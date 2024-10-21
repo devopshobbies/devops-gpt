@@ -1,5 +1,10 @@
 version: '3.6'
 
+x-common-variables: &common-variables
+    MONGO_INITDB_DATABASE: testdb
+    MONGO_INITDB_ROOT_USERNAME: admin
+    MONGO_INITDB_ROOT_PASSWORD: admin
+
 services:
         
   web:
@@ -7,21 +12,22 @@ services:
     container_name: fastapi_gpt
     command: fastapi run app/main.py --port 80
     environment:
-      - OPENAI_API_KEY=abc
+      <<: *common-variables
+      OPENAI_API_KEY: abc
+      MONGO_HOST: mongo_gpt
+      MONGO_PORT: 27017
+
     ports:
       - "80:80"
    
    
   
-  # mongo:
-  #   image: mongo
-  #   hostname: kafka_st
-  #   restart: always
-  #   volumes:
-  #     - './data:/data/db'
-  #   ports:
-  #     - "27017:27017"
-  #   environment:
-  #     MONGO_INITDB_DATABASE: test
-  #     MONGO_INITDB_ROOT_USERNAME: admin
-  #     MONGO_INITDB_ROOT_PASSWORD: admin
+  mongo:
+    image: mongo
+    container_name: mongo_gpt
+    restart: always
+    volumes:
+      - './data:/data/db'
+    ports:
+      - "27017:27017"
+    environment: *common-variables

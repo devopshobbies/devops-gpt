@@ -13,7 +13,7 @@ services:
     command: fastapi run app/main.py --port 80
     environment:
       <<: *common-variables
-      OPENAI_API_KEY: abc
+      OPENAI_API_KEY: ${KEY:-}
       MONGO_HOST: mongo_gpt
       MONGO_PORT: 27017
 

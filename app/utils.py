@@ -1,7 +1,8 @@
 
 import os
 from fastapi import HTTPException
-from pymongo import MongoClient
+from pymongo import MongoClient,ASCENDING,errors
+
 def get_mongo_client():
 
     client = MongoClient(host=os.environ.get('MONGO_HOST'),
@@ -21,19 +22,19 @@ def get_mongo_collection():
         
         
 def save_QA_to_mongo(question:str, answer:str) -> None:
-
+    
     try:
 
         col = get_mongo_collection()
-
+        col.create_index([("question", ASCENDING)], unique=True)
         data = {
 
             "question":question,
             "answer":answer
         }
-
+        
         col.insert_one(data)
 
-    except Exception as e:
+    except errors.DuplicateKeyError:
 
-        raise HTTPException(status_code=400,detail=str(e))
+        pass

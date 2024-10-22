@@ -8,7 +8,7 @@ app = FastAPI()
 
 
 @app.post("/IaC-text-gen/")
-def IaC_text_generation(request:IaCInput) -> IaCOutput:
+async def IaC_text_generation(request:IaCInput) -> IaCOutput:
         
         output = gpt_service_IaC(request.input, request.service,request.max_tokens,request.min_tokens)
         save_QA_to_mongo(str(request.input),str(output))

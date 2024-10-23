@@ -14,26 +14,20 @@ def get_mongo_client():
 
 
 
-def get_mongo_collection():
+def get_mongo_collection(col:str):
 
     client = get_mongo_client()
-    col = client[os.environ.get('MONGO_INITDB_DATABASE')]['qa']
+    col = client[os.environ.get('MONGO_INITDB_DATABASE')][col]
     return col
         
         
-def save_QA_to_mongo(question:str, answer:str) -> None:
+def save_to_mongo(data:dict,index:str,collection:str) -> None:
     
     try:
 
-        col = get_mongo_collection()
+        col = get_mongo_collection(collection)
 
-        col.create_index([("question", ASCENDING)], unique=True)
-
-        data = {
-
-            "question":question,
-            "answer":answer
-        }
+        col.create_index(index, unique=True)
         
         col.insert_one(data)
 

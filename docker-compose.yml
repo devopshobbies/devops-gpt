@@ -22,12 +22,12 @@ services:
    
    
   
-  mongo:
-    image: mongo
-    container_name: mongo_gpt
-    restart: always
-    volumes:
-      - './data:/data/db'
-    ports:
-      - "27017:27017"
-    environment: *common-variables
+  # mongo:
+  #   image: mongo
+  #   container_name: mongo_gpt
+  #   restart: always
+  #   volumes:
+  #     - './data:/data/db'
+  #   ports:
+  #     - "27017:27017"
+  #   environment: *common-variables

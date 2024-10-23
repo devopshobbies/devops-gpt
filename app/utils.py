@@ -26,7 +26,9 @@ def save_QA_to_mongo(question:str, answer:str) -> None:
     try:
 
         col = get_mongo_collection()
+
         col.create_index([("question", ASCENDING)], unique=True)
+
         data = {
 
             "question":question,
@@ -38,3 +40,5 @@ def save_QA_to_mongo(question:str, answer:str) -> None:
     except errors.DuplicateKeyError:
 
         pass
+
+

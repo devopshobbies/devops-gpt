@@ -11,6 +11,8 @@ services:
     build: .
     container_name: fastapi_gpt
     command: fastapi run app/main.py --port 80
+    volumes:
+      - './app:/code/app'
     environment:
       <<: *common-variables
       OPENAI_API_KEY: ${KEY:-}

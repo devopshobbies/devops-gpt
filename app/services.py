@@ -1,4 +1,6 @@
 from .utils import save_to_mongo
+import os
+import shutil
 
 def write_basic(request,output):
 
@@ -31,3 +33,24 @@ def write_installation(request,output):
 
     save_to_mongo(data, index=['os','service'], collection = 'installation')
 
+def edit_directory_generator(python_code):
+
+
+    with open('app/directory_generator.py', 'w') as file:
+        
+        file.write(python_code)
+
+        
+
+def execute_pythonfile():
+    folder = 'app/media/MyTerraform'
+    if os.path.isdir(folder):
+        try:
+            
+            shutil.rmtree(folder)
+            print(f"Successfully removed '{folder}' and all its contents.")
+        except Exception as e:
+            print(f"Failed to remove '{folder}'. Reason: {e}")
+
+        os.system('python3 app/directory_generator.py')
+    os.system('python3 app/directory_generator.py')

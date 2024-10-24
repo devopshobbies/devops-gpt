@@ -23,6 +23,10 @@ class IaCInstallationInput(BasicInput):
 
 class IaCTemplateGeneration(BasicInput):
     CI_integration:bool = True
+    base_config:str = 'ec2'
+    service:Optional[str] = 'terraform'
+    project_name:str = 'MyTerraform'
+
 
 class Output(BaseModel):
     output:str

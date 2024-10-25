@@ -28,9 +28,8 @@ def IaC_bugfix_generator(input : IaCBugfixInput) -> str:
 def IaC_installation_generator(input : IaCInstallationInput) -> str:
 
     prompt = f"""
-                Write a clear answer about installation {input.service} in {input.os} based on {input.service} document.
-                
-                minimun length of answer is {input.min_tokens} and maximum length is {input.max_tokens}
+                generate a clear shell acript about installation {input.service} in {input.os} based on {input.service} document.
+                without any additional note. just script for installation.
 
             """
     return prompt
@@ -44,13 +43,14 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
 
                     1 - CI pipeline integration = {input.CI_integration}
                     2 - base config is {input.base_config}
-                    3 - project name is app/media/{input.project_name}
+                    3 - project name is app/media/MyTerraform
                     4 - number of modules = 1
                    
                 if CI integration is true, generate a pipeline based on github actions.
 
                 finally just give me a python code without any note that can generate a project folder with the given schema
-                without ```python entry. and we dont need any base directory in the python code
+                without ```python entry. and we dont need any base directory in the python code.
+                the final terraform template must work very well without any error!
 
                 
             """

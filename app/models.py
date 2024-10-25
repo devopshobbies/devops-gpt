@@ -21,11 +21,11 @@ class IaCInstallationInput(BasicInput):
     os:str = "ubuntu"
     service:Optional[str] = 'terraform'
 
-class IaCTemplateGeneration(BasicInput):
+class IaCTemplateGeneration(BaseModel):
     CI_integration:bool = True
     base_config:str = 'ec2'
-    service:Optional[str] = 'terraform'
-    project_name:str = 'MyTerraform'
+    service:str = 'terraform'
+   
 
 
 class Output(BaseModel):

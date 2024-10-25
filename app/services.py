@@ -1,6 +1,7 @@
 from .utils import save_to_mongo
 import os
 import shutil
+from fastapi import HTTPException
 
 def write_basic(request,output):
 
@@ -50,7 +51,7 @@ def execute_pythonfile():
             shutil.rmtree(folder)
             print(f"Successfully removed '{folder}' and all its contents.")
         except Exception as e:
-            print(f"Failed to remove '{folder}'. Reason: {e}")
+            raise HTTPException(status_code=400, detail='please try again')
 
         os.system('python3 app/directory_generator.py')
     os.system('python3 app/directory_generator.py')

@@ -40,10 +40,12 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
 
     prompt = f"""
                 generate a complex template for {input.service} base on standard template with project structure focus on 
-                these parameters:
-                    1- CI pipeline integration = {input.CI_integration}
+                these important points:
+
+                    1 - CI pipeline integration = {input.CI_integration}
                     2 - base config is {input.base_config}
                     3 - project name is app/media/{input.project_name}
+                    4 - number of modules = 1
                    
                 if CI integration is true, generate a pipeline based on github actions.
 

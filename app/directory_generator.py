@@ -1,43 +1,107 @@
 import os
 
-project_name = "app/MyTerraform"
-ci_integration = True
+def create_terraform_project():
+    project_name = "MyTerraform"
+    base_dir = f"app/media/{project_name}"
+    os.makedirs(base_dir, exist_ok=True)
 
-# Directory structure
-dirs = [
-    f"{project_name}/",
-    f"{project_name}/.github/workflows/",
-    f"{project_name}/modules/",
-    f"{project_name}/environments/",
-    f"{project_name}/variables/",
-    f"{project_name}/main.tf",
-    f"{project_name}/variables.tf",
-    f"{project_name}/outputs.tf",
-    f"{project_name}/terraform.tfvars"
-]
+    # main.tf
+    main_tf = f"""provider "aws" {{
+  region = "us-west-2"
+}}
 
-# Create directory structure
-for dir in dirs:
-    os.makedirs(os.path.dirname(dir), exist_ok=True)
-    if dir.endswith('.tf'):
-        with open(dir, 'w') as f:
-            if dir == f"{project_name}/main.tf":
-                f.write('provider "azurerm" {\n  features {}\n}\n\n')
-                f.write('resource "azurerm_resource_group" "example" {\n  name     = "example-resources"\n  location = "East US"\n}\n')
-            elif dir == f"{project_name}/variables.tf":
-                f.write('variable "region" {\n  description = "The Azure region to deploy to"\n  default     = "East US"\n}\n')
-            elif dir == f"{project_name}/outputs.tf":
-                f.write('output "resource_group_name" {\n  value = azurerm_resource_group.example.name\n}\n')
-            elif dir == f"{project_name}/terraform.tfvars":
-                f.write('region = "East US"\n')
+module "ec2_instance" {{
+  source = "./modules/ec2"
 
-if ci_integration:
-    with open(f"{project_name}/.github/workflows/terraform.yml", 'w') as f:
-        f.write('name: Terraform\n\n')
-        f.write('on:\n  push:\n    branches:\n      - main\n\n')
-        f.write('jobs:\n  terraform:\n    runs-on: ubuntu-latest\n    steps:\n')
-        f.write('      - name: Checkout code\n        uses: actions/checkout@v2\n\n')
-        f.write('      - name: Set up Azure CLI\n        uses: azure/setup-azure@v1\n\n')
-        f.write('      - name: Terraform Init\n        run: |\n          az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}\n          terraform init\n\n')
-        f.write('      - name: Terraform Plan\n        run: terraform plan\n\n')
-        f.write('      - name: Terraform Apply\n        run: terraform apply -auto-approve\n')
+  instance_type = "t2.micro"
+  ami           = "ami-0c55b159cbfafe01e"
+  tags = {{
+    Name = "{project_name}-instance"
+  }}
+}}
+"""
+    with open(os.path.join(base_dir, "main.tf"), "w") as f:
+        f.write(main_tf)
+
+    # variables.tf
+    variables_tf = """variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+}
+
+variable "ami" {
+  description = "AMI ID for EC2 instance"
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags for the EC2 instance"
+  type        = map(string)
+}
+"""
+    with open(os.path.join(base_dir, "variables.tf"), "w") as f:
+        f.write(variables_tf)
+
+    # outputs.tf
+    outputs_tf = """output "instance_id" {
+  value = module.ec2_instance.instance_id
+}
+
+output "public_ip" {
+  value = module.ec2_instance.public_ip
+}
+"""
+    with open(os.path.join(base_dir, "outputs.tf"), "w") as f:
+        f.write(outputs_tf)
+
+    # Create modules directory
+    modules_dir = os.path.join(base_dir, "modules")
+    os.makedirs(modules_dir, exist_ok=True)
+
+    # Create EC2 module directory
+    ec2_module_dir = os.path.join(modules_dir, "ec2")
+    os.makedirs(ec2_module_dir, exist_ok=True)
+
+    # ec2/main.tf
+    ec2_main_tf = """resource "aws_instance" "this" {
+  ami           = var.ami
+  instance_type = var.instance_type
+
+  tags = var.tags
+}
+"""
+    with open(os.path.join(ec2_module_dir, "main.tf"), "w") as f:
+        f.write(ec2_main_tf)
+
+    # ec2/variables.tf
+    ec2_variables_tf = """variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+}
+
+variable "ami" {
+  description = "AMI ID for the EC2 instance"
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags for the EC2 instance"
+  type        = map(string)
+}
+"""
+    with open(os.path.join(ec2_module_dir, "variables.tf"), "w") as f:
+        f.write(ec2_variables_tf)
+
+    # ec2/outputs.tf
+    ec2_outputs_tf = """output "instance_id" {
+  value = aws_instance.this.id
+}
+
+output "public_ip" {
+  value = aws_instance.this.public_ip
+}
+"""
+    with open(os.path.join(ec2_module_dir, "outputs.tf"), "w") as f:
+        f.write(ec2_outputs_tf)
+
+create_terraform_project()

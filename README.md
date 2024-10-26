@@ -1,4 +1,4 @@
-# DevOps-GPT
+# DevOps_GPT
 Use a brilliant assistant as your friend on your DevOps journey.
 
 ## What does this project offer?

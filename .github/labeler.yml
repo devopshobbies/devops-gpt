@@ -32,9 +32,17 @@ Documentation:
   - any-glob-to-any-file: ['docs/*', 'guides/*']
 
 # Add 'Documentation' label to any change to .md files within the entire repository 
-Documentation:
+README:
 - changed-files:
   - any-glob-to-any-file: '**/*.md'
+
+docker-compose:
+- changed-files:
+  - any-glob-to-any-file: '**/docker-compose.yml'
+
+dockerfile:
+- changed-files:
+  - any-glob-to-any-file: '**/Dockerfile'
 
 # Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
 source:

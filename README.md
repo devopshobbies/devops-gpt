@@ -1,5 +1,5 @@
 # DevOps-GPT
-Use a brilliant assistant as your friend on your DevOps journey.
+Use a brilliant assistant as your friend in your DevOps journey.
 
 ## What does this project offer?
 This project helps you to balance your daily work as a DevOps engineer, from simple bug fixes to project template generation.<br />

@@ -9,3 +9,21 @@ docker-compose:
 dockerfile:
 - changed-files:
   - any-glob-to-any-file: '**/Dockerfile'
+
+
+requirements:
+- changed-files:
+  - any-glob-to-any-file: '**/requirements.txt'
+
+gpt:
+- changed-files:
+  - any-glob-to-any-file: '**/app/gpt_services.py'
+
+fastapi:
+- changed-files:
+  - any-glob-to-any-file: '**/app/main.py'
+
+prompt:
+- changed-files:
+  - any-glob-to-any-file: '**/app/prompt_generators.py'
+

@@ -37,11 +37,11 @@ jobs:
               "template": "#{{CHANGELOG}}",
               "categories": [
                 {
-                    "title": "## Feature",
+                    "title": "## 🚀 Features",
                     "labels": ["feat", "feature"]
                 },
                 {
-                    "title": "## Fix",
+                    "title": "## 🐛 Fixes",
                     "labels": ["fix", "bug"]
                 },
                 {

@@ -1,16 +1,13 @@
-name: Docker CI
+name: Docker Health Check
+
 on:
   pull_request:
-    types:
-      - closed
     branches:
       - master
+      
 jobs:
-
- CI:
-
+ docker_health_check:
     runs-on: ubuntu-latest
-
     steps:
     
     - uses: actions/checkout@v4

@@ -27,7 +27,7 @@ jobs:
       run: docker compose build
       
     - name: run services
-      run: docker compose up -d
+      run: sh run.sh
       
     - name: stop containers
       run: docker compose down

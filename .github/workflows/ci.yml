@@ -23,7 +23,7 @@ jobs:
       id: bump
       uses: anothrNick/github-tag-action@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
         DEFAULT_BUMP: patch
         
@@ -57,7 +57,7 @@ jobs:
               ]
             }
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}          
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
         fromTag: ${{ steps.bump.outputs.previous_tag }} 
         toTag: ${{ steps.bump.outputs.new_tag }}
         

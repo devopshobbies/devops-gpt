@@ -10,3 +10,13 @@ you don't need to search on Google for some routine jobs and it helps you with a
 2. Docker
 3. GPT-4-mini
 4. FastAPI
+
+## Pre-requisites
+1. Python
+2. Docker
+
+## How to use?
+execute `sh run.sh` in your terminal
+
+# Maintenance
+** [Abolfazl Andalib](https://github.com/abolfazl8131) - abolfazlandalib@gmail.com **

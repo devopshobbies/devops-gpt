@@ -1,0 +1,68 @@
+name: Realse Version
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.merge_commit_sha }}
+        fetch-depth: '0'
+
+    - name: Bump version and push tag
+      id: bump
+      uses: anothrNick/github-tag-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        WITH_V: true
+        DEFAULT_BUMP: patch
+        
+    - name: Build Changelog
+      id: github_release
+      uses: mikepenz/release-changelog-builder-action@v5
+      with:
+          mode: "COMMIT"
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}",
+              "categories": [
+                {
+                    "title": "## Feature",
+                    "labels": ["feat", "feature"]
+                },
+                {
+                    "title": "## Fix",
+                    "labels": ["fix", "bug"]
+                },
+                {
+                    "title": "## Other",
+                    "labels": []
+                }
+              ],
+              "label_extractor": [
+                {
+                  "pattern": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: (.*?)([\\s\\S]*)?",
+                  "target": "$1"
+                }
+              ]
+            }
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}          
+        fromTag: ${{ steps.bump.outputs.previous_tag }} 
+        toTag: ${{ steps.bump.outputs.new_tag }}
+        
+    - name: Create Release
+      uses: mikepenz/action-gh-release@v0.2.0-a03 #softprops/action-gh-release
+      with:
+        body: ${{steps.github_release.outputs.changelog}}
+        tag_name: ${{ steps.bump.outputs.new_tag }}

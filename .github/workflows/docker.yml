@@ -23,9 +23,6 @@ jobs:
     - name: build services
       run: docker compose build
       
-    - name: push images
-      run: docker compose push
-      
     - name: run services
       run: docker compose up -d
       

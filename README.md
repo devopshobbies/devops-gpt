@@ -22,6 +22,12 @@ surely we can save any static data in the `/media`.
 
 This is an example of a template generated in the `/media`
 
+and the input is something like that
+
+
+![Uploading Screenshot from 2024-10-27 10-56-54.png…]()
+
+
 ### directory_generator.py
 This file becomes updated when we trigger the template generation API. finally, It generates the MyTerraform directory based on user input which is a template.
 

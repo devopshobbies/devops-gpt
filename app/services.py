@@ -37,7 +37,7 @@ def write_installation(request,output):
 def edit_directory_generator(python_code):
 
 
-    with open('app/directory_generator.py', 'w') as file:
+    with open('app/directory_generators/directory_generator.py', 'w') as file:
         
         file.write(python_code)
 
@@ -53,5 +53,5 @@ def execute_pythonfile():
         except Exception as e:
             raise HTTPException(status_code=400, detail='please try again')
 
-        os.system('python3 app/directory_generator.py')
-    os.system('python3 app/directory_generator.py')
+        os.system('python3 app/directory_generators/directory_generator.py')
+    os.system('python3 app/directory_generators/directory_generator.py')

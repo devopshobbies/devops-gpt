@@ -10,12 +10,16 @@ This is a wrapper between DevOps engineers and large language models like GPT-4-
 
 We have developed some (Extendable) prompt-driven solutions with a simplified interface for the DevOps process cost reduction.<br />
 
-### Components
+### Docker services
 We run our services using docker-compose (the main Fast-API-based backend and MongoDB), so we package all dependencies and don't use any external service.<br />
-
 The second one is Mongodb. we need to save the prompt and GPT-4_mini response in the Mongo document for future use. (for example, fine-tuning the other model with our data) <br />
 
-The third one is in the media directory. for now, We save a project called (MyTerraform) which is a Terraform template generated based on user requirements. so users can download it and use it.
+### Media directory
+The third one is in the media directory. for now, We save a project called (MyTerraform) which is a Terraform template generated based on user requirements. so users can download it and use it.<be />
+surely we can save any static data in the /media.
+
+### directory_generator.py
+This file becomes updated when we trigger the template generation API. finally, It generates the MyTerraform directory based on user input which is a template.
 
 
 ## ToolChain

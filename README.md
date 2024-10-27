@@ -5,6 +5,14 @@ Use a brilliant assistant as your friend in your DevOps journey.
 This project helps you to balance your daily work as a DevOps engineer, from simple bug fixes to project template generation.<br />
 you don't need to search on Google for some routine jobs and it helps you with a robust prompt to simplify your career.
 
+## How it works?
+This is a wrapper between DevOps engineers and large language models like GPT-4-mini. The main strength of it is prompt engineering.<br />
+We have developed some (Extendable) prompt-driven solutions with a simplified interface for the DevOps process cost reduction.<br />
+### Components
+We run our services using docker-compose (the main Fast-API-based backend and MongoDB), so we package all dependencies and don't use any external service.<br />
+The second one is Mongodb. we need to save the prompt and GPT-4_mini response in the Mongo document for future use. (for example, fine-tuning the other model with our data) <br />
+
+
 ## ToolChain
 1. Python
 2. Docker
@@ -18,5 +26,10 @@ you don't need to search on Google for some routine jobs and it helps you with a
 ## How to use?
 execute `sh run.sh` in your terminal
 
+> [!WARNING]  
+> Do Not change the GPT model! Prompts have been developed for the GPT-4-mini model and they can't be integrated with other GPT models. it can cause horrible incompatibility.
+
+
+> 
 # Maintenance
 ** [Abolfazl Andalib](https://github.com/abolfazl8131) - abolfazlandalib@gmail.com **

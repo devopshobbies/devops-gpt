@@ -23,8 +23,11 @@ jobs:
     - name: build services
       run: docker compose build
       
+    - name: push images
+      run: docker compose push
+      
     - name: run services
-      run: docker compose up --build -d
+      run: docker compose up -d
       
     - name: stop containers
       run: docker compose down

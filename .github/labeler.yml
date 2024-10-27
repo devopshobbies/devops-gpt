@@ -19,6 +19,10 @@ gpt:
 - changed-files:
   - any-glob-to-any-file: '**/app/gpt_services.py'
 
+services:
+- changed-files:
+  - any-glob-to-any-file: '**/app/services.py'
+
 fastapi:
 - changed-files:
   - any-glob-to-any-file: '**/app/main.py'

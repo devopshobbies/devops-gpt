@@ -17,7 +17,7 @@ class IaCBugfixInput(BasicInput):
     version:str = 'latest'
     service:Optional[str] = 'terraform'
 
-class IaCInstallationInput(BasicInput):
+class IaCInstallationInput(BaseModel):
     os:str = "ubuntu"
     service:Optional[str] = 'terraform'
 

@@ -49,7 +49,7 @@ async def IaC_template_generation(request:IaCTemplateGeneration) -> Output:
 
         generated_prompt = IaC_template_generator(request)
         output = gpt_service(generated_prompt)
-        output = edit_directory_generator(output)
+        edit_directory_generator(output)
         execute_pythonfile()
         return Output(output='output')
 

@@ -1,0 +1,30 @@
+name: Docker Health Check
+
+on:
+  pull_request:
+    branches:
+      - master
+      
+jobs:
+ docker_health_check:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: actions/checkout@v4
+    - name: install requirements
+      run: pip install -r requirements.txt
+      
+    - name: docker login
+      uses: docker/login-action@v3
+      with:
+        username: 81318131
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: build services
+      run: docker compose build
+      
+    - name: run services
+      run: docker compose up --build -d
+      
+    - name: stop containers
+      run: docker compose down

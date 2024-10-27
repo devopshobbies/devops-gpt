@@ -24,8 +24,8 @@ This is an example of a template generated in the `/media`
 
 and the input is something like that
 
+![Screenshot from 2024-10-27 10-56-54](https://github.com/user-attachments/assets/63d1db07-2c25-4c10-a841-69a2c1235d9d)
 
-![Uploading Screenshot from 2024-10-27 10-56-54.png…]()
 
 
 ### directory_generator.py

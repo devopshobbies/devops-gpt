@@ -1,6 +1,6 @@
 from .models import (IaCBasicInput, 
     IaCBugfixInput,
-    IaCInstallationInput, IaCTemplateGeneration)
+    IaCInstallationInput, IaCTemplateGeneration,HelmTemplateGeneration)
 
 def IaC_basics_generator(input : IaCBasicInput) -> str:
 
@@ -53,5 +53,22 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
                 the final terraform template must work very well without any error!
 
                 
+            """
+    return prompt
+
+def helm_template_generator(input : HelmTemplateGeneration) -> str:
+
+    prompt = f"""
+            generate a correct python code to generate a helm project structure (project name: app/media/MyHelm) 
+            based on the latest version of helm chart. 
+            just generate a code to generate a folder as project template. don't consider base_dir
+                
+            CI integrated (using github actions) = {input.CI_integration}.
+            consider these directories : [charts/, crds/, templates/]
+            consider these files : Chart.yaml & values.yaml
+
+            please set a something default in chart.yaml and values.yaml
+
+            just Generate a python code without any additional notes or ```python3 entry
             """
     return prompt

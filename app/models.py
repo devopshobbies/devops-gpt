@@ -25,7 +25,10 @@ class IaCTemplateGeneration(BaseModel):
     CI_integration:bool = True
     base_config:str = 'ec2'
     service:str = 'terraform'
-   
+
+class HelmTemplateGeneration(BaseModel):
+    CI_integration:bool = True
+    
 
 
 class Output(BaseModel):

@@ -7,14 +7,15 @@ from .services import (write_basic,
 from .models import (IaCBasicInput,
         IaCBugfixInput, 
         Output,
-        IaCInstallationInput,IaCTemplateGeneration)
+        IaCInstallationInput,IaCTemplateGeneration,HelmTemplateGeneration)
 
 from fastapi import FastAPI, HTTPException,Response
 from fastapi.responses import FileResponse
 from .prompt_generators import (IaC_basics_generator, 
         IaC_bugfix_generator,
         IaC_installation_generator, 
-        IaC_template_generator)
+        IaC_template_generator,helm_template_generator)
+
 import os
 app = FastAPI()
 
@@ -49,8 +50,17 @@ async def IaC_template_generation(request:IaCTemplateGeneration) -> Output:
 
         generated_prompt = IaC_template_generator(request)
         output = gpt_service(generated_prompt)
-        edit_directory_generator(output)
-        execute_pythonfile()
+        edit_directory_generator("terraform_generator",output)
+        execute_pythonfile("MyTerraform","terraform_generator")
+        return Output(output='output')
+
+@app.post("/Helm-template/")
+async def Helm_template_generation(request:HelmTemplateGeneration) -> Output:
+
+        generated_prompt = helm_template_generator(request)
+        output = gpt_service(generated_prompt)
+        edit_directory_generator("helm_generator",output)
+        execute_pythonfile("MyHelm","helm_generator")
         return Output(output='output')
 
 

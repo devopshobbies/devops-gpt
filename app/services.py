@@ -34,17 +34,17 @@ def write_installation(request,output):
 
     save_to_mongo(data, index=['os','service'], collection = 'installation')
 
-def edit_directory_generator(python_code):
+def edit_directory_generator(gen_file,python_code):
 
 
-    with open('app/directory_generators/directory_generator.py', 'w') as file:
+    with open(f"app/directory_generators/{gen_file}.py", 'w') as file:
         
         file.write(python_code)
 
         
 
-def execute_pythonfile():
-    folder = 'app/media/MyTerraform'
+def execute_pythonfile(folder,gen_file):
+    folder = f"app/media/{folder}"
     if os.path.isdir(folder):
         try:
             
@@ -53,5 +53,5 @@ def execute_pythonfile():
         except Exception as e:
             raise HTTPException(status_code=400, detail='please try again')
 
-        os.system('python3 app/directory_generators/directory_generator.py')
-    os.system('python3 app/directory_generators/directory_generator.py')
+        os.system(f"python3 app/directory_generators/{gen_file}.py")
+    os.system(f"python3 app/directory_generators/{gen_file}.py")

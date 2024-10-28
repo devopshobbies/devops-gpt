@@ -39,7 +39,7 @@ This file becomes updated when we trigger the template generation API. finally, 
 4. FastAPI
 
 ## Pre-requisites
-1. Python
+![python](https://github.com/user-attachments/assets/ca8df9d9-e04c-4bb4-9f36-d2c7e15145ef)
 2. Docker
 
 ## How to use?

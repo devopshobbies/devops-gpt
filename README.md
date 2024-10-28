@@ -39,7 +39,8 @@ This file becomes updated when we trigger the template generation API. finally, 
 4. FastAPI
 
 ## Pre-requisites
-![python](https://github.com/user-attachments/assets/ca8df9d9-e04c-4bb4-9f36-d2c7e15145ef)
+![Python](https://img.shields.io/badge/https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2F0%2F0a%2FPython.svg%2F2048px-Python.svg.png)
+
 2. Docker
 
 ## How to use?

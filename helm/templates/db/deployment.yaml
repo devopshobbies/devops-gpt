@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "db.deploymentName" . }}
+  labels:
+    {{- include "db.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.db.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "db.labels" . | nindent 8 }}
+  template:
+    metadata:
+      labels:
+        {{- include "db.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "db.deploymentName" . }}
+          image: {{ .Values.db.image.repository }}:{{ .Values.db.image.tag }}
+          ports:
+            - containerPort: {{ .Values.db.service.targetPort }}
+          envFrom:
+            - secretRef:
+                name: {{ include "db.secretName" . }}
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "db.pvcName" . }}
+      {{- if .Values.db.nodeSelector }}
+      nodeSelector: {{ .Values.db.nodeSelector | toYaml | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.db.affinity }}
+      affinity: {{ .Values.db.affinity | toYaml | nindent 8 }}
+      {{- end }}

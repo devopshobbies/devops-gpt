@@ -1,3 +1,7 @@
+helm:
+- changed-files:
+  - any-glob-to-any-file: helm/**
+
 README:
 - changed-files:
   - any-glob-to-any-file: '**/*.md'

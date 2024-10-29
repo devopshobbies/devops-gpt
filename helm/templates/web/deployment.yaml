@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "web.deploymentName" . }}
+  labels:
+    {{- include "web.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.web.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "web.labels" . | nindent 8 }}
+  template:
+    metadata:
+      labels:
+        {{- include "web.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "web.deploymentName" . }}
+          image: {{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}
+          command: ["fastapi", "run", "app/main.py", "--port", "8080"]
+          ports:
+            - containerPort: {{ .Values.web.service.targetPort }}
+          envFrom:
+            - secretRef:
+                name: {{ include "web.secretName" . }}
+            - secretRef:
+                name: {{ include "db.secretName" . }}
+          env:
+            - name: MONGO_HOST
+              value: {{ include "db.serviceName" . }}
+            - name: MONGO_PORT
+              value: "{{ .Values.db.service.port }}"
+      {{- if .Values.web.nodeSelector }}
+      nodeSelector: {{ .Values.web.nodeSelector | toYaml | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.web.affinity }}
+      affinity: {{ .Values.web.affinity | toYaml | nindent 8 }}
+      {{- end }}

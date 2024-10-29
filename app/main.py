@@ -25,7 +25,6 @@ async def IaC_basic_generation(request:IaCBasicInput) -> Output:
 
         generated_prompt = IaC_basics_generator(request)
         output = gpt_service(generated_prompt)
-        write_basic(request,output)
         return Output(output=output)
    
 @app.post("/IaC-bugfix/")
@@ -33,7 +32,6 @@ async def IaC_bugfix_generation(request:IaCBugfixInput) -> Output:
 
         generated_prompt = IaC_bugfix_generator(request)
         output = gpt_service(generated_prompt)
-        write_bugfix(request,output)
         return Output(output=output)
 
 
@@ -42,7 +40,6 @@ async def IaC_install_generation(request:IaCInstallationInput) -> Output:
 
         generated_prompt = IaC_installation_generator(request)
         output = gpt_service(generated_prompt)
-        write_installation(request,output)
         return Output(output=output)
 
 @app.post("/IaC-template/")

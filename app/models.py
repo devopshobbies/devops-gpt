@@ -28,6 +28,11 @@ class IaCTemplateGeneration(BaseModel):
 
 class HelmTemplateGeneration(BaseModel):
     CI_integration:bool = True
+    api_version:int = 1
+    templates:list[str]
+    images:list[str]
+
+
     
 
 

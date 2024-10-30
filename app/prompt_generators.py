@@ -66,6 +66,9 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
             CI integrated (using github actions) = {input.CI_integration}.
             consider these directories : [charts/, crds/, templates/]
             consider these files : Chart.yaml & values.yaml
+            in the templates/ directory create these directories: {input.templates}.
+            set the api_version in the Chart.yaml : v{input.api_version}.
+            initialize values.yaml based on these docker images : {input.images}
 
             please set a something default in chart.yaml and values.yaml
 

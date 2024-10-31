@@ -1,5 +1,12 @@
 web:
+  env:
+    ENV1: Hi
   image: nginx
-  service:
+  persistence:
+    accessModes:
+    - ReadWriteOnce
     enabled: true
+    size: 1Gi
+  replicaCount: 1
+  service:
     port: 80

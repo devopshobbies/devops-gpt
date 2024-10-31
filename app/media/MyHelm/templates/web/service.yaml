@@ -1,10 +1,11 @@
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: web
+  name: {{ include "{project_name}.name" . }}
 spec:
   type: ClusterIP
   ports:
     - port: {{ .Values.web.service.port }}
   selector:
-    app: web
+    app: {{ include "{project_name}.name" . }}

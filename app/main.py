@@ -4,7 +4,7 @@ from .services import (write_basic,
         write_bugfix,
         write_installation,
         edit_directory_generator,execute_pythonfile)
-from .models import (IaCBasicInput,
+from app.models import (IaCBasicInput,
         IaCBugfixInput, 
         Output,
         IaCInstallationInput,IaCTemplateGeneration,HelmTemplateGeneration)

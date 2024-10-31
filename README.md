@@ -48,6 +48,11 @@ execute `sh run.sh` in your terminal
 > [!WARNING]  
 > Do Not change the GPT model! Prompts have been developed for the GPT-4-mini model and they can't be integrated with other GPT models. it can cause horrible incompatibility.
 
+## Run it local on kubernetes
+First of all, you need to configure a Kubernetes environment. we suggest kind as an environment. you can see a configuration guide [here](https://kind.sigs.k8s.io/docs/user/configuration/) <br />
+after that, you need to install a helm package like this:
+1. `cd /helm`
+2. `helm install chatbot . -f values.yaml` 
 
 > 
 # Maintenance

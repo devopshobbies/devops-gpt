@@ -1,4 +1,5 @@
-image:
-  repository: rembg
-  tag: latest
-  pullPolicy: IfNotPresent
+web:
+  image: nginx
+  service:
+    enabled: true
+    port: 80

@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
-
+from typing import List, Optional
 
 class BasicInput(BaseModel):
 
@@ -26,12 +25,15 @@ class IaCTemplateGeneration(BaseModel):
     base_config:str = 'ec2'
     service:str = 'terraform'
 
-class HelmTemplateGeneration(BaseModel):
-    CI_integration:bool = True
-    api_version:int = 1
-    templates:list[str]
-    images:list[str]
+class Pod(BaseModel):
+    name:str
+    image:str
+    target_port:int
 
+class HelmTemplateGeneration(BaseModel):
+    api_version:int = 1
+    pods:List[Pod]
+    
 
     
 

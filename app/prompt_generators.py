@@ -57,18 +57,23 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
     return prompt
 
 def helm_template_generator(input : HelmTemplateGeneration) -> str:
-
+    templates = [i.name for i in input.pods]
+    docker_images = [{i.name:i.image} for i in input.pods]
+    target_ports = [{i.name:i.target_port} for i in input.pods]
     prompt = f"""
             generate a correct python code to generate a helm project structure (project name: app/media/MyHelm) 
             based on the latest version of helm chart. 
             just generate a code to generate a folder as project template. don't consider base_dir
                 
-            CI integrated (using github actions) = {input.CI_integration}.
             consider these directories : [charts/, crds/, templates/]
             consider these files : Chart.yaml & values.yaml
-            in the templates/ directory create these directories: {input.templates}.
+            in the templates/ directory create these directories: {templates}.
             set the api_version in the Chart.yaml : v{input.api_version}.
-            initialize values.yaml based on these docker images : {input.images}
+            initialize values.yaml based on these dict of templates and docker images,
+            please provide other informations related to values.yaml : {docker_images},
+            the target port of pods in the dict format are here : {target_ports}
+            for each template, initialize this files [deployment.yaml ,service.yaml].
+            
 
             please set a something default in chart.yaml and values.yaml
 

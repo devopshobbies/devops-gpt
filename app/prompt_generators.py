@@ -83,12 +83,11 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
             set replicas of pods following this dict format : {replicas_}.
             set persistance (pvc) of pods following this dict fomrat : {persistance}
             set environment variables of pods like this dict format : {envs}
-            set ingress for pod if the pod ingress is true. here is a dict format for ingress : {ingress_}.
-            create deployment.yaml in the related template if the pod stateless == true, 
-            you can see each pod status here in the dict format : {status}
+            initialize ingress with a default host for pod if the pod ingress is true in here {ingress_}.
+            
             if environment variable is considered for pod, then create secret.yaml in the related template.
 
-            please set a something default in chart.yaml and values.yaml
+            please set a something default in chart.yaml and values.yaml based on the requirement.
 
             just Generate a python code without any additional notes or ```python3 entry
             """

@@ -21,50 +21,23 @@ jobs:
 
     - name: Bump version and push tag
       id: bump
-      uses: anothrNick/github-tag-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
-        DEFAULT_BUMP: patch
+      uses: mathieudutour/github-tag-action@v6.2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        default_bump: patch
         
     - name: Build Changelog
       id: github_release
       uses: mikepenz/release-changelog-builder-action@v5
-      with:
-          mode: "COMMIT"
-          configurationJson: |
-            {
-              "template": "#{{CHANGELOG}}",
-              "categories": [
-                {
-                    "title": "## 🚀 Features",
-                    "labels": ["feat", "feature"]
-                },
-                {
-                    "title": "## 🐛 Fixes",
-                    "labels": ["fix", "bug"]
-                },
-                {
-                    "title": "## Other",
-                    "labels": []
-                }
-              ],
-              "label_extractor": [
-                {
-                  "pattern": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: (.*?)([\\s\\S]*)?",
-                  "target": "$1"
-                }
-              ]
-            }
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
         fromTag: ${{ steps.bump.outputs.previous_tag }} 
         toTag: ${{ steps.bump.outputs.new_tag }}
         
     - name: Create Release
-      uses: mikepenz/action-gh-release@v0.2.0-a03 #softprops/action-gh-release
+      uses: softprops/action-gh-release@v2
       with:
-        body: ${{steps.github_release.outputs.changelog}}
+        body: ${{ steps.bump.outputs.changelog }}
         tag_name: ${{ steps.bump.outputs.new_tag }}
         
   releaseDocker:

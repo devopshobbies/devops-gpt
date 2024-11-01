@@ -1,10 +1,1 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: { include "MyHelm.fullname" . }
-spec:
-  type: ClusterIP
-  ports:
-    - port: { .Values.web.service.port }
-  selector:
-    app: { include "MyHelm.name" . }
+# service.yaml for web

@@ -88,7 +88,10 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
             if environment variable is considered for pod, then create secret.yaml in the related template.
 
             please set a something default in chart.yaml and values.yaml based on the requirement.
+            please generate helpers.tpl for each template and initialize resources and set a label for reach resource.
 
             just Generate a python code without any additional notes or ```python3 entry
             """
     return prompt
+
+

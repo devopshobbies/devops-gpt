@@ -1,19 +1,16 @@
 web:
+  image: nginx
+  replicas: 1
+  service:
+    targetPort: 80
+  persistence:
+    enabled: true
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
   env:
-  - name: ENV1
-    value: Hi
-  image:
-    repository: nginx
-    tag: latest
+    - name: ENV1
+      value: Hi
   ingress:
     enabled: false
     host: www.example.com
-  persistence:
-    accessModes:
-    - ReadWriteOnce
-    enabled: true
-    size: 1Gi
-  replicaCount: 1
-  service:
-    enabled: true
-    port: 80

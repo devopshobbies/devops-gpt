@@ -82,14 +82,18 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
             for each template, initialize this file => service.yaml.
             set replicas of pods following this dict format : {replicas_}.
             set persistance (pvc) of pods following this dict fomrat : {persistance}
-            set environment variables of pods like this dict format : {envs}
+            set environment variables of pods following this dict format : {envs} based on helm standard environment setting.(
+                for example something like that:
+                    env:
+                     name=value
+            )
             initialize ingress with a default host for pod if the pod ingress is true in here {ingress_}.
             
             if environment variable is considered for pod, then create secret.yaml in the related template.
+            creating secret.yaml based on environemt variables in the {envs} in the template is very important.
 
             please set a something default in chart.yaml and values.yaml based on the requirement.
-            please generate helpers.tpl for each template and initialize resources and set a label for reach resource.
-
+           
             just Generate a python code without any additional notes or ```python3 entry
             """
     return prompt

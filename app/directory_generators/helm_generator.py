@@ -1,21 +1,43 @@
 import os
 
-# Define project structure
-project_name = "app/media/MyHelm"
-directories = ["charts", "templates/web"]
-files = ["Chart.yaml", "values.yaml"]
-template_files = ["service.yaml", "secret.yaml"]
-chart_content = """apiVersion: v2
-name: my-helm-chart
+# Define the project structure
+project_name = "MyHelm"
+base_path = f"app/media/{project_name}"
+
+directories = [
+    "charts/",
+    "templates/web/"
+]
+
+files = [
+    "Chart.yaml",
+    "values.yaml",
+    "templates/web/service.yaml",
+    "templates/web/deployment.yaml",
+    "templates/web/secret.yaml"  # Only if there are environment variables
+]
+
+# Create the directories
+for directory in directories:
+    os.makedirs(os.path.join(base_path, directory), exist_ok=True)
+
+# Create the Chart.yaml file
+chart_yaml_content = """apiVersion: v2
+name: mychart
 description: A Helm chart for Kubernetes
 version: 0.1.0
 """
-values_content = """web:
+with open(os.path.join(base_path, "Chart.yaml"), "w") as chart_file:
+    chart_file.write(chart_yaml_content)
+
+# Create the values.yaml file
+values_yaml_content = """web:
   image: nginx
-  replicas: 1
   service:
-    port: 80
+    targetPort: 80
+  replicas: 1
   persistence:
+    enabled: true
     size: 1Gi
     accessModes:
       - ReadWriteOnce
@@ -26,42 +48,71 @@ values_content = """web:
     enabled: false
     host: www.example.com
 """
+with open(os.path.join(base_path, "values.yaml"), "w") as values_file:
+    values_file.write(values_yaml_content)
 
-# Create project directories and files
-os.makedirs(project_name, exist_ok=True)
-for directory in directories:
-    os.makedirs(os.path.join(project_name, directory), exist_ok=True)
-
-for file in files:
-    with open(os.path.join(project_name, file), 'w') as f:
-        if file == "Chart.yaml":
-            f.write(chart_content)
-        elif file == "values.yaml":
-            f.write(values_content)
-
-# Create template files
-for template in directories[1:]:
-    for template_file in template_files:
-        with open(os.path.join(project_name, template, template_file), 'w') as f:
-            if template_file == "service.yaml":
-                f.write("""apiVersion: v1
+# Create service.yaml file
+service_yaml_content = """apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "{{ .Chart.Name }}.fullname" . }}
+  name: web
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.web.service.port }}
-      targetPort: {{ .Values.web.service.port }}
+    - port: 80
+      targetPort: {{ .Values.web.service.targetPort }}
   selector:
-    app: {{ include "{{ .Chart.Name }}.fullname" . }}
-""")
-            elif template_file == "secret.yaml":
-                f.write("""apiVersion: v1
+    app: {{ .Release.Name }}
+"""
+
+with open(os.path.join(base_path, "templates/web/service.yaml"), "w") as service_file:
+    service_file.write(service_yaml_content)
+
+# Create deployment.yaml file
+deployment_yaml_content = """apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: {{ .Values.web.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: web
+          image: {{ .Values.web.image }}
+          ports:
+            - containerPort: {{ .Values.web.service.targetPort }}
+          env:
+            - name: ENV1
+              value: {{ .Values.web.env[0].value }}
+      volumeClaimTemplates:
+        - metadata:
+            name: web-pvc
+          spec:
+            accessModes: {{ .Values.web.persistence.accessModes | toYaml }}
+            resources:
+              requests:
+                storage: {{ .Values.web.persistence.size }}
+"""
+
+with open(os.path.join(base_path, "templates/web/deployment.yaml"), "w") as deployment_file:
+    deployment_file.write(deployment_yaml_content)
+
+# Create secret.yaml file
+secret_yaml_content = """apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "{{ .Chart.Name }}.fullname" . }}-secret
+  name: web-secret
 type: Opaque
 data:
-  ENV1: {{ .Values.web.env | toJson | b64enc | quote }}
-""")
+  ENV1: aGl
+"""
+
+with open(os.path.join(base_path, "templates/web/secret.yaml"), "w") as secret_file:
+    secret_file.write(secret_yaml_content)

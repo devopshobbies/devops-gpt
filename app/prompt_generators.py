@@ -88,10 +88,12 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
                      name=value
             )
             initialize ingress with a default host for pod if the pod ingress is true in here {ingress_}.
+
+
             
             if environment variable is considered for pod, then create secret.yaml in the related template.
             creating secret.yaml based on environemt variables in the {envs} in the template is very important.
-
+            creating deployment.yaml based on our pods in the template is very important.
             please set a something default in chart.yaml and values.yaml based on the requirement.
            
             just Generate a python code without any additional notes or ```python3 entry

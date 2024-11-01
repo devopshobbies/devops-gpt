@@ -1,6 +1,6 @@
 apiVersion: v2
 name: devopsgpt
-description: The Helm chart for DevOps GPT
+description: The Helm chart for DevOps ChatBot
 type: application
 version: 1.0.0
 appVersion: "1.0.0"

@@ -9,6 +9,10 @@ class Environment(BaseModel):
     name:str = "ENV1"
     value:str = "Hi"
 
+class Ingress(BaseModel):
+    enabled:bool = False
+    host:str = "www.example.com"
+
 class Pod(BaseModel):
     name:str = "web"
     image:str = "nginx"
@@ -17,7 +21,7 @@ class Pod(BaseModel):
     persistance: Persistance
     environment: List[Environment]
     stateless:bool = True
-    ingress:bool = False
+    ingress: Ingress
 
 class HelmTemplateGeneration(BaseModel):
     api_version:int = 2

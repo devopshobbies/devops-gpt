@@ -1,1 +1,11 @@
-# service.yaml for web
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "{{ .Chart.Name }}.fullname" . }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.web.service.port }}
+      targetPort: {{ .Values.web.service.port }}
+  selector:
+    app: {{ include "{{ .Chart.Name }}.fullname" . }}

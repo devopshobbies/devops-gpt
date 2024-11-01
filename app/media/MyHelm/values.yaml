@@ -2,9 +2,8 @@ web:
   image: nginx
   replicas: 1
   service:
-    targetPort: 80
+    port: 80
   persistence:
-    enabled: true
     size: 1Gi
     accessModes:
       - ReadWriteOnce

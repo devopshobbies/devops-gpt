@@ -1,30 +1,22 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "{project_name}.name" . }}
+  name: {{ .Release.Name }}-web
 spec:
-  replicas: {{ .Values.web.replicaCount }}
+  replicas: {{ .Values.web.replicas }}
   selector:
     matchLabels:
-      app: {{ include "{project_name}.name" . }}
+      app: {{ .Release.Name }}-web
   template:
     metadata:
       labels:
-        app: {{ include "{project_name}.name" . }}
+        app: {{ .Release.Name }}-web
     spec:
       containers:
-        - name: {{ include "{project_name}.name" . }}
+        - name: web
           image: {{ .Values.web.image }}
           ports:
-            - containerPort: {{ .Values.web.service.port }}
-      {{- if .Values.web.persistence.enabled }}
-      volumeClaimTemplates:
-      - metadata:
-          name: {{ include "{project_name}.name" . }}-pvc
-        spec:
-          accessModes: {{ .Values.web.persistence.accessModes | toJson }}
-          resources:
-            requests:
-              storage: {{ .Values.web.persistence.size }}
-      {{- end }}
+            - containerPort: {{ .Values.web.targetPort }}
+          env:
+            - name: {{ .Values.web.env[0].name }}
+              value: {{ .Values.web.env[0].value }}

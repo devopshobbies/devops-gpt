@@ -1,11 +1,11 @@
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "{project_name}.name" . }}
+  name: {{ .Release.Name }}-web
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.web.service.port }}
+    - port: 80
+      targetPort: {{ .Values.web.targetPort }}
   selector:
-    app: {{ include "{project_name}.name" . }}
+    app: {{ .Release.Name }}-web

@@ -1,5 +1,4 @@
 apiVersion: v2
+name: MyHelm
 description: A Helm chart for Kubernetes
-name: my-helm-chart
-type: application
 version: 0.1.0

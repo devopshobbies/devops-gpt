@@ -17,6 +17,7 @@ class Pod(BaseModel):
     persistance: Persistance
     environment: List[Environment]
     stateless:bool = True
+    ingress:bool = False
 
 class HelmTemplateGeneration(BaseModel):
     api_version:int = 2

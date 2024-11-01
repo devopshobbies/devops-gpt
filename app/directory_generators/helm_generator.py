@@ -1,111 +1,86 @@
 import os
-import yaml
 
-# Define the project directories and files
-project_name = "app/media/MyHelm"
-dirs = ["charts", "templates/web"]
-files = ["Chart.yaml", "values.yaml", "templates/web/service.yaml", "templates/web/deployment.yaml", "templates/web/secret.yaml"]
+# Define the project structure
+project_name = "MyHelm"
+base_path = "app/media/"
+project_path = os.path.join(base_path, project_name)
 
-# Chart.yaml content
-chart_yaml_content = {
-    "apiVersion": "v2",
-    "name": "my-helm-chart",
-    "version": "0.1.0",
-    "description": "A Helm chart for Kubernetes",
-    "type": "application",
-}
+directories = [
+    "charts",
+    "templates/web"
+]
 
-# values.yaml content
-values_yaml_content = {
-    "web": {
-        "image": "nginx",
-        "replicaCount": 1,
-        "service": {
-            "port": 80,
-        },
-        "persistence": {
-            "enabled": True,
-            "size": "1Gi",
-            "accessModes": ["ReadWriteOnce"],
-        },
-        "env": {
-            "ENV1": "Hi",
-        },
-    }
-}
-
-# Create the project structure
-for directory in dirs:
-    os.makedirs(os.path.join(project_name, directory), exist_ok=True)
-
-# Write Chart.yaml
-with open(os.path.join(project_name, "Chart.yaml"), "w") as chart_file:
-    yaml.dump(chart_yaml_content, chart_file)
-
-# Write values.yaml
-with open(os.path.join(project_name, "values.yaml"), "w") as values_file:
-    yaml.dump(values_yaml_content, values_file)
-
-# Write service.yaml
-service_yaml_content = """
-apiVersion: v1
+files_and_contents = {
+    "Chart.yaml": """apiVersion: v2
+name: MyHelm
+description: A Helm chart for Kubernetes
+version: 0.1.0
+""",
+    "values.yaml": """web:
+  image: nginx
+  targetPort: 80
+  replicas: 1
+  persistence:
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
+  env:
+    - name: ENV1
+      value: Hi
+  ingress:
+    enabled: true
+  stateless: true
+""",
+    "templates/web/service.yaml": """apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "{project_name}.name" . }}
+  name: {{ .Release.Name }}-web
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.web.service.port }}
+    - port: 80
+      targetPort: {{ .Values.web.targetPort }}
   selector:
-    app: {{ include "{project_name}.name" . }}
-"""
-with open(os.path.join(project_name, "templates/web/service.yaml"), "w") as service_file:
-    service_file.write(service_yaml_content)
-
-# Write deployment.yaml
-deployment_yaml_content = """
-apiVersion: apps/v1
+    app: {{ .Release.Name }}-web
+""",
+    "templates/web/deployment.yaml": """apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "{project_name}.name" . }}
+  name: {{ .Release.Name }}-web
 spec:
-  replicas: {{ .Values.web.replicaCount }}
+  replicas: {{ .Values.web.replicas }}
   selector:
     matchLabels:
-      app: {{ include "{project_name}.name" . }}
+      app: {{ .Release.Name }}-web
   template:
     metadata:
       labels:
-        app: {{ include "{project_name}.name" . }}
+        app: {{ .Release.Name }}-web
     spec:
       containers:
-        - name: {{ include "{project_name}.name" . }}
+        - name: web
           image: {{ .Values.web.image }}
           ports:
-            - containerPort: {{ .Values.web.service.port }}
-      {{- if .Values.web.persistence.enabled }}
-      volumeClaimTemplates:
-      - metadata:
-          name: {{ include "{project_name}.name" . }}-pvc
-        spec:
-          accessModes: {{ .Values.web.persistence.accessModes | toJson }}
-          resources:
-            requests:
-              storage: {{ .Values.web.persistence.size }}
-      {{- end }}
-"""
-with open(os.path.join(project_name, "templates/web/deployment.yaml"), "w") as deployment_file:
-    deployment_file.write(deployment_yaml_content)
-
-# Write secret.yaml
-secret_yaml_content = """
-apiVersion: v1
+            - containerPort: {{ .Values.web.targetPort }}
+          env:
+            - name: {{ .Values.web.env[0].name }}
+              value: {{ .Values.web.env[0].value }}
+""",
+    "templates/web/secret.yaml": """apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "{project_name}.name" . }}-secret
+  name: {{ .Release.Name }}-web-secret
 type: Opaque
 data:
-  ENV1: {{ .Values.web.env.ENV1 | b64enc | quote }}
+  ENV1: {{ .Values.web.env[0].value | b64enc | quote }}
 """
-with open(os.path.join(project_name, "templates/web/secret.yaml"), "w") as secret_file:
-    secret_file.write(secret_yaml_content)
+}
+
+# Create directories and files
+os.makedirs(project_path, exist_ok=True)
+for directory in directories:
+    os.makedirs(os.path.join(project_path, directory), exist_ok=True)
+
+for file_path, content in files_and_contents.items():
+    with open(os.path.join(project_path, file_path), 'w') as f:
+        f.write(content)

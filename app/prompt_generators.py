@@ -65,6 +65,7 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
     persistance = [{i.name:i.persistance} for i in input.pods]
     envs = [{i.name:i.environment} for i in input.pods]
     status =  [{i.name:i.stateless} for i in input.pods]
+    ingress_ = [{i.name:i.ingress} for i in input.pods]
 
     prompt = f"""
             generate a correct python code to generate a helm project structure (project name: app/media/MyHelm) 
@@ -82,6 +83,7 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
             set replicas of pods following this dict format : {replicas_}.
             set persistance (pvc) of pods following this dict fomrat : {persistance}
             set environment variables of pods like this dict format : {envs}
+            set ingress for pod if the pod ingress is true. here is a dict format for ingress : {ingress_}.
             create deployment.yaml in the related template if the pod stateless == true, 
             you can see each pod status here in the dict format : {status}
             if environment variable is considered for pod, then create secret.yaml in the related template.

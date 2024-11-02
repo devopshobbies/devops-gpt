@@ -2,7 +2,7 @@ helm:
 - changed-files:
   - any-glob-to-any-file: helm/**
 
-README:
+doc:
 - changed-files:
   - any-glob-to-any-file: '**/*.md'
 

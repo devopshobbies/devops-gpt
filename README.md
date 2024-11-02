@@ -28,8 +28,8 @@ and the input is something like that
 
 
 
-### directory_generator.py
-This file becomes updated when we trigger the template generation API. finally, It generates the MyTerraform directory based on user input which is a template.
+### directory_generators
+This directory becomes updated when we trigger the template generation API. finally, It generates the MyTerraform directory based on user input which is a template.
 
 
 ## ToolChain

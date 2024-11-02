@@ -37,6 +37,7 @@ This file becomes updated when we trigger the template generation API. finally, 
 2. Docker
 3. GPT-4-mini
 4. FastAPI
+5. Helm
 
 ## Pre-requisites
 1. Python

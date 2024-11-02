@@ -54,7 +54,9 @@ after that, you need to install a helm package like this:
 1. `cd /helm`
 2. `helm install chatbot . -f values.yaml` 
 
-> 
+>
+# Contributing
+please read the [Contribution guide](https://github.com/abolfazl8131/devops-gpt/blob/master/CONTRIBUTING.md)
 # Maintenance
 ** [Abolfazl Andalib](https://github.com/abolfazl8131) - abolfazlandalib@gmail.com **<br />
 ** [Mohammad Madanipour](https://github.com/mohammadll) - m.madanipourr@gmail.com **

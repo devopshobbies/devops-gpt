@@ -35,7 +35,7 @@ This directory becomes updated when we trigger the template generation API. fina
 ## ToolChain
 1. Python
 2. Docker
-3. GPT-4-mini
+3. GPT-4o-mini
 4. FastAPI
 5. Helm
 

@@ -1,7 +1,7 @@
 name: Docker Health Check
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - master
       
@@ -9,8 +9,13 @@ jobs:
  docker_health_check:
     runs-on: ubuntu-latest
     steps:
-    
-    - uses: actions/checkout@v4
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+      
     - name: install requirements
       run: pip install -r requirements.txt
       

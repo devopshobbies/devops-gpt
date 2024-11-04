@@ -10,5 +10,8 @@ spec:
     - port: {{ .Values.web.service.port }}
       targetPort: {{ .Values.web.service.targetPort }}
       protocol: {{ .Values.web.service.protocol }}
+      {{- if eq .Values.web.service.type "NodePort" }}
+      nodePort: {{ .Values.web.service.nodePort }}
+      {{- end }}
   selector:
     {{- include "web.labels" . | nindent 4 }}

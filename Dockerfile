@@ -1,4 +1,4 @@
-FROM python:3.11-alpine
+FRO python:3.11-alpine
 RUN apk add --no-cache shadow
 RUN useradd -ms /bin/bash admin
 WORKDIR /code

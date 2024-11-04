@@ -1,24 +1,17 @@
 name: Realse Version
+
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
       - master
 
 jobs:
   releaseGithub:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
     permissions:
       contents: write
       pull-requests: write
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.merge_commit_sha }}
-        fetch-depth: '0'
-
     - name: Bump version and push tag
       id: bump
       uses: mathieudutour/github-tag-action@v6.2

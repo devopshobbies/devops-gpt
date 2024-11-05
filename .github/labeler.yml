@@ -2,6 +2,10 @@ helm:
 - changed-files:
   - any-glob-to-any-file: helm/**
 
+web-ui:
+- changed-files:
+  - any-glob-to-any-file: web/**
+
 doc:
 - changed-files:
   - any-glob-to-any-file: '**/*.md'

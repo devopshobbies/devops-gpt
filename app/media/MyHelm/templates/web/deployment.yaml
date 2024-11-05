@@ -1,30 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: {{ include "my-helm.fullname" . }}
 spec:
   replicas: {{ .Values.web.replicas }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ include "my-helm.name" . }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ include "my-helm.name" . }}
     spec:
       containers:
-        - name: web
+        - name: {{ include "my-helm.name" . }}
           image: {{ .Values.web.image }}
           ports:
-            - containerPort: {{ .Values.web.service.targetPort }}
+            - containerPort: {{ .Values.web.service.port }}
           env:
             - name: ENV1
-              value: {{ .Values.web.env[0].value }}
-      volumeClaimTemplates:
-        - metadata:
-            name: web-pvc
-          spec:
-            accessModes: {{ .Values.web.persistence.accessModes | toYaml }}
-            resources:
-              requests:
-                storage: {{ .Values.web.persistence.size }}
+              value: Hi

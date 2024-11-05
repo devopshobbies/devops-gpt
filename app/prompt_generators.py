@@ -29,7 +29,7 @@ def IaC_installation_generator(input : IaCInstallationInput) -> str:
 
     prompt = f"""
                 generate a clear shell acript about installation {input.service} in {input.os} based on {input.service} document.
-                without any additional note. just script for installation.
+                without any additional note. just script for installation. please consider new lines with out any additional comment.
 
             """
     return prompt
@@ -95,6 +95,8 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
             creating secret.yaml based on environemt variables in the {envs} in the template is very important.
             creating deployment.yaml based on our pods in the template is very important.
             please set a something default in chart.yaml and values.yaml based on the requirement.
+
+            in the final stage, put helpers.tpl in all templates and set the content based on information given.
            
             just Generate a python code without any additional notes or ```python3 entry
             """

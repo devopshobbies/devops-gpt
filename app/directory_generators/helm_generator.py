@@ -1,43 +1,26 @@
 import os
 
-# Define the project structure
-project_name = "MyHelm"
-base_path = f"app/media/{project_name}"
+project_name = "app/media/MyHelm"
 
+# Define the directory structure and file content
 directories = [
-    "charts/",
-    "templates/web/"
+    "charts",
+    "templates/web"
 ]
 
-files = [
-    "Chart.yaml",
-    "values.yaml",
-    "templates/web/service.yaml",
-    "templates/web/deployment.yaml",
-    "templates/web/secret.yaml"  # Only if there are environment variables
-]
-
-# Create the directories
-for directory in directories:
-    os.makedirs(os.path.join(base_path, directory), exist_ok=True)
-
-# Create the Chart.yaml file
-chart_yaml_content = """apiVersion: v2
-name: mychart
+files = {
+    "Chart.yaml": """apiVersion: v2
+name: my-helm
 description: A Helm chart for Kubernetes
 version: 0.1.0
-"""
-with open(os.path.join(base_path, "Chart.yaml"), "w") as chart_file:
-    chart_file.write(chart_yaml_content)
-
-# Create the values.yaml file
-values_yaml_content = """web:
+appVersion: "1.0"
+""",
+    "values.yaml": """web:
   image: nginx
   service:
-    targetPort: 80
+    port: 80
   replicas: 1
   persistence:
-    enabled: true
     size: 1Gi
     accessModes:
       - ReadWriteOnce
@@ -47,72 +30,71 @@ values_yaml_content = """web:
   ingress:
     enabled: false
     host: www.example.com
-"""
-with open(os.path.join(base_path, "values.yaml"), "w") as values_file:
-    values_file.write(values_yaml_content)
-
-# Create service.yaml file
-service_yaml_content = """apiVersion: v1
+""",
+    "templates/web/service.yaml": """apiVersion: v1
 kind: Service
 metadata:
-  name: web
+  name: {{ include \"my-helm.fullname\" . }}
 spec:
   type: ClusterIP
   ports:
-    - port: 80
-      targetPort: {{ .Values.web.service.targetPort }}
+    - port: {{ .Values.web.service.port }}
   selector:
-    app: {{ .Release.Name }}
-"""
-
-with open(os.path.join(base_path, "templates/web/service.yaml"), "w") as service_file:
-    service_file.write(service_yaml_content)
-
-# Create deployment.yaml file
-deployment_yaml_content = """apiVersion: apps/v1
+    app: {{ include \"my-helm.name\" . }}
+""",
+    "templates/web/deployment.yaml": """apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: {{ include \"my-helm.fullname\" . }}
 spec:
   replicas: {{ .Values.web.replicas }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ include \"my-helm.name\" . }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ include \"my-helm.name\" . }}
     spec:
       containers:
-        - name: web
+        - name: {{ include \"my-helm.name\" . }}
           image: {{ .Values.web.image }}
           ports:
-            - containerPort: {{ .Values.web.service.targetPort }}
+            - containerPort: {{ .Values.web.service.port }}
           env:
             - name: ENV1
-              value: {{ .Values.web.env[0].value }}
-      volumeClaimTemplates:
-        - metadata:
-            name: web-pvc
-          spec:
-            accessModes: {{ .Values.web.persistence.accessModes | toYaml }}
-            resources:
-              requests:
-                storage: {{ .Values.web.persistence.size }}
-"""
-
-with open(os.path.join(base_path, "templates/web/deployment.yaml"), "w") as deployment_file:
-    deployment_file.write(deployment_yaml_content)
-
-# Create secret.yaml file
-secret_yaml_content = """apiVersion: v1
+              value: Hi
+""",
+    "templates/web/secret.yaml": """apiVersion: v1
 kind: Secret
 metadata:
-  name: web-secret
+  name: {{ include \"my-helm.fullname\" . }}-secret
 type: Opaque
 data:
-  ENV1: aGl
-"""
+  ENV1: {{ .Values.web.env[0].value | b64enc | quote }}
+""",
+    "templates/web/helpers.tpl": """{{/*
+Helper Template
+*/}}
+{{- define "my-helm.name" -}}
+{{- .Chart.Name | replace \"-\" \"_\" | quote -}}
+{{- end -}}
 
-with open(os.path.join(base_path, "templates/web/secret.yaml"), "w") as secret_file:
-    secret_file.write(secret_yaml_content)
+{{- define "my-helm.fullname" -}}
+{{- if .Chart.Name -}}
+{{- .Release.Name | default \"my-release\" | lower | quote }}-{{ .Chart.Name | lower | quote }}
+{{- else -}}
+{{- .Release.Name | default \"my-release\" | lower | quote }}
+{{- end -}}
+{{- end -}}
+"""
+}
+
+# Create directories
+for directory in directories:
+    os.makedirs(os.path.join(project_name, directory), exist_ok=True)
+
+# Create files
+for file_path, content in files.items():
+    with open(os.path.join(project_name, file_path), 'w') as f:
+        f.write(content)

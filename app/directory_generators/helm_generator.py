@@ -1,24 +1,39 @@
 import os
 
-project_name = "app/media/MyHelm"
+class Persistence:
+    def __init__(self, size, accessModes):
+        self.size = size
+        self.accessModes = accessModes
 
-# Define the directory structure and file content
-directories = [
-    "charts",
-    "templates/web"
-]
+class Environment:
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
 
-files = {
-    "Chart.yaml": """apiVersion: v2
-name: my-helm
+class Ingress:
+    def __init__(self, enabled, host):
+        self.enabled = enabled
+        self.host = host
+
+def create_file_with_content(filepath, content):
+    with open(filepath, 'w') as f:
+        f.write(content)
+
+def generate_helm_project_structure():
+    project_name = 'app/media/MyHelm'
+    
+    os.makedirs(os.path.join(project_name, 'charts'), exist_ok=True)
+    os.makedirs(os.path.join(project_name, 'templates', 'web'), exist_ok=True)
+
+    chart_yaml_content = """apiVersion: v2
+name: myhelm-chart
 description: A Helm chart for Kubernetes
 version: 0.1.0
-appVersion: "1.0"
-""",
-    "values.yaml": """web:
+"""
+    create_file_with_content(os.path.join(project_name, 'Chart.yaml'), chart_yaml_content)
+
+    values_yaml_content = """web:
   image: nginx
-  service:
-    port: 80
   replicas: 1
   persistence:
     size: 1Gi
@@ -30,71 +45,78 @@ appVersion: "1.0"
   ingress:
     enabled: false
     host: www.example.com
-""",
-    "templates/web/service.yaml": """apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include \"my-helm.fullname\" . }}
-spec:
-  type: ClusterIP
-  ports:
-    - port: {{ .Values.web.service.port }}
-  selector:
-    app: {{ include \"my-helm.name\" . }}
-""",
-    "templates/web/deployment.yaml": """apiVersion: apps/v1
+"""
+    create_file_with_content(os.path.join(project_name, 'values.yaml'), values_yaml_content)
+
+    deployment_yaml_content = """apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include \"my-helm.fullname\" . }}
+  name: {{ include "myhelm-chart.fullname" . }}
 spec:
   replicas: {{ .Values.web.replicas }}
   selector:
     matchLabels:
-      app: {{ include \"my-helm.name\" . }}
+      app: {{ include "myhelm-chart.name" . }}
   template:
     metadata:
       labels:
-        app: {{ include \"my-helm.name\" . }}
+        app: {{ include "myhelm-chart.name" . }}
     spec:
       containers:
-        - name: {{ include \"my-helm.name\" . }}
-          image: {{ .Values.web.image }}
-          ports:
-            - containerPort: {{ .Values.web.service.port }}
-          env:
-            - name: ENV1
-              value: Hi
-""",
-    "templates/web/secret.yaml": """apiVersion: v1
+      - name: {{ include "myhelm-chart.name" . }}
+        image: {{ .Values.web.image }}
+        ports:
+        - containerPort: 80
+        env:
+        {{- range .Values.web.env }}
+        - name: {{ .name }}
+          value: {{ .value }}
+        {{- end }}
+"""
+    create_file_with_content(os.path.join(project_name, 'templates', 'web', 'deployment.yaml'), deployment_yaml_content)
+
+    service_yaml_content = """apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "myhelm-chart.fullname" . }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: {{ include "myhelm-chart.name" . }}
+"""
+    create_file_with_content(os.path.join(project_name, 'templates', 'web', 'service.yaml'), service_yaml_content)
+
+    secret_yaml_content = """apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include \"my-helm.fullname\" . }}-secret
+  name: {{ include "myhelm-chart.fullname" . }}-env
 type: Opaque
 data:
-  ENV1: {{ .Values.web.env[0].value | b64enc | quote }}
-""",
-    "templates/web/helpers.tpl": """{{/*
-Helper Template
+  ENV1: {{ .Values.web.env | json | b64enc | quote }}
+"""
+    create_file_with_content(os.path.join(project_name, 'templates', 'web', 'secret.yaml'), secret_yaml_content)
+
+    helpers_tpl_content = """{{/*
+Expand the name of the chart.
 */}}
-{{- define "my-helm.name" -}}
-{{- .Chart.Name | replace \"-\" \"_\" | quote -}}
+{{- define "myhelm-chart.name" -}}
+{{- if .Chart.Name -}}
+{{ .Chart.Name | quote }}
+{{- else -}}
+myhelm-chart
+{{- end -}}
 {{- end -}}
 
-{{- define "my-helm.fullname" -}}
-{{- if .Chart.Name -}}
-{{- .Release.Name | default \"my-release\" | lower | quote }}-{{ .Chart.Name | lower | quote }}
-{{- else -}}
-{{- .Release.Name | default \"my-release\" | lower | quote }}
-{{- end -}}
+{{/*
+Return the full name of the chart.
+*/}}
+{{- define "myhelm-chart.fullname" -}}
+{{ printf "%s-%s" .Release.Name (include "myhelm-chart.name" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 """
-}
+    create_file_with_content(os.path.join(project_name, 'templates', 'web', 'helpers.tpl'), helpers_tpl_content)
 
-# Create directories
-for directory in directories:
-    os.makedirs(os.path.join(project_name, directory), exist_ok=True)
-
-# Create files
-for file_path, content in files.items():
-    with open(os.path.join(project_name, file_path), 'w') as f:
-        f.write(content)
+generate_helm_project_structure()

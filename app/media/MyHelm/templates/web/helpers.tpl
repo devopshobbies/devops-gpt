@@ -1,14 +1,17 @@
 {{/*
-Helper Template
+Expand the name of the chart.
 */}}
-{{- define "my-helm.name" -}}
-{{- .Chart.Name | replace "-" "_" | quote -}}
+{{- define "myhelm-chart.name" -}}
+{{- if .Chart.Name -}}
+{{ .Chart.Name | quote }}
+{{- else -}}
+myhelm-chart
+{{- end -}}
 {{- end -}}
 
-{{- define "my-helm.fullname" -}}
-{{- if .Chart.Name -}}
-{{- .Release.Name | default "my-release" | lower | quote }}-{{ .Chart.Name | lower | quote }}
-{{- else -}}
-{{- .Release.Name | default "my-release" | lower | quote }}
-{{- end -}}
+{{/*
+Return the full name of the chart.
+*/}}
+{{- define "myhelm-chart.fullname" -}}
+{{ printf "%s-%s" .Release.Name (include "myhelm-chart.name" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}

@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "my-helm.fullname" . }}
+  name: {{ include "myhelm-chart.fullname" . }}
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.web.service.port }}
+    - port: 80
+      targetPort: 80
   selector:
-    app: {{ include "my-helm.name" . }}
+    app: {{ include "myhelm-chart.name" . }}

@@ -4,7 +4,6 @@ web:
     targetPort: 80
   replicas: 1
   persistence:
-    enabled: true
     size: 1Gi
     accessModes:
       - ReadWriteOnce

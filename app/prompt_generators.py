@@ -29,7 +29,7 @@ def IaC_installation_generator(input : IaCInstallationInput) -> str:
 
     prompt = f"""
                 generate a clear shell acript about installation {input.service} in {input.os} based on {input.service} document.
-                without any additional note. just script for installation.
+                without any additional note. just script for installation. please consider new lines with out any additional comment.
 
             """
     return prompt
@@ -67,9 +67,10 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
     status =  [{i.name:i.stateless} for i in input.pods]
     ingress_ = [{i.name:i.ingress} for i in input.pods]
 
-    prompt = f"""
+    prompt = f"""  
+    
             generate a correct python code to generate a helm project structure (project name: app/media/MyHelm) 
-            based on the latest version of helm chart. 
+            based on the latest version of helm chart. Only provide Python code, no explanations or markdown formatting.
             just generate a code to generate a folder as project template. don't consider base_dir
                 
             consider these directories : [charts/,templates/]
@@ -95,8 +96,8 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
             creating secret.yaml based on environemt variables in the {envs} in the template is very important.
             creating deployment.yaml based on our pods in the template is very important.
             please set a something default in chart.yaml and values.yaml based on the requirement.
-           
-            just Generate a python code without any additional notes or ```python3 entry
+
+            in the final stage, put helpers.tpl in all templates and set the content based on information given.
             """
     return prompt
 

@@ -10,6 +10,14 @@ doc:
 - changed-files:
   - any-glob-to-any-file: '**/*.md'
 
+web:
+- changed-files:
+  - any-glob-to-any-file: '**/web/**'
+
+test:
+- changed-files:
+  - any-glob-to-any-file: '**/app/tests/**'
+
 docker-compose:
 - changed-files:
   - any-glob-to-any-file: '**/docker-compose.yml'

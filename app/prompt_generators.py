@@ -1,7 +1,6 @@
 from .models import (IaCBasicInput, 
     IaCBugfixInput,
     IaCInstallationInput, IaCTemplateGeneration,HelmTemplateGeneration)
-
 def IaC_basics_generator(input : IaCBasicInput) -> str:
 
     prompt = f"""

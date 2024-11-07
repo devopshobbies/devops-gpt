@@ -2,8 +2,6 @@ from pydantic import BaseModel, validator, ValidationError
 from typing import List, Optional
 
 from .utils import BasicInput
-
-
 class IaCBasicInput(BasicInput):
     input:str
     service:Optional[str] = 'terraform'

@@ -3,7 +3,6 @@ from openai import OpenAI
 from fastapi import HTTPException
 
 def gpt_service(prompt):
-
     try:
         client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 

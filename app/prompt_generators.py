@@ -69,7 +69,7 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
 
     prompt = f"""
             generate a correct python code to generate a helm project structure (project name: app/media/MyHelm) 
-            based on the latest version of helm chart. 
+            based on the latest version of helm chart. Only provide Python code, no explanations or markdown formatting.
             just generate a code to generate a folder as project template. don't consider base_dir
                 
             consider these directories : [charts/,templates/]
@@ -97,8 +97,6 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
             please set a something default in chart.yaml and values.yaml based on the requirement.
 
             in the final stage, put helpers.tpl in all templates and set the content based on information given.
-           
-            just Generate a python code without any additional notes or ```python3 entry
             """
     return prompt
 

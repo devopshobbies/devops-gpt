@@ -50,6 +50,7 @@ class Ingress(BaseModel):
 
 
 class Pod(BaseModel):
+    
     name: str = "web"
     image: str = "nginx"
     target_port: int = 80

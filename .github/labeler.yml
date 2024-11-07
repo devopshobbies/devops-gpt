@@ -45,8 +45,8 @@ prompt:
 
 directory-generators:
 - changed-files:
-  - any-glob-to-any-file: 'app/directory_generators/*'
+  - any-glob-to-any-file: 'app/directory_generators/**'
 
 pydantic-models:
 - changed-files:
-  - any-glob-to-any-file: 'app/models/*'
+  - any-glob-to-any-file: 'app/models/**'

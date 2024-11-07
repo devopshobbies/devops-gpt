@@ -67,7 +67,8 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
     status =  [{i.name:i.stateless} for i in input.pods]
     ingress_ = [{i.name:i.ingress} for i in input.pods]
 
-    prompt = f"""
+    prompt = f"""  
+    
             generate a correct python code to generate a helm project structure (project name: app/media/MyHelm) 
             based on the latest version of helm chart. Only provide Python code, no explanations or markdown formatting.
             just generate a code to generate a folder as project template. don't consider base_dir

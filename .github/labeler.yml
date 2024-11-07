@@ -12,7 +12,7 @@ doc:
 
 unit-test:
 - changed-files:
-  - any-glob-to-any-file: '**/app/tests/**'
+  - any-glob-to-any-file: 'app/tests/**'
 
 docker-compose:
 - changed-files:
@@ -29,24 +29,24 @@ requirements:
 
 gpt:
 - changed-files:
-  - any-glob-to-any-file: '**/app/gpt_services.py'
+  - any-glob-to-any-file: 'app/gpt_services.py'
 
 services:
 - changed-files:
-  - any-glob-to-any-file: '**/app/services.py'
+  - any-glob-to-any-file: 'app/services.py'
 
 fastapi:
 - changed-files:
-  - any-glob-to-any-file: '**/app/main.py'
+  - any-glob-to-any-file: 'app/main.py'
 
 prompt:
 - changed-files:
-  - any-glob-to-any-file: '**/app/prompt_generators.py'
+  - any-glob-to-any-file: 'app/prompt_generators.py'
 
 directory-generators:
 - changed-files:
-  - any-glob-to-any-file: '**/app/directory_generators/**'
+  - any-glob-to-any-file: 'app/directory_generators/**'
 
 pydantic-models:
 - changed-files:
-  - any-glob-to-any-file: '**/app/models/**'
+  - any-glob-to-any-file: 'app/models/**'

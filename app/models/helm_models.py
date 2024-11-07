@@ -50,7 +50,6 @@ class Ingress(BaseModel):
 
 
 class Pod(BaseModel):
-    
     name: str = "web"
     image: str = "nginx"
     target_port: int = 80
@@ -59,8 +58,6 @@ class Pod(BaseModel):
     environment: List[Environment]
     stateless: bool = True
     ingress: Ingress
-
-   
 
     @validator("name")
     def validate_name(cls, value):

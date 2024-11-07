@@ -12,7 +12,7 @@ doc:
 
 unit-test:
 - changed-files:
-  - any-glob-to-any-file: 'app/tests/**'
+  - any-glob-to-any-file: 'app/tests/*.py'
 
 docker-compose:
 - changed-files:
@@ -45,8 +45,8 @@ prompt:
 
 directory-generators:
 - changed-files:
-  - any-glob-to-any-file: 'app/directory_generators/**'
+  - any-glob-to-any-file: 'app/directory_generators/*.py'
 
 pydantic-models:
 - changed-files:
-  - any-glob-to-any-file: 'app/models/**'
+  - any-glob-to-any-file: 'app/models/*.py'

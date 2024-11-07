@@ -10,11 +10,7 @@ doc:
 - changed-files:
   - any-glob-to-any-file: '**/*.md'
 
-web:
-- changed-files:
-  - any-glob-to-any-file: '**/web/**'
-
-test:
+unit-test:
 - changed-files:
   - any-glob-to-any-file: '**/app/tests/**'
 
@@ -47,3 +43,10 @@ prompt:
 - changed-files:
   - any-glob-to-any-file: '**/app/prompt_generators.py'
 
+directory-generators:
+- changed-files:
+  - any-glob-to-any-file: '**/app/directory_generators/**'
+
+pydantic-models:
+- changed-files:
+  - any-glob-to-any-file: '**/app/models/**'

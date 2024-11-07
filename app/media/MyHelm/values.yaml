@@ -1,5 +1,7 @@
 web:
   image: nginx
+  service:
+    targetPort: 80
   replicas: 1
   persistence:
     size: 1Gi

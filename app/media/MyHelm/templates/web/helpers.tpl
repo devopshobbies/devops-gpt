@@ -1,17 +1,17 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "myhelm-chart.name" -}}
-{{- if .Chart.Name -}}
-{{ .Chart.Name | quote }}
-{{- else -}}
-myhelm-chart
-{{- end -}}
+{{- define "MyHelm.name" -}}
+{{- .Chart.Name | replace "-" "_" | lower -}}
 {{- end -}}
 
 {{/*
-Return the full name of the chart.
+Create a default fully qualified domain name
 */}}
-{{- define "myhelm-chart.fullname" -}}
-{{ printf "%s-%s" .Release.Name (include "myhelm-chart.name" .) | trunc 63 | trimSuffix "-" }}
+{{- define "MyHelm.fullname" -}}
+{{- if .Chart.Name -}}
+{{- .Release.Name | lower | replace "-" "_" | trimSuffix "-" | append (include "MyHelm.name" . | lower) | toLower -}}
+{{- else -}}
+{{- .Release.Name | lower -}}
+{{- end -}}
 {{- end -}}

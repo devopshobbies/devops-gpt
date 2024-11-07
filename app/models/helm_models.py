@@ -26,13 +26,13 @@ class Environment(BaseModel):
     @validator("name")
     def validate_name(cls, value):
         if not value:
-            raise ValueError("Name cannot be empty.")
+            raise ValueError("Name is str")
         return value
 
     @validator("value")
     def validate_value(cls, value):
         if not value:
-            raise ValueError("Value cannot be empty.")
+            raise ValueError("Value is str")
         return value
 
 class Ingress(BaseModel):
@@ -42,10 +42,12 @@ class Ingress(BaseModel):
     @validator("host")
     def validate_host(cls, value):
         if not value:
-            raise ValueError("Host cannot be empty.")
-        if not isinstance(value, str):
             raise ValueError("Host must be a string.")
         return value
+
+    
+
+
 
 class Pod(BaseModel):
     name: str = "web"
@@ -56,17 +58,19 @@ class Pod(BaseModel):
     environment: List[Environment]
     stateless: bool = True
     ingress: Ingress
-    
+
+   
+
     @validator("name")
     def validate_name(cls, value):
         if not value:
-            raise ValueError("Name cannot be empty.")
+            raise ValueError("Name is str")
         return value
 
     @validator("image")
     def validate_image(cls, value):
         if not value:
-            raise ValueError("Image cannot be empty.")
+            raise ValueError("Image is str")
         return value
     
     @validator("target_port")

@@ -14,7 +14,6 @@ def write_basic(request,output):
 
 
 def write_bugfix(request,output):
-
     data = {
         'bug_description':request.bug_description,
         'service':request.service,

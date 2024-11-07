@@ -1,14 +1,17 @@
 {{/*
-Helper Template
+Expand the name of the chart.
 */}}
-{{- define "my-helm.name" -}}
-{{- .Chart.Name | replace "-" "_" | quote -}}
+{{- define "MyHelm.name" -}}
+{{- .Chart.Name | replace "-" "_" | lower -}}
 {{- end -}}
 
-{{- define "my-helm.fullname" -}}
+{{/*
+Create a default fully qualified domain name
+*/}}
+{{- define "MyHelm.fullname" -}}
 {{- if .Chart.Name -}}
-{{- .Release.Name | default "my-release" | lower | quote }}-{{ .Chart.Name | lower | quote }}
+{{- .Release.Name | lower | replace "-" "_" | trimSuffix "-" | append (include "MyHelm.name" . | lower) | toLower -}}
 {{- else -}}
-{{- .Release.Name | default "my-release" | lower | quote }}
+{{- .Release.Name | lower -}}
 {{- end -}}
 {{- end -}}

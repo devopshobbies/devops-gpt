@@ -7,7 +7,7 @@ class Persistance(BaseModel):
 
 class Environment(BaseModel):
     name:str = "ENV1"
-    value:str = "Hi"
+    value:str = "VALUE1"
 
 class Ingress(BaseModel):
     enabled:bool = False

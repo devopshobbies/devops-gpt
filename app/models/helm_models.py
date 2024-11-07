@@ -59,6 +59,7 @@ class Pod(BaseModel):
     stateless: bool = True
     ingress: Ingress
 
+
     @validator("name")
     def validate_name(cls, value):
         if not value:

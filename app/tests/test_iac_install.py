@@ -26,7 +26,7 @@ def test_iac_install_generation(mock_gpt_service, valid_installation_data):
     assert response.json() == {"output": mocked_gpt_response}
 
     expected_prompt = """
-        generate a clear shell acript about installation terraform in ubuntu based on terraform document.
+        generate a clear shell script about installation terraform in ubuntu based on terraform document.
         without any additional note. just script for installation.
     """
     actual_prompt = " ".join(mock_gpt_service.call_args[0][0].split())

@@ -2,7 +2,6 @@ from .utils import save_to_mongo
 import os
 import shutil
 from fastapi import HTTPException
-
 def write_basic(request,output):
 
     data = {

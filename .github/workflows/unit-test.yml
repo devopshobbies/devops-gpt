@@ -1,4 +1,4 @@
-name: Docker Health Check And Unit-tests
+name: Unit-test
 
 on:
   pull_request_target:

@@ -89,13 +89,15 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
                      name=value
             )
             initialize ingress with a default host for pod if the pod ingress is true in here {ingress_}.
-
+            set stateless in pod based on {status}. 
 
             
-            if environment variable is considered for pod, then create secret.yaml in the related template.
-            creating secret.yaml based on environemt variables in the {envs} in the template is very important.
-            creating deployment.yaml based on our pods in the template is very important.
-            please set a something default in chart.yaml and values.yaml based on the requirement.
+            Based on values.yaml, create all necessary Kubernetes templates in the templates directory:
+            if stateless is true, create deployment.yaml; if stateless is false, create statefulset.yaml.
+            If a persistence block exists, include pvc.yaml. If the ingress block is defined and ingress.enabled
+            is true, create ingress.yaml. Always create secrets.yaml for secure data storage.
+
+            Ensure each template is fully parameterized to match values from values.yaml for flexible configuration.
 
             in the final stage, put helpers.tpl in all templates and set the content based on information given.
             """

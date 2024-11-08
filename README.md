@@ -53,7 +53,13 @@ execute `sh run.sh` in your terminal
 If you want to run and use this chatbot app within your Kubernetes cluster, you can easily install it using the Helm chart provided in this repository
 
     helm install [RELEASE_NAME] helm/ -f helm/values.yaml
+# Test
 
+Run tests:
+```
+cd app
+pytest tests/
+```
 # Contributing
 please read the [Contribution guide](https://github.com/abolfazl8131/devops-gpt/blob/master/CONTRIBUTING.md)
 # Maintenance

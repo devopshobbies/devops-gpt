@@ -1,4 +1,4 @@
-name: Docker Health Check
+name: Docker Health Check And Unit-tests
 
 on:
   pull_request_target:
@@ -27,6 +27,10 @@ jobs:
         
     - name: build services
       run: docker compose build
+
+    - name: Running Unit-tests
+      run: pytest tests/
+      working-directory: ./app 
       
     - name: run services
       run: docker compose up -d

@@ -19,7 +19,7 @@ def IaC_bugfix_generator(input : IaCBugfixInput) -> str:
                 Write a clear answer to debug {input.service}
                 focusing on the version {input.version} of {input.service} and based on this bug:{input.bug_description},
                 generate a correct code that help us to solve this bug.
-                minimun length of answer is {input.min_tokens} and maximum length is {input.max_tokens}
+                minimum length of answer is {input.min_tokens} and maximum length is {input.max_tokens}
 
             """
     return prompt
@@ -28,8 +28,8 @@ def IaC_bugfix_generator(input : IaCBugfixInput) -> str:
 def IaC_installation_generator(input : IaCInstallationInput) -> str:
 
     prompt = f"""
-                generate a clear shell acript about installation {input.service} in {input.os} based on {input.service} document.
-                without any additional note. just script for installation. please consider new lines with out any additional comment.
+                generate a clear shell script about installation {input.service} in {input.os} based on {input.service} document.
+                without any additional note. just script for installation. please consider new lines without any additional comment.
 
             """
     return prompt

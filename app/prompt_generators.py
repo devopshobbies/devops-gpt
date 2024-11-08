@@ -39,7 +39,7 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
 
     prompt = f"""
                 generate a complex template for {input.service} base on standard template with project structure focus on 
-                these important points:
+                these important points, Only provide Python code, no explanations or markdown formatting.:
 
                     1 - CI pipeline integration = {input.CI_integration}
                     2 - base config is {input.base_config}

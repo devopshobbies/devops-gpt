@@ -27,13 +27,13 @@ jobs:
         
     - name: build services
       run: docker compose build
+      
+    - name: run services
+      run: docker compose up -d
 
     - name: Running Unit-tests
       run: pytest tests/
       working-directory: ./app 
-      
-    - name: run services
-      run: docker compose up -d
       
     - name: stop containers
       run: docker compose down

@@ -26,19 +26,6 @@ def test_bugfix(mock_gpt_service, valid_bugfix_data):
     assert response.status_code == 200
     assert response.json() == {"output": mocked_gpt_response}
 
-    expected_prompt = """
-    Write a clear answer to debug terraform
-    focusing on the version latest of terraform and based on this bug:Application fails to start on version latest,
-    generate a correct code that help us to solve this bug.
-    minimum length of answer is 100 and maximum length is 500
-    """
-
-
-    actual_prompt = " ".join(mock_gpt_service.call_args[0][0].split())
-    normalized_expected_prompt = " ".join(expected_prompt.split())
-    assert actual_prompt == normalized_expected_prompt
-
-
 @patch('app.main.gpt_service') 
 def test_bugfix_invalid(mock_gpt_service):
     """

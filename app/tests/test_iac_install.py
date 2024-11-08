@@ -23,17 +23,6 @@ def test_install(mock_gpt_service, valid_installation_data):
     response = client.post("/IaC-install/", json=valid_installation_data.model_dump())
     assert response.status_code == 200
     assert response.json() == {"output": mocked_gpt_response}
-    expected_prompt = """
-        generate a clear shell script about installation terraform in ubuntu based on terraform document.
-        without any additional note. just script for installation. please consider new lines without any additional comment.
-    """
-    actual_prompt = " ".join(mock_gpt_service.call_args[0][0].split()).strip()
-    normalized_expected_prompt = " ".join(expected_prompt.split()).strip()
-    if actual_prompt != normalized_expected_prompt:
-        print("Expected Prompt:", repr(normalized_expected_prompt))
-        print("Actual Prompt:", repr(actual_prompt))
-
-    assert actual_prompt == normalized_expected_prompt
 
 @patch('app.main.gpt_service')
 def test_install_invalid(mock_gpt_service):

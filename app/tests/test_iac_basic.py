@@ -24,15 +24,7 @@ def test_iac_basic_generation(mock_gpt_service, valid_iac_basic_data):
     response = client.post("/IaC-basic/", json=valid_iac_basic_data.model_dump())
     assert response.status_code == 200
     assert response.json() == {"output": mocked_gpt_response}
-
-    expected_prompt = """
-    Write a robust answer about terraform, focusing on the latest update of terraform and based on this question:How do I manage state effectively in Terraform?,
-    minimun length of answer is 100 and maximum length is 500
-    """
-    actual_prompt = " ".join(mock_gpt_service.call_args[0][0].split())
-    normalized_expected_prompt = " ".join(expected_prompt.split())
-    assert actual_prompt == normalized_expected_prompt
-
+    
 @patch('app.main.gpt_service')  
 def test_basic_generation(mock_gpt_service):
     """

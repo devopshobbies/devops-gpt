@@ -1,17 +1,13 @@
-name: Terraform CI
+name: Terraform
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -25,11 +21,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -var-file=env/dev/terraform.tfvars
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
-        env:
-          TF_VAR_region: ${{ secrets.AWS_REGION }}
-          TF_VAR_instance_type: ${{ secrets.AWS_INSTANCE_TYPE }}
-          TF_VAR_ami: ${{ secrets.AWS_AMI }}
+        run: terraform apply -auto-approve -var-file=env/dev/terraform.tfvars

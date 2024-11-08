@@ -1,12 +1,20 @@
-provider "aws" {
-  region = "us-east-1"
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+  required_version = ">= 0.12"
 }
 
-resource "aws_instance" "web" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-  
-  tags = {
-    Name = "MyEC2Instance"
-  }
+provider "aws" {
+  region = var.aws_region
+}
+
+module "ec2_module" {
+  source = "./modules/ec2-module"
+  instance_type = var.instance_type
+  ami = var.ami
+  key_name = var.key_name
 }

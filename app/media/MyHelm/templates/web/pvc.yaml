@@ -1,0 +1,11 @@
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "app.media.MyHelm.fullname" . }}-pvc
+spec:
+  accessModes:
+    - {{ .Values.web.persistence.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.web.persistence.size }}

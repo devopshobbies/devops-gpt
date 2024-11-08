@@ -1,0 +1,26 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "app.media.MyHelm.fullname" . }}
+spec:
+  serviceName: {{ include "app.media.MyHelm.fullname" . }}
+  replicas: {{ .Values.web.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "app.media.MyHelm.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "app.media.MyHelm.fullname" . }}
+    spec:
+      containers:
+        - name: web
+          image: {{ .Values.web.image }}
+          ports:
+            - containerPort: {{ .Values.web.service.port }}
+          env:
+            {{- range .Values.web.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}

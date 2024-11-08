@@ -1,129 +1,142 @@
 import os
 
-class Persistance:
-    def __init__(self, size, accessModes):
-        self.size = size
-        self.accessModes = accessModes
+# Define project structure
+project_name = 'app/media/MyHelm'
+directories = ['charts', 'templates/web']
+files = ['Chart.yaml', 'values.yaml']
+template_files = ['service.yaml', 'secrets.yaml', 'helpers.tpl']
+stateless = False
+persistence = True
+docker_images = {'web': 'nginx'}
+target_ports = {'web': 80}
+replicas = {'web': 1}
+pvc = {'web': {'size': '1Gi', 'accessModes': ['ReadWriteOnce']}}
+environment = {'web': [{'name': 'ENV1', 'value': 'Hi'}]}
+ingress = {'web': {'enabled': False, 'host': 'www.example.com'}}
 
-class Environment:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+# Create directories
+for directory in directories:
+    os.makedirs(os.path.join(project_name, directory), exist_ok=True)
 
-def create_helm_structure(base_path):
-    os.makedirs(os.path.join(base_path, "charts"), exist_ok=True)
-    os.makedirs(os.path.join(base_path, "templates/web"), exist_ok=True)
+# Create base files
+with open(os.path.join(project_name, 'Chart.yaml'), 'w') as chart_file:
+    chart_file.write("apiVersion: v2\n")
 
-    chart_yaml_content = """apiVersion: v2
-name: MyHelm
-description: A Helm chart for Kubernetes
-version: 0.1.0
-"""
-    with open(os.path.join(base_path, "Chart.yaml"), "w") as f:
-        f.write(chart_yaml_content)
+with open(os.path.join(project_name, 'values.yaml'), 'w') as values_file:
+    values_content = f"web:\n  image: {docker_images['web']}\n  service:\n    port: {target_ports['web']}\n"
+    values_content += f"  replicaCount: {replicas['web']}\n"
+    if persistence:
+        values_content += f"  persistence:\n    size: {pvc['web']['size']}\n    accessModes: {pvc['web']['accessModes'][0]}\n"
+    values_content += "  env:\n"
+    for env in environment['web']:
+        values_content += f"    - name: {env['name']}\n      value: {env['value']}\n"
+    values_content += f"  ingress:\n    enabled: {ingress['web']['enabled']}\n    host: {ingress['web']['host']}\n"
+    values_content += f"  stateless: {stateless}\n"
+    values_file.write(values_content)
 
-    values_yaml_content = """web:
-  image: nginx
-  service:
-    targetPort: 80
-  replicas: 1
-  persistence:
-    size: 1Gi
-    accessModes:
-      - ReadWriteOnce
-  env:
-    - name: ENV1
-      value: Hi
-  ingress:
-    enabled: false
-    host: www.example.com
-"""
-    with open(os.path.join(base_path, "values.yaml"), "w") as f:
-        f.write(values_yaml_content)
-
-    service_yaml_content = """apiVersion: v1
+# Create template files
+for template in template_files:
+    with open(os.path.join(project_name, 'templates/web', template), 'w') as temp_file:
+        if template == 'service.yaml':
+            temp_file.write("""
+apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "<.Release.Name>.fullname" . }}
+  name: {{ .Release.Name }}-web
 spec:
-  type: ClusterIP
   ports:
-    - port: 80
-      targetPort: {{ .Values.web.service.targetPort }}
+    - port: {{ .Values.web.service.port }}
   selector:
-    app: {{ include "<.Release.Name>.name" . }}
-"""
-    with open(os.path.join(base_path, "templates/web/service.yaml"), "w") as f:
-        f.write(service_yaml_content)
+    app: {{ .Release.Name }}-web
+""")
+        elif template == 'secrets.yaml':
+            temp_file.write("""
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-web-secrets
+type: Opaque
+data:
+  ENV1: {{ .Values.web.env[0].value | b64enc }}
+""")
+        elif template == 'helpers.tpl':
+            temp_file.write("""
+{{- define "app.media.MyHelm.fullname" -}}
+{{- .Release.Name }}-web
+{{- end -}}
+""")
 
-    deployment_yaml_content = """apiVersion: apps/v1
+# Create StatefulSet or Deployment based on statefulness
+if stateless:
+    with open(os.path.join(project_name, 'templates/web/deployment.yaml'), 'w') as deploy_file:
+        deploy_file.write("""
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "<.Release.Name>.fullname" . }}
+  name: {{ include "app.media.MyHelm.fullname" . }}
 spec:
-  replicas: {{ .Values.web.replicas }}
+  replicas: {{ .Values.web.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "<.Release.Name>.name" . }}
+      app: {{ include "app.media.MyHelm.fullname" . }}
   template:
     metadata:
       labels:
-        app: {{ include "<.Release.Name>.name" . }}
+        app: {{ include "app.media.MyHelm.fullname" . }}
     spec:
       containers:
-        - name: {{ include "<.Release.Name>.name" . }}
+        - name: web
           image: {{ .Values.web.image }}
           ports:
-            - containerPort: {{ .Values.web.service.targetPort }}
+            - containerPort: {{ .Values.web.service.port }}
           env:
-            - name: ENV1
-              value: Hi
-"""
-    with open(os.path.join(base_path, "templates/web/deployment.yaml"), "w") as f:
-        f.write(deployment_yaml_content)
-
-    if True:  # Ingress enabled condition
-        ingress_yaml_content = """apiVersion: networking.k8s.io/v1
-kind: Ingress
+            {{- range .Values.web.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
+""")
+else:
+    with open(os.path.join(project_name, 'templates/web/statefulset.yaml'), 'w') as stateful_file:
+        stateful_file.write("""
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: {{ include "<.Release.Name>.fullname" . }}
+  name: {{ include "app.media.MyHelm.fullname" . }}
 spec:
-  rules:
-    - host: {{ .Values.web.ingress.host }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "<.Release.Name>.fullname" . }}
-                port:
-                  number: 80
-"""
-        with open(os.path.join(base_path, "templates/web/ingress.yaml"), "w") as f:
-            f.write(ingress_yaml_content)
+  serviceName: {{ include "app.media.MyHelm.fullname" . }}
+  replicas: {{ .Values.web.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "app.media.MyHelm.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "app.media.MyHelm.fullname" . }}
+    spec:
+      containers:
+        - name: web
+          image: {{ .Values.web.image }}
+          ports:
+            - containerPort: {{ .Values.web.service.port }}
+          env:
+            {{- range .Values.web.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
+""")
 
-    secret_yaml_content = """apiVersion: v1
-kind: Secret
+# Create PVC if persistence is configured
+if persistence:
+    with open(os.path.join(project_name, 'templates/web/pvc.yaml'), 'w') as pvc_file:
+        pvc_file.write("""
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "<.Release.Name>.fullname" . }}-secret
-type: Opaque
-data:
-  ENV1: {{ .Values.web.env[0].value | b64enc | quote }}
-"""
-    with open(os.path.join(base_path, "templates/web/secret.yaml"), "w") as f:
-        f.write(secret_yaml_content)
-
-    helpers_tpl_content = """{{/* Place helper variables here */}}
-{{- define "<.Release.Name>.fullname" -}}
-{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "<.Release.Name>.name" -}}
-{{- .Chart.Name | lower -}}
-{{- end -}}
-"""
-    with open(os.path.join(base_path, "templates/web/_helpers.tpl"), "w") as f:
-        f.write(helpers_tpl_content)
-
-create_helm_structure("app/media/MyHelm")
+  name: {{ include "app.media.MyHelm.fullname" . }}-pvc
+spec:
+  accessModes:
+    - {{ .Values.web.persistence.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.web.persistence.size }}
+""")

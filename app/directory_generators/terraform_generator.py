@@ -1,47 +1,71 @@
 import os
 
-project_name = "app/media/MyTerraform"
-base_directory = project_name.replace("/", os.sep)
-modules_directory = os.path.join(base_directory, "modules")
-ci_directory = os.path.join(base_directory, ".github", "workflows")
+project_name = "MyTerraform"
+modules = ["ec2"]
 
-os.makedirs(modules_directory, exist_ok=True)
-os.makedirs(ci_directory, exist_ok=True)
+# Create project structure
+os.makedirs(f"app/media/{project_name}", exist_ok=True)
+os.makedirs(f"app/media/{project_name}/modules/{modules[0]}", exist_ok=True)
 
-terraform_main = f"""provider "aws" {{
+# Create main.tf
+with open(f"app/media/{project_name}/main.tf", "w") as f:
+    f.write(f"""
+terraform {{
+  required_providers {{
+    aws = {{
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }}
+  }}
+
+  required_version = ">= 0.12"
+}}
+
+provider "aws" {{
   region = "us-east-1"
 }}
 
-resource "aws_instance" "web" {{
-  ami           = "ami-0c55b159cbfafe1f0"
+module "{modules[0]}" {{
+  source = "./modules/{modules[0]}"
   instance_type = "t2.micro"
-  
-  tags = {{
-    Name = "MyEC2Instance"
-  }}
+  ami = "ami-0c55b159cbfafe1f0" # Example AMI
 }}
-"""
+""")
 
-terraform_variables = """variable "region" {{
-  description = "AWS region"
-  type        = string
-  default     = "us-east-1"
-}}
-
+# Create modules/ec2/variables.tf
+with open(f"app/media/{project_name}/modules/{modules[0]}/variables.tf", "w") as f:
+    f.write(f"""
 variable "instance_type" {{
-  description = "EC2 Instance type"
+  description = "The type of instance to create"
   type        = string
   default     = "t2.micro"
 }}
 
 variable "ami" {{
-  description = "AMI ID"
+  description = "The AMI to use for the instance"
   type        = string
-  default     = "ami-0c55b159cbfafe1f0"
+  default     = "ami-0c55b159cbfafe1f0" # Example AMI
 }}
-"""
+""")
 
-github_actions = """name: Terraform CI
+# Create modules/ec2/main.tf
+with open(f"app/media/{project_name}/modules/{modules[0]}/main.tf", "w") as f:
+    f.write(f"""
+resource "aws_instance" "app_instance" {{
+  ami           = var.ami
+  instance_type = var.instance_type
+
+  tags = {{
+    Name = "MyTerraformInstance"
+  }}
+}}
+""")
+
+# Create .github/workflows/ci.yml
+os.makedirs(f"app/media/{project_name}/.github/workflows", exist_ok=True)
+with open(f"app/media/{project_name}/.github/workflows/ci.yml", "w") as f:
+    f.write(f"""
+name: Terraform CI
 
 on:
   push:
@@ -60,7 +84,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2.0.0
         with:
           terraform_version: 1.0.0
 
@@ -72,17 +96,4 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        env:
-          TF_VAR_region: ${{ secrets.AWS_REGION }}
-          TF_VAR_instance_type: ${{ secrets.AWS_INSTANCE_TYPE }}
-          TF_VAR_ami: ${{ secrets.AWS_AMI }}
-"""
-
-with open(os.path.join(base_directory, "main.tf"), "w") as f:
-    f.write(terraform_main)
-
-with open(os.path.join(base_directory, "variables.tf"), "w") as f:
-    f.write(terraform_variables)
-
-with open(os.path.join(ci_directory, "terraform-ci.yml"), "w") as f:
-    f.write(github_actions)
+""")

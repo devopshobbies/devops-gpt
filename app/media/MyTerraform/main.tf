@@ -1,12 +1,21 @@
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+
+  required_version = ">= 0.12"
+}
+
 provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_instance" "web" {
-  ami           = "ami-0c55b159cbfafe1f0"
+module "ec2" {
+  source = "./modules/ec2"
   instance_type = "t2.micro"
-  
-  tags = {
-    Name = "MyEC2Instance"
-  }
+  ami = "ami-0c55b159cbfafe1f0" # Example AMI
 }

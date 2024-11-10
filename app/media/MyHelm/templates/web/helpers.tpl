@@ -1,7 +1,4 @@
-{{/*
-Common utility functions for templates
-*/}}
-
-{{- define "mychart.name" -}}
-{{ .Release.Name }}-{{ .Chart.Name }}
-{{- end -}}
+# Define any helpers here
+define "web.fullname"  
+  {{ .Release.Name }}-{{ .Values.web.name }} 
+end

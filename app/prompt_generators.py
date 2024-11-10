@@ -93,7 +93,7 @@ def helm_template_generator(input : HelmTemplateGeneration) -> str:
 
             
             Based on values.yaml, create all necessary Kubernetes templates in the templates directory:
-            if stateless is true, create deployment.yaml; if stateless is false, create statefulset.yaml.
+            if stateless.enabled is true, create deployment.yaml; if stateless.enabled is false, create statefulset.yaml.
             If a persistence block exists, include pvc.yaml. If the ingress block is defined and ingress.enabled
             is true, create ingress.yaml. if ingress.enabled is false, do not create ingress.yaml. Always create 
             secrets.yaml for secure data storage.

@@ -1,99 +1,143 @@
 import os
+project_name = "app/media/MyTerraform"
+modules_dir = os.path.join(project_name, "modules")
+docker_dir = os.path.join(modules_dir, "docker")
 
-project_name = "MyTerraform"
-modules = ["ec2"]
+# Create project directories
+os.makedirs(docker_dir, exist_ok=True)
 
-# Create project structure
-os.makedirs(f"app/media/{project_name}", exist_ok=True)
-os.makedirs(f"app/media/{project_name}/modules/{modules[0]}", exist_ok=True)
+# Create main.tf at root
+with open(os.path.join(project_name, "main.tf"), "w") as main_file:
+    main_file.write('''provider "docker" {
+  host = var.docker_host
+}
 
-# Create main.tf
-with open(f"app/media/{project_name}/main.tf", "w") as f:
-    f.write(f"""
-terraform {{
-  required_providers {{
-    aws = {{
-      source  = "hashicorp/aws"
-      version = "~> 3.0"
-    }}
-  }}
+module "docker" {
+  source = "./modules/docker"
+  image  = var.image
+  name   = var.container_name
+  ports  = var.ports
+}
+''')
 
-  required_version = ">= 0.12"
-}}
-
-provider "aws" {{
-  region = "us-east-1"
-}}
-
-module "{modules[0]}" {{
-  source = "./modules/{modules[0]}"
-  instance_type = "t2.micro"
-  ami = "ami-0c55b159cbfafe1f0" # Example AMI
-}}
-""")
-
-# Create modules/ec2/variables.tf
-with open(f"app/media/{project_name}/modules/{modules[0]}/variables.tf", "w") as f:
-    f.write(f"""
-variable "instance_type" {{
-  description = "The type of instance to create"
+# Create variables.tf at root
+with open(os.path.join(project_name, "variables.tf"), "w") as variables_file:
+    variables_file.write('''variable "docker_host" {
+  description = "The Docker host Uri."
   type        = string
-  default     = "t2.micro"
-}}
+}
 
-variable "ami" {{
-  description = "The AMI to use for the instance"
+variable "image" {
+  description = "The Docker image to use."
   type        = string
-  default     = "ami-0c55b159cbfafe1f0" # Example AMI
-}}
-""")
+}
 
-# Create modules/ec2/main.tf
-with open(f"app/media/{project_name}/modules/{modules[0]}/main.tf", "w") as f:
-    f.write(f"""
-resource "aws_instance" "app_instance" {{
-  ami           = var.ami
-  instance_type = var.instance_type
+variable "container_name" {
+  description = "The name of the Docker container."
+  type        = string
+}
 
-  tags = {{
-    Name = "MyTerraformInstance"
-  }}
-}}
-""")
+variable "ports" {
+  description = "List of ports to expose."
+  type        = list(string)
+}
+''')
 
-# Create .github/workflows/ci.yml
-os.makedirs(f"app/media/{project_name}/.github/workflows", exist_ok=True)
-with open(f"app/media/{project_name}/.github/workflows/ci.yml", "w") as f:
-    f.write(f"""
-name: Terraform CI
+# Create terraform.tfvars at root
+with open(os.path.join(project_name, "terraform.tfvars"), "w") as tfvars_file:
+    tfvars_file.write('''docker_host = "tcp://localhost:2375"
+image       = "nginx:latest"
+container_name = "my_nginx"
+ports      = ["80:80"]
+''')
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# Create versions.tf at root
+with open(os.path.join(project_name, "versions.tf"), "w") as versions_file:
+    versions_file.write('''terraform {
+  required_version = ">= 1.0"
 
-jobs:
-  terraform:
-    runs-on: ubuntu-latest
+  required_providers {
+    docker = {
+      source  = "hashicorp/docker"
+      version = ">= 2.0"
+    }
+  }
+}
+''')
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+# Create outputs.tf at root
+with open(os.path.join(project_name, "outputs.tf"), "w") as outputs_file:
+    outputs_file.write('''output "container_id" {
+  description = "The ID of the Docker container."
+  value       = module.docker.container_id
+}
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2.0.0
-        with:
-          terraform_version: 1.0.0
+output "container_ip" {
+  description = "The IP address of the Docker container."
+  value       = module.docker.container_ip
+}
+''')
 
-      - name: Terraform Init
-        run: terraform init
+# Create main.tf in modules/docker
+with open(os.path.join(docker_dir, "main.tf"), "w") as docker_main_file:
+    docker_main_file.write('''resource "docker_container" "this" {
+  name  = var.name
+  image = var.image
+  ports {
+    internal = var.ports[0]
+    external = var.ports[1]
+  }
+}
+''')
 
-      - name: Terraform Plan
-        run: terraform plan
+# Create variables.tf in modules/docker
+with open(os.path.join(docker_dir, "variables.tf"), "w") as docker_variables_file:
+    docker_variables_file.write('''variable "image" {
+  description = "The Docker image to use."
+  type        = string
+}
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
-""")
+variable "name" {
+  description = "The name of the Docker container."
+  type        = string
+}
+
+variable "ports" {
+  description = "List of ports for the container."
+  type        = list(string)
+}
+''')
+
+# Create terraform.tfvars in modules/docker
+with open(os.path.join(docker_dir, "terraform.tfvars"), "w") as docker_tfvars_file:
+    docker_tfvars_file.write('''image = "nginx:latest"
+name  = "my_nginx"
+ports = ["80", "80"]
+''')
+
+# Create versions.tf in modules/docker
+with open(os.path.join(docker_dir, "versions.tf"), "w") as docker_versions_file:
+    docker_versions_file.write('''terraform {
+  required_version = ">= 1.0"
+
+  required_providers {
+    docker = {
+      source  = "hashicorp/docker"
+      version = ">= 2.0"
+    }
+  }
+}
+''')
+
+# Create outputs.tf in modules/docker
+with open(os.path.join(docker_dir, "outputs.tf"), "w") as docker_outputs_file:
+    docker_outputs_file.write('''output "container_id" {
+  description = "The ID of the Docker container."
+  value       = docker_container.this.id
+}
+
+output "container_ip" {
+  description = "The IP address of the Docker container."
+  value       = docker_container.this.ip_address
+}
+''')

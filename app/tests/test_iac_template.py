@@ -46,7 +46,7 @@ def test_template_invalid(mock_execute_pythonfile, mock_edit_directory_generator
     assert "detail" in response.json(), "Response JSON does not contain 'detail'"
     errors = response.json()["detail"]
     expected_error_loc = ["body", "base_config"]
-    expected_error_msg = "Base config must be one of ['ec2', 's3', 'rds','docker']."
+    expected_error_msg = "Value error, Base config must be one of ['ec2', 's3', 'rds', 'docker']."
     assert any(
         error["loc"] == expected_error_loc and expected_error_msg in error["msg"]
         for error in errors

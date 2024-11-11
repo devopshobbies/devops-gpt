@@ -68,6 +68,10 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
                         sensitive values.
                   - versions.tf:
                       - Contains the `terraform` and `provider` blocks, specifying required versions.
+
+                      - If {input.base_config} is a Docker resource, set kreuzwerker/docker as the provider with appropriate version constraints.
+                      - If {input.base_config} is an AWS resource, set hashicorp/aws as the provider with suitable version constraints.
+
                       - Structure the `terraform` block as:
                             terraform {{
                               required_version = ">= 1.0"
@@ -103,6 +107,9 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
                         typical configuration values, making it easier to set up and reducing the need for hardcoded values.
                   - versions.tf:
                       - Contains the `terraform` and `provider` blocks, specifying required versions.
+                      - If {input.base_config} is a Docker resource, set kreuzwerker/docker as the provider with appropriate version constraints.
+                      - If {input.base_config} is an AWS resource, set hashicorp/aws as the provider with suitable version constraints.
+
                       - Structure the `terraform` block as:
                             terraform {{
                               required_version = ">= 1.0"

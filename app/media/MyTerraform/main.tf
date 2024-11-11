@@ -1,12 +1,10 @@
-provider "aws" {
-  region = "us-east-1"
+provider "docker" {
+  host = var.docker_host
 }
 
-resource "aws_instance" "web" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-  
-  tags = {
-    Name = "MyEC2Instance"
-  }
+module "docker" {
+  source = "./modules/docker"
+  image  = var.image
+  name   = var.container_name
+  ports  = var.ports
 }

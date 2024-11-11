@@ -1,19 +1,14 @@
-variable "docker_host" {
-  description = "The Docker host Uri."
-  type        = string
-}
-
 variable "image" {
   description = "The Docker image to use."
   type        = string
 }
 
-variable "container_name" {
+variable "name" {
   description = "The name of the Docker container."
   type        = string
 }
 
 variable "ports" {
-  description = "List of ports to expose."
+  description = "List of ports for the container."
   type        = list(string)
 }

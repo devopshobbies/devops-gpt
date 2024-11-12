@@ -83,18 +83,26 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
                                }}
                               }}
                             }}
-                  - outputs.tf:
-                      - Exposes relevant outputs from {input.base_config}, retrieving them from the module output
-                        and making them accessible at the root level. Each output should have a clear description,
-                        making it easy for users to understand the value and purpose of the output data.
               2. Module Directory Structure (modules/{input.base_config}):
                   - main.tf:
-                      - Defines the {input.base_config} resource, fully utilizing required and also some optional
-                        parameters. Avoid any hardcoded values within the module to support full configurability
-                        from the root level.
-                      - Required parameters should cover the essentials for creating {input.base_config}, while
-                        optional parameters should provide a range of additional settings that enable more
-                        granular configuration if desired.
+                      - Configures the resource for {input.base_config} with this logic:
+                          - If {input.base_config} is an AWS resource, use all required parameters for it based on
+                            the terraform aws provider.
+                          - If {input.base_config} == 'docker_container':
+                              - Use only the following parameters and avoid using any other parameters:
+                                  - 1. image (type: string): Specifies the container image.
+                                  - 2. name (type: string): Sets the container name.
+                                  - 3. hostname (type: string): Configures the container hostname.
+                                  - 4. restart (type: string): Defines the container's restart policy (e.g., always, on-failure, no).
+                          - If {input.base_config} == 'docker_image':
+                              - Use only the following parameters and avoid using any other parameters:
+                                  - 1. name (type: string): Specifies the image name.
+                                  - 2. force_remove (type: boolean): Determines whether to forcibly remove intermediate containers.
+                                  - 3. build (block type, max: 1): Includes the following required field:
+                                      - context (type: string, required): Specifies the build context for the image.
+                      - The project must only create the resource defined by {input.base_config}, treating resource 
+                        as completely unrelated entities
+                      - Avoid any hardcoded values within the module to support full configurability from the root level.
                   - variables.tf:
                       - Lists all variables necessary for configuring {input.base_config}, with descriptions and
                         types specified to improve usability. No default values should be set here unless
@@ -121,10 +129,6 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
                                 }}
                               }}
                             }}
-                  - outputs.tf:
-                      - Specifies outputs for the {input.base_config} resource, selecting relevant data that users
-                        might need to access from the root level. Each output should have an informative
-                        description, so users can understand its purpose and utility.
               Ensure this project structure supports {input.base_config}’s configurability, extensibility, and
               reusability across diverse Terraform providers, empowering users to manage their resources through a
               single, customizable root configuration while keeping module internals robustly modular.

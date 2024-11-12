@@ -70,7 +70,7 @@ class IaCTemplateGeneration(BaseModel):
 
     @validator("base_config")
     def validate_base_config(cls, value):
-        allowed_configs = ['ec2', 's3', 'rds','docker']
+        allowed_configs = ['ec2','s3','rds','docker_image','docker_container']
         if value not in allowed_configs:
             raise ValueError(f"Base config must be one of {allowed_configs}.")
         return value

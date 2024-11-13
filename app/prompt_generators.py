@@ -52,10 +52,10 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
                       - Every variable defined in {input.base_config} should be passed through the module block,
                         ensuring that users can adjust all critical parameters of {input.base_config} by
                         modifying root main.tf.
+                      - Avoid using versions in the root main.tf. place versions in versions.tf only
                   - variables.tf:
-                      - Declares all variables that users might need to configure for {input.base_config}.
-                        These should include any inputs required by the provider or the {input.base_config}
-                        resource, as well as optional parameters that users may want to customize.
+                      - Define variables only for parameters explicitly required by the {input.base_config} resource
+                        with exactly the same keys of {input.base_config} module, don't use new keys, and also avoid using any additional parameter
                       - Variable descriptions should clearly indicate their purpose, and default values should
                         be avoided unless there are reasonable, common defaults, to maintain flexibility and
                         encourage explicit configuration.
@@ -87,7 +87,8 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
                   - main.tf:
                       - Configures the resource for {input.base_config} with this logic:
                           - If {input.base_config} is an AWS resource, use all required parameters for it based on
-                            the terraform aws provider.
+                            the terraform aws provider. be careful to avoid creating any other resources from aws
+                            and any other providers alongside {input.base_config}. just define {input.base_config}
                           - If {input.base_config} == 'docker_container':
                               - Use only the following parameters and avoid using any other parameters:
                                   - 1. image (type: string): Specifies the container image.
@@ -95,13 +96,20 @@ def IaC_template_generator(input : IaCTemplateGeneration) -> str:
                                   - 3. hostname (type: string): Configures the container hostname.
                                   - 4. restart (type: string): Defines the container's restart policy (e.g., always, on-failure, no).
                           - If {input.base_config} == 'docker_image':
-                              - Use only the following parameters and avoid using any other parameters:
+                              - Use only the following parameters and avoid using any other parameters and also create docker_container resource based on the docker image you create:
                                   - 1. name (type: string): Specifies the image name.
                                   - 2. force_remove (type: boolean): Determines whether to forcibly remove intermediate containers.
-                                  - 3. build (block type, max: 1): Includes the following required field:
+                                  - 3. build (block type): Includes the following required field:
                                       - context (type: string, required): Specifies the build context for the image.
-                      - The project must only create the resource defined by {input.base_config}, treating resource 
-                        as completely unrelated entities
+                                      - tag(type: List of Strings, required): Specifices the image tag in the
+                                        'name:tag' format, (e.g., ["NAME:VERSION"])
+                             - If {input.base_config} == 'docker_image', The image parameter in docker_container
+                               must dynamically references just like the following pattern:
+                                  ```
+                                   resource "docker_container" "<DOCKER_CONTAINER_RESOURCE_NAME>" {{
+                                     image = docker_image.<DOCKER_IMAGE_RESOURCE_NAME>.name
+                                   }}
+                                  ```
                       - Avoid any hardcoded values within the module to support full configurability from the root level.
                   - variables.tf:
                       - Lists all variables necessary for configuring {input.base_config}, with descriptions and

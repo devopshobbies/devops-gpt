@@ -1,9 +1,10 @@
+
 output "container_id" {
   description = "The ID of the Docker container."
-  value       = module.docker.container_id
+  value       = module.docker_container.container_id
 }
 
 output "container_ip" {
   description = "The IP address of the Docker container."
-  value       = module.docker.container_ip
+  value       = module.docker_container.container_ip
 }

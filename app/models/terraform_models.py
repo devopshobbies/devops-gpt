@@ -63,21 +63,8 @@ class IaCInstallationInput(BaseModel):
             raise ValueError(f"Service must be one of {allowed_services}.")
         return value
 
-class IaCTemplateGeneration(BaseModel):
-    CI_integration:bool = True
-    base_config:str = 'ec2'
-    service:str = 'terraform'
+class IaCTemplateGenerationDocker(BaseModel):
+    docker_image: bool = True
+    docker_container: bool = True
 
-    @validator("base_config")
-    def validate_base_config(cls, value):
-        allowed_configs = ['ec2','s3','rds','docker_image','docker_container']
-        if value not in allowed_configs:
-            raise ValueError(f"Base config must be one of {allowed_configs}.")
-        return value
-
-    @validator("service")
-    def validate_service(cls, value):
-        allowed_services = ['terraform']
-        if value not in allowed_services:
-            raise ValueError(f"Service must be one of {allowed_services}.")
-        return value
+   

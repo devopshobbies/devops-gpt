@@ -1,10 +1,14 @@
+
 provider "docker" {
   host = var.docker_host
 }
 
-module "docker" {
-  source = "./modules/docker"
-  image  = var.image
-  name   = var.container_name
-  ports  = var.ports
+module "docker_container" {
+  source = "./modules/docker_container"
+
+  image = var.image
+  name  = var.name
+  ports = var.ports
+  env   = var.env
 }
+

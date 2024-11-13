@@ -1,39 +1,44 @@
 import os
 project_name = "app/media/MyTerraform"
 modules_dir = os.path.join(project_name, "modules")
-docker_dir = os.path.join(modules_dir, "docker")
+docker_container_dir = os.path.join(modules_dir, "docker_container")
 
 # Create project directories
-os.makedirs(docker_dir, exist_ok=True)
+os.makedirs(docker_container_dir, exist_ok=True)
 
-# Create main.tf at root
+# Create main.tf
 with open(os.path.join(project_name, "main.tf"), "w") as main_file:
-    main_file.write('''provider "docker" {
+    main_file.write('''
+provider "docker" {
   host = var.docker_host
 }
 
-module "docker" {
-  source = "./modules/docker"
-  image  = var.image
-  name   = var.container_name
-  ports  = var.ports
+module "docker_container" {
+  source = "./modules/docker_container"
+
+  image = var.image
+  name  = var.name
+  ports = var.ports
+  env   = var.env
 }
+
 ''')
 
-# Create variables.tf at root
-with open(os.path.join(project_name, "variables.tf"), "w") as variables_file:
-    variables_file.write('''variable "docker_host" {
-  description = "The Docker host Uri."
+# Create variables.tf
+with open(os.path.join(project_name, "variables.tf"), "w") as vars_file:
+    vars_file.write('''
+variable "docker_host" {
+  description = "Docker host URL."
   type        = string
 }
 
 variable "image" {
-  description = "The Docker image to use."
+  description = "Docker image to use."
   type        = string
 }
 
-variable "container_name" {
-  description = "The name of the Docker container."
+variable "name" {
+  description = "Name of the container."
   type        = string
 }
 
@@ -41,103 +46,126 @@ variable "ports" {
   description = "List of ports to expose."
   type        = list(string)
 }
+
+variable "env" {
+  description = "Environment variables for the container."
+  type        = map(string)
+}
 ''')
 
-# Create terraform.tfvars at root
+# Create terraform.tfvars
 with open(os.path.join(project_name, "terraform.tfvars"), "w") as tfvars_file:
-    tfvars_file.write('''docker_host = "tcp://localhost:2375"
-image       = "nginx:latest"
-container_name = "my_nginx"
+    tfvars_file.write('''
+docker_host = "tcp://localhost:2375"
+image      = "nginx:latest"
+name       = "my-nginx-container"
 ports      = ["80:80"]
+env        = { "MY_ENV_VAR" = "value" }
 ''')
 
-# Create versions.tf at root
+# Create versions.tf
 with open(os.path.join(project_name, "versions.tf"), "w") as versions_file:
-    versions_file.write('''terraform {
+    versions_file.write('''
+terraform {
   required_version = ">= 1.0"
 
   required_providers {
     docker = {
-      source  = "hashicorp/docker"
-      version = ">= 2.0"
+      source  = "kreuzwerker/docker"
+      version = ">= 2.8.0"
     }
   }
 }
+
 ''')
 
-# Create outputs.tf at root
+# Create outputs.tf
 with open(os.path.join(project_name, "outputs.tf"), "w") as outputs_file:
-    outputs_file.write('''output "container_id" {
+    outputs_file.write('''
+output "container_id" {
   description = "The ID of the Docker container."
-  value       = module.docker.container_id
+  value       = module.docker_container.container_id
 }
 
 output "container_ip" {
   description = "The IP address of the Docker container."
-  value       = module.docker.container_ip
+  value       = module.docker_container.container_ip
 }
 ''')
 
-# Create main.tf in modules/docker
-with open(os.path.join(docker_dir, "main.tf"), "w") as docker_main_file:
-    docker_main_file.write('''resource "docker_container" "this" {
-  name  = var.name
+# Create module files
+# Create docker_container/main.tf
+with open(os.path.join(docker_container_dir, "main.tf"), "w") as module_main_file:
+    module_main_file.write('''
+resource "docker_container" "app" {
   image = var.image
+  name  = var.name
   ports {
-    internal = var.ports[0]
-    external = var.ports[1]
+    internal = 80
+    external = var.ports[0]
   }
+  env = var.env
 }
 ''')
 
-# Create variables.tf in modules/docker
-with open(os.path.join(docker_dir, "variables.tf"), "w") as docker_variables_file:
-    docker_variables_file.write('''variable "image" {
-  description = "The Docker image to use."
+# Create docker_container/variables.tf
+with open(os.path.join(docker_container_dir, "variables.tf"), "w") as module_vars_file:
+    module_vars_file.write('''
+variable "image" {
+  description = "Docker image."
   type        = string
 }
 
 variable "name" {
-  description = "The name of the Docker container."
+  description = "Container name."
   type        = string
 }
 
 variable "ports" {
-  description = "List of ports for the container."
+  description = "List of exposed ports."
   type        = list(string)
+}
+
+variable "env" {
+  description = "Map of environment variables."
+  type        = map(string)
 }
 ''')
 
-# Create terraform.tfvars in modules/docker
-with open(os.path.join(docker_dir, "terraform.tfvars"), "w") as docker_tfvars_file:
-    docker_tfvars_file.write('''image = "nginx:latest"
-name  = "my_nginx"
-ports = ["80", "80"]
+# Create docker_container/terraform.tfvars
+with open(os.path.join(docker_container_dir, "terraform.tfvars"), "w") as module_tfvars_file:
+    module_tfvars_file.write('''
+image = "nginx:latest"
+name  = "my-nginx-container"
+ports = ["80:80"]
+env   = { "MY_ENV_VAR" = "value" }
 ''')
 
-# Create versions.tf in modules/docker
-with open(os.path.join(docker_dir, "versions.tf"), "w") as docker_versions_file:
-    docker_versions_file.write('''terraform {
+# Create docker_container/versions.tf
+with open(os.path.join(docker_container_dir, "versions.tf"), "w") as module_versions_file:
+    module_versions_file.write('''
+terraform {
   required_version = ">= 1.0"
 
   required_providers {
     docker = {
-      source  = "hashicorp/docker"
-      version = ">= 2.0"
+      source  = "kreuzwerker/docker"
+      version = ">= 2.8.0"
     }
   }
 }
 ''')
 
-# Create outputs.tf in modules/docker
-with open(os.path.join(docker_dir, "outputs.tf"), "w") as docker_outputs_file:
-    docker_outputs_file.write('''output "container_id" {
+# Create docker_container/outputs.tf
+with open(os.path.join(docker_container_dir, "outputs.tf"), "w") as module_outputs_file:
+    module_outputs_file.write('''
+output "container_id" {
   description = "The ID of the Docker container."
-  value       = docker_container.this.id
+  value       = docker_container.app.id
 }
 
 output "container_ip" {
   description = "The IP address of the Docker container."
-  value       = docker_container.this.ip_address
+  value       = docker_container.app.ip_address
 }
 ''')

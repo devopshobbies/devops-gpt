@@ -7,14 +7,16 @@ from .services import (write_basic,
 from app.models import (IaCBasicInput,
         IaCBugfixInput, 
         Output,
-        IaCInstallationInput,IaCTemplateGeneration,HelmTemplateGeneration)
+        IaCInstallationInput,IaCTemplateGenerationDocker,HelmTemplateGeneration)
 
 from fastapi import FastAPI, HTTPException,Response
 from fastapi.responses import FileResponse
 from .prompt_generators import (IaC_basics_generator, 
         IaC_bugfix_generator,
         IaC_installation_generator, 
-        IaC_template_generator,helm_template_generator)
+        helm_template_generator)
+
+from app.template_generators.terraform.docker import (IaC_template_generator_docker)
 
 import os
 app = FastAPI()
@@ -42,10 +44,10 @@ async def IaC_install_generation(request:IaCInstallationInput) -> Output:
         output = gpt_service(generated_prompt)
         return Output(output=output)
 
-@app.post("/IaC-template/")
-async def IaC_template_generation(request:IaCTemplateGeneration) -> Output:
+@app.post("/IaC-template/docker")
+async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) -> Output:
 
-        generated_prompt = IaC_template_generator(request)
+        generated_prompt = IaC_template_generator_docker(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)
         execute_pythonfile("MyTerraform","terraform_generator")

@@ -1,96 +1,111 @@
-
-
 def IaC_template_generator_docker(input) -> str:
+
+    docker = ['docker_container', 'docker_image']
+    docker_image_count = 1 if input.docker_image else 0
+    docker_container_count = 1 if input.docker_container else 0
 
     prompt = f"""
               Generate a Python code to generate a Terraform project (project name is app/media/MyTerraform)
-              that dynamically provisions resources for {input.base_config} ensuring a modular, flexible structure
-              to enable users to configure all essential settings at the root level. Only provide Python code,
-              no explanations or markdown formatting. The project should be organized as follows:
+              that dynamically provisions {docker} resources ensuring a modular, flexible structure to enable users
+              to configure all essential settings at the root level. Only provide Python code, no explanations or
+              markdown formatting. The project should be organized as follows:
               1. Root Directory Structure:
                   - main.tf:
-                      - Contains a provider block, configured with flexible variables where required to allow
-                        users to specify provider settings without hardcoding.
-                      - Defines a module block that references {input.base_config} from a subdirectory within
-                        modules. This module block should expose all variables that {input.base_config} requires,
-                        allowing configuration at the root level rather than directly within the module.
-                      - Every variable defined in {input.base_config} should be passed through the module block,
-                        ensuring that users can adjust all critical parameters of {input.base_config} by
-                        modifying root main.tf.
+                      - Define the provider block as follows:
+                            ```
+                            provider "docker" {{
+                              host = "unix:///var/run/docker.sock"
+                            }}
+                            ```
+                      - Defines a module block that references "docker" from a subdirectory within modules.
+                        This module block should expose all variables that {docker} resources require, allowing
+                        configuration at the root level rather than directly within the module.
+                      - Every variable defined in {docker} resources should be passed through the module block,
+                        ensuring that users can adjust all critical parameters of {docker} resources by modifying
+                        root main.tf. Avoid using any other parameters. just use the parameters of {docker} resources with the same keys
                   - variables.tf:
-                      - Declares all variables that users might need to configure for {input.base_config}.
-                        These should include any inputs required by the provider or the {input.base_config}
-                        resource, as well as optional parameters that users may want to customize.
-                      - Variable descriptions should clearly indicate their purpose, and default values should
-                        be avoided unless there are reasonable, common defaults, to maintain flexibility and
-                        encourage explicit configuration.
-                      - All types of variables can be used such as (number, string, bool, list(string),
-                        map(string), list(map(string)), map(map(string)), object(), any)
+                      - Sets these variables names for docker_image resource:
+                          image_name(string), image_force_remove(bool), image_build(object), image_count(number)
+                      - Sets these variables names for docker_container resource:
+                          container_image(string), container_name(string), container_hostname(string),
+                          container_restart(string), container_count(number)
                   - terraform.tfvars:
-                      - Provides default values for variables declared in the root `variables.tf`, making it easy
-                        for users to define common configurations.
-                      - This file should be structured to include any typical default settings without hardcoding
-                        sensitive values.
+                      - Structure as follows:
+                          image_name = "my-image"
+                          image_force_remove = true
+                          image_build = {{
+                          context = "./"
+                          tag    = ["my-image:latest"]
+                          }}
+                          image_count = {docker_image_count}
+
+                          container_image = "my-image"
+                          container_name = "my-container"
+                          container_hostname = "my-host"
+                          container_restart = "always"
+                          container_count = {docker_container_count}
                   - versions.tf:
-                      - Contains the `terraform` and `provider` blocks, specifying required versions.
-
-                      - If {input.base_config} is a Docker resource, set kreuzwerker/docker as the provider with appropriate version constraints.
-                      - If {input.base_config} is an AWS resource, set hashicorp/aws as the provider with suitable version constraints.
-
-                      - Structure the `terraform` block as:
+                      - Structure as follows:
                             terraform {{
                               required_version = ">= 1.0"
 
                               required_providers {{
-                                <provider_name> = {{
-                                  source  = "<source>"
-                                  version = ">= <version>"
+                                docker = {{
+                                  source  = "kreuzwerker/docker"
+                                  version = ">= 2.8.0"
                                }}
                               }}
                             }}
-                  - outputs.tf:
-                      - Exposes relevant outputs from {input.base_config}, retrieving them from the module output
-                        and making them accessible at the root level. Each output should have a clear description,
-                        making it easy for users to understand the value and purpose of the output data.
-              2. Module Directory Structure (modules/{input.base_config}):
+              2. Module Directory Structure (modules/docker):
                   - main.tf:
-                      - Defines the {input.base_config} resource, fully utilizing required and also some optional
-                        parameters. Avoid any hardcoded values within the module to support full configurability
-                        from the root level.
-                      - Required parameters should cover the essentials for creating {input.base_config}, while
-                        optional parameters should provide a range of additional settings that enable more
-                        granular configuration if desired.
+                      - Set the following parameters for docker_image resource and avoid using any other parameters:
+                           - 1. count (type: number) Specifies the number of images
+                           - 2. name (type: string): Specifies the image name.
+                           - 3. force_remove (type: boolean): Determines whether to forcibly remove intermediate containers.
+                           - 4. build (block type): Includes the following required field:
+                               - context (type: string, required): Specifies the build context for the image.
+                               - tag(type: List of Strings, required): Specifices the image tag in the 'name:tag'
+                                 format, (e.g., ["NAME:VERSION"])
+                      - Set the following parameters for docker_container resource and avoid using any other parameters:
+                           - 1. count (type: number): Specifies the number of containers
+                           - 2. image (type: string): Specifies the container image.
+                           - 3. name (type: string): Sets the container name.
+                           - 4. hostname (type: string): Configures the container hostname.
+                           - 5. restart (type: string): Defines the container's restart policy (e.g., always, on-failure, no).
                   - variables.tf:
-                      - Lists all variables necessary for configuring {input.base_config}, with descriptions and
-                        types specified to improve usability. No default values should be set here unless
-                        necessary for required fields.
-                      - Variable names should be clear and consistent with naming conventions in the root
-                        variables file, ensuring consistency in usage.
+                      - Sets these variables names for docker_image resource:
+                          image_name(string), image_force_remove(bool), image_build(object), image_count(number)
+                      - Sets these variables names for docker_container resource:
+                          container_image(string), container_name(string), container_hostname(string),
+                          container_restart(string), container_count(number)
                   - terraform.tfvars:
-                      - Includes default values for module-level variables to ensure that common parameters have
-                        defaults. This `terraform.tfvars` file within the module should be structured to provide
-                        typical configuration values, making it easier to set up and reducing the need for hardcoded values.
-                  - versions.tf:
-                      - Contains the `terraform` and `provider` blocks, specifying required versions.
-                      - If {input.base_config} is a Docker resource, set kreuzwerker/docker as the provider with appropriate version constraints.
-                      - If {input.base_config} is an AWS resource, set hashicorp/aws as the provider with suitable version constraints.
+                      - Structure as follows:
+                          image_name = "my-image"
+                          image_force_remove = true
+                          image_build = {{
+                          context = "./"
+                          tag    = ["my-image:latest"]
+                          }}
+                          image_count = {docker_image_count}
 
-                      - Structure the `terraform` block as:
+                          container_image = "my-image"
+                          container_name = "my-container"
+                          container_hostname = "my-host"
+                          container_restart = "always"
+                          container_count = {docker_container_count}
+                  - versions.tf:
+                      - Structure as follows:
                             terraform {{
                               required_version = ">= 1.0"
 
                               required_providers {{
-                                <provider_name> = {{
-                                  source  = "<source>"
-                                  version = ">= <version>"
-                                }}
+                                docker = {{
+                                  source  = "kreuzwerker/docker"
+                                  version = ">= 2.8.0"
+                               }}
                               }}
                             }}
-                  - outputs.tf:
-                      - Specifies outputs for the {input.base_config} resource, selecting relevant data that users
-                        might need to access from the root level. Each output should have an informative
-                        description, so users can understand its purpose and utility.
-              Ensure this project structure supports {input.base_config}’s configurability, extensibility, and
+              Ensure this project structure supports {docker}’s configurability, extensibility, and
               reusability across diverse Terraform providers, empowering users to manage their resources through a
               single, customizable root configuration while keeping module internals robustly modular.
 
@@ -100,19 +115,17 @@ def IaC_template_generator_docker(input) -> str:
 
               Python code you give me, must have structure like that:
 
-                import os
-                project_name = "app/media/MyTerraform"
-                moduels_dir = os.path.join(project_name, "modules")
+              import os
+              project_name = "app/media/MyTerraform"
+              modules_dir = os.path.join(project_name, "modules")
+              docker_container_dir = os.path.join(modules_dir, "docker_container")
 
-                # Create project directories
+              # Create project directories
+              os.makedirs(docker_container_dir, exist_ok=True)
 
-                os.makedirs(moduels_dir, exist_ok=True)
-
-                # Create main.tf (for example)
-                with open(os.path.join(project_name, "main.tf"), "w") as main_file:
-                    # any thing you need
-
-
+              # Create main.tf
+              with open(os.path.join(project_name, "main.tf"), "w") as main_file:
+                  # any thing you need
 
             """
     return prompt

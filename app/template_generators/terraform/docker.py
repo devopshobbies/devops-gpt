@@ -1,8 +1,8 @@
 def IaC_template_generator_docker(input) -> str:
 
     docker = ['docker_container', 'docker_image']
-    docker_image_count = 1 if input.docker_image else 0
-    docker_container_count = 1 if input.docker_container else 0
+    create_docker_image = 'true' if input.docker_image else 'false'
+    create_docker_container = 'true' if input.docker_container else 'false'
 
     prompt = f"""
               Generate a Python code to generate a Terraform project (project name is app/media/MyTerraform)
@@ -25,25 +25,24 @@ def IaC_template_generator_docker(input) -> str:
                         root main.tf. Avoid using any other parameters. just use the parameters of {docker} resources with the same keys
                   - variables.tf:
                       - Sets these variables names for docker_image resource:
-                          image_name(string), image_force_remove(bool), image_build(object), image_count(number)
+                          create_image(bool), image_name(string), image_force_remove(bool), image_build(object)
                       - Sets these variables names for docker_container resource:
-                          container_image(string), container_name(string), container_hostname(string),
-                          container_restart(string), container_count(number)
+                          create_container(bool), container_image(string), container_name(string), container_hostname(string), container_restart(string)
                   - terraform.tfvars:
                       - Structure as follows:
+                          create_image = {create_docker_image}
                           image_name = "my-image"
                           image_force_remove = true
                           image_build = {{
                           context = "./"
                           tag    = ["my-image:latest"]
                           }}
-                          image_count = {docker_image_count}
 
+                          create_container = {create_docker_container}
                           container_image = "my-image"
                           container_name = "my-container"
                           container_hostname = "my-host"
                           container_restart = "always"
-                          container_count = {docker_container_count}
                   - versions.tf:
                       - Structure as follows:
                             terraform {{
@@ -58,41 +57,46 @@ def IaC_template_generator_docker(input) -> str:
                             }}
               2. Module Directory Structure (modules/docker):
                   - main.tf:
-                      - Set the following parameters for docker_image resource and avoid using any other parameters:
-                           - 1. count (type: number) Specifies the number of images
+                      - Set the following parameters for docker_image resource (name its terraform resource to "image") and avoid using any other parameters:
+                           - 1. count (type: number): follow the below syntax for count:
+                               ```
+                               count = var.create_image ? 1 : 0
+                               ```
                            - 2. name (type: string): Specifies the image name.
                            - 3. force_remove (type: boolean): Determines whether to forcibly remove intermediate containers.
                            - 4. build (block type): Includes the following required field:
                                - context (type: string, required): Specifies the build context for the image.
                                - tag(type: List of Strings, required): Specifices the image tag in the 'name:tag'
                                  format, (e.g., ["NAME:VERSION"])
-                      - Set the following parameters for docker_container resource and avoid using any other parameters:
-                           - 1. count (type: number): Specifies the number of containers
+                      - Set the following parameters for docker_container resource (name its terraform resource to "container") and avoid using any other parameters:
+                           - 1. count (type: number): follow the below syntax for count:
+                               ```
+                               count = var.create_container ? 1 : 0
+                               ```
                            - 2. image (type: string): Specifies the container image.
                            - 3. name (type: string): Sets the container name.
                            - 4. hostname (type: string): Configures the container hostname.
                            - 5. restart (type: string): Defines the container's restart policy (e.g., always, on-failure, no).
                   - variables.tf:
                       - Sets these variables names for docker_image resource:
-                          image_name(string), image_force_remove(bool), image_build(object), image_count(number)
+                          create_image(bool), image_name(string), image_force_remove(bool), image_build(object)
                       - Sets these variables names for docker_container resource:
-                          container_image(string), container_name(string), container_hostname(string),
-                          container_restart(string), container_count(number)
+                          create_container(bool), container_image(string), container_name(string), container_hostname(string), container_restart(string)
                   - terraform.tfvars:
                       - Structure as follows:
+                          create_image = {create_docker_image}
                           image_name = "my-image"
                           image_force_remove = true
                           image_build = {{
                           context = "./"
                           tag    = ["my-image:latest"]
                           }}
-                          image_count = {docker_image_count}
 
+                          create_container = {create_docker_container}
                           container_image = "my-image"
                           container_name = "my-container"
                           container_hostname = "my-host"
                           container_restart = "always"
-                          container_count = {docker_container_count}
                   - versions.tf:
                       - Structure as follows:
                             terraform {{

@@ -15,8 +15,8 @@ const ChatBubble = ({ message, userType, isLoading }: Props) => {
       }`}
     >
       <div
-        className={`chat-bubble ${
-          userType === UserType.USER ? "bg-stone-800" : ""
+        className={`chat-bubble  ${
+          userType === UserType.USER ? "bg-stone-600" : ""
         }`}
       >
         {userType === UserType.USER

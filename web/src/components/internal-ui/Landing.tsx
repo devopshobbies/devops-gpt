@@ -27,7 +27,7 @@ const Landing = () => {
         <Button
           w="10rem"
           mt="16"
-          bg="orange.800"
+          bg="orange.700"
           disabled={isOpen}
           onClick={() => setIsOpen(true)}
         >

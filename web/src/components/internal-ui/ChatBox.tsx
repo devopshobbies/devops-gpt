@@ -14,7 +14,7 @@ interface Props {
 
 const ChatBox = ({ messageData, endpoint, request }: Props) => {
   const addMessage = useGptStore((s) => s.addMessage);
-  const { data, error, isLoading } = usePost(endpoint, request);
+  const { data, error, isPending } = usePost(endpoint, request);
 
   useEffect(() => {
     addMessage(UserType.BOT, data?.data.output);
@@ -32,7 +32,7 @@ const ChatBox = ({ messageData, endpoint, request }: Props) => {
     >
       {messageData.map((message, index) => (
         <ChatBubble
-          isLoading={isLoading}
+          isLoading={isPending}
           key={index}
           message={message.content}
           userType={message.user}

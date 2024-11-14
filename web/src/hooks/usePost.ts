@@ -7,7 +7,7 @@ const usePost = (endpoint: ENDPOINTS, data: any) =>
   useQuery({
     queryKey: [endpoint],
     queryFn: () => apiClient.post(endpoint, data),
-    retry: 2,
+    retry: 4,
     staleTime: 60,
   });
 

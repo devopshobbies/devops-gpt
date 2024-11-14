@@ -1,14 +1,19 @@
 
 provider "docker" {
-  host = var.docker_host
+  host = "unix:///var/run/docker.sock"
 }
 
-module "docker_container" {
-  source = "./modules/docker_container"
+module "docker" {
+  source = "./modules/docker"
+  
+  image_name          = var.image_name
+  image_force_remove  = var.image_force_remove
+  image_build         = var.image_build
+  image_count         = var.image_count
 
-  image = var.image
-  name  = var.name
-  ports = var.ports
-  env   = var.env
+  container_image     = var.container_image
+  container_name      = var.container_name
+  container_hostname  = var.container_hostname
+  container_restart    = var.container_restart
+  container_count     = var.container_count
 }
-

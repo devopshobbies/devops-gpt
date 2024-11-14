@@ -67,4 +67,16 @@ class IaCTemplateGenerationDocker(BaseModel):
     docker_image: bool = True
     docker_container: bool = True
 
-   
+class IaCTemplateGenerationEC2(BaseModel):
+    key_pair:bool = True
+    security_group:bool = True
+    aws_instance:bool = True
+    ami_from_instance:bool = True
+
+class IaCTemplateGenerationS3(BaseModel):
+    s3_bucket:bool = True
+    bucket_versioning:bool = True
+
+class IaCTemplateGenerationIAM(BaseModel):
+    iam_user:bool = True
+    iam_group:bool = True

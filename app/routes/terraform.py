@@ -20,18 +20,20 @@ from app.prompt_generators import (IaC_basics_generator,
         IaC_installation_generator, 
        )
 from app.template_generators.terraform.docker import (IaC_template_generator_docker)
-
+import os
 
 @app.post("/IaC-basic/")
 async def IaC_basic_generation(request:IaCBasicInput) -> Output:
-
+        if os.environ.get("TEST"):
+            return Output(output='Terraform developed by hashicorp and it is very usefull')
         generated_prompt = IaC_basics_generator(request)
         output = gpt_service(generated_prompt)
         return Output(output=output)
    
 @app.post("/IaC-bugfix/")
 async def IaC_bugfix_generation(request:IaCBugfixInput) -> Output:
-
+        if os.environ.get("TEST"):
+            return Output(output='fix this bug by adding x to the y')
         generated_prompt = IaC_bugfix_generator(request)
         output = gpt_service(generated_prompt)
         return Output(output=output)
@@ -39,14 +41,16 @@ async def IaC_bugfix_generation(request:IaCBugfixInput) -> Output:
 
 @app.post("/IaC-install/")
 async def IaC_install_generation(request:IaCInstallationInput) -> Output:
-
+        if os.environ.get("TEST"):
+            return Output(output='apt-get install xyz \n apt-get update (covert them to shell file output)')
         generated_prompt = IaC_installation_generator(request)
         output = gpt_service(generated_prompt)
         return Output(output=output)
 
 @app.post("/IaC-template/docker")
 async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) -> Output:
-
+        if os.environ.get("TEST"):
+            return Output(output='output (nothing special)')
         generated_prompt = IaC_template_generator_docker(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)
@@ -55,7 +59,8 @@ async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) ->
 
 @app.post("/IaC-template/aws/ec2")
 async def IaC_template_generation_aws_ec2(request:IaCTemplateGenerationEC2) -> Output:
-
+        if os.environ.get("TEST"):
+            return Output(output='output (nothing special)')
         generated_prompt = IaC_template_generator_docker(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)
@@ -64,7 +69,8 @@ async def IaC_template_generation_aws_ec2(request:IaCTemplateGenerationEC2) -> O
 
 @app.post("/IaC-template/aws/s3")
 async def IaC_template_generation_aws_s3(request:IaCTemplateGenerationS3) -> Output:
-
+        if os.environ.get("TEST"):
+            return Output(output='output (nothing special)')
         generated_prompt = IaC_template_generator_docker(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)
@@ -73,7 +79,8 @@ async def IaC_template_generation_aws_s3(request:IaCTemplateGenerationS3) -> Out
 
 @app.post("/IaC-template/aws/iam")
 async def IaC_template_generation_aws_iam(request:IaCTemplateGenerationIAM) -> Output:
-
+        if os.environ.get("TEST"):
+            return Output(output='output (nothing special)')
         generated_prompt = IaC_template_generator_docker(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)

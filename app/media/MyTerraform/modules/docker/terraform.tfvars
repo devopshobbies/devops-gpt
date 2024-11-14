@@ -1,10 +1,11 @@
+
 image_name = "my-image"
 image_force_remove = true
 image_build = {
-  context = "./"
-  tag    = ["my-image:latest"]
+    context = "./"
+    tag    = ["my-image:latest"]
 }
-image_count = 0
+image_count = 1
 
 container_image = "my-image"
 container_name = "my-container"

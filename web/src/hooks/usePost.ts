@@ -6,7 +6,8 @@ import { ENDPOINTS } from "../features/constants";
 const usePost = (endpoint: ENDPOINTS, data: any) =>
   useQuery({
     queryKey: [endpoint],
-    queryFn: () => apiClient.post(endpoint, data),
+    queryFn: () =>
+      data ? apiClient.post(endpoint, data) : Promise.reject("No request data"),
     retry: 4,
     staleTime: 60,
   });

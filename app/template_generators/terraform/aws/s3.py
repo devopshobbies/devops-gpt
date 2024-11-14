@@ -15,7 +15,7 @@ def IaC_template_generator_s3(input) -> str:
                       - Define the provider block as follows:
                             ```
                             provider "aws" {{
-                              host = "us-east-1"
+                              region = "us-east-1"
                             }}
                             ```
                       - Defines a module block that references "s3" from a subdirectory within modules.

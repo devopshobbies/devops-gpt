@@ -20,6 +20,9 @@ from app.prompt_generators import (IaC_basics_generator,
         IaC_installation_generator, 
        )
 from app.template_generators.terraform.docker import (IaC_template_generator_docker)
+from app.template_generators.terraform.aws.ec2 import (IaC_template_generator_ec2)
+from app.template_generators.terraform.aws.IAM import (IaC_template_generator_iam)
+from app.template_generators.terraform.aws.s3 import (IaC_template_generator_s3)
 import os
 
 @app.post("/IaC-basic/")
@@ -61,7 +64,8 @@ async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) ->
 async def IaC_template_generation_aws_ec2(request:IaCTemplateGenerationEC2) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_docker(request)
+
+        generated_prompt = IaC_template_generator_ec2(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)
         execute_pythonfile("MyTerraform","terraform_generator")
@@ -71,7 +75,7 @@ async def IaC_template_generation_aws_ec2(request:IaCTemplateGenerationEC2) -> O
 async def IaC_template_generation_aws_s3(request:IaCTemplateGenerationS3) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_docker(request)
+        generated_prompt = IaC_template_generator_s3(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)
         execute_pythonfile("MyTerraform","terraform_generator")
@@ -81,7 +85,7 @@ async def IaC_template_generation_aws_s3(request:IaCTemplateGenerationS3) -> Out
 async def IaC_template_generation_aws_iam(request:IaCTemplateGenerationIAM) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_docker(request)
+        generated_prompt = IaC_template_generator_iam(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)
         execute_pythonfile("MyTerraform","terraform_generator")

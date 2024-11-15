@@ -20,7 +20,7 @@ def download_file_helm(filename: str):
 @app.get("/download-terraform/{filename}")
 def download_file_terraform(filename: str):
 
-    folder = 'app/media/MyHelm'
+    folder = 'app/media/MyTerraform'
     file_path = os.path.join(folder, filename)
     
     if not os.path.isfile(file_path):

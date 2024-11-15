@@ -20,3 +20,20 @@ export interface ApiRequestBasicGen {
   input: string;
   requestId: string;
 }
+
+export interface BugFixFormData {
+  minToken: number;
+  maxToken: number;
+  service: string;
+  bugDescription: string;
+  version: string;
+}
+
+export interface ApiRequestBugFix {
+  min_token: number;
+  max_token: number;
+  service: string;
+  bug_description: string;
+  version: string;
+  requestId: string;
+}

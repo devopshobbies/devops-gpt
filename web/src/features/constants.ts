@@ -1,8 +1,16 @@
 export enum BasicGenFields {
   MIN_TOKEN = "minToken",
   MAX_TOKEN = "maxToken",
-  INPUT = "input",
   SERVICE = "service",
+  INPUT = "input",
+}
+
+export enum BugFixFields {
+  MIN_TOKEN = "minToken",
+  MAX_TOKEN = "maxToken",
+  SERVICE = "service",
+  VERSION = "version",
+  BUG_DESCRIPTION = "bugDescription",
 }
 
 export enum UserType {

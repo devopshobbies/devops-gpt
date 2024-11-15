@@ -11,17 +11,20 @@ interface Props {
   messageData: Message[];
   endpoint: ENDPOINTS;
   request: any;
+  id: string;
 }
 
 interface BasicGenApiResponse {
   output: string;
 }
 
-const ChatBox = ({ messageData, endpoint, request }: Props) => {
+const ChatBox = ({ messageData, endpoint, request, id }: Props) => {
   const addMessage = useGptStore((s) => s.addMessage);
+
   const { data, error, isLoading } = usePost<BasicGenApiResponse>(
     endpoint,
-    request
+    request,
+    id
   );
 
   useEffect(() => {

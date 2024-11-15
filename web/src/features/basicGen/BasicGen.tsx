@@ -35,6 +35,7 @@ const BasicGen = () => {
       max_token: data.maxToken,
       service: data.service,
       input: data.input,
+      requestId: uuid(),
     };
     if (data.input) setReq(request);
   };
@@ -57,6 +58,7 @@ const BasicGen = () => {
               endpoint={ENDPOINTS.postBasic}
               request={req}
               messageData={messages}
+              id={req?.requestId ?? ""}
             />
             <HStack
               mt="3"

@@ -18,4 +18,5 @@ export interface ApiRequestBasicGen {
   max_token: number;
   service: string;
   input: string;
+  requestId: string;
 }

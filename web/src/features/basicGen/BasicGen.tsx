@@ -6,9 +6,10 @@ import { Button, HStack, Stack } from "@chakra-ui/react";
 import useGptStore from "../../utils/store";
 import ChatBox from "../../components/internal-ui/ChatBox";
 
-import { BasicGenFormData } from "../model";
+import { ApiRequestBasicGen, BasicGenFormData } from "../model";
 import { useEffect, useState } from "react";
 import { IoSendOutline } from "react-icons/io5";
+import { v4 as uuid } from "uuid";
 
 const BasicGen = () => {
   const formMethods = useForm<BasicGenFormData>({
@@ -18,30 +19,29 @@ const BasicGen = () => {
       service: "terraform",
       input: undefined,
     },
-    mode: "all",
+    mode: "onSubmit",
   });
 
   const { handleSubmit } = formMethods;
 
   const messages = useGptStore((s) => s.messages);
   const addMessage = useGptStore((s) => s.addMessage);
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [req, setReq] = useState<any>();
+  const [req, setReq] = useState<ApiRequestBasicGen | null>(null);
 
   const onSubmit = (data: BasicGenFormData) => {
-    addMessage(UserType.USER, data.input);
-    const request = {
+    addMessage(UserType.USER, data.input, uuid());
+    const request: ApiRequestBasicGen = {
       min_token: data.minToken,
       max_token: data.maxToken,
       service: data.service,
       input: data.input,
     };
-    setReq(request);
+    if (data.input) setReq(request);
   };
 
   useEffect(() => {
-    setIsDisabled(!!formMethods.getFieldState(BasicGenFields.INPUT).isDirty);
-  }, [formMethods]);
+    return () => setReq(null);
+  }, []);
 
   return (
     <div>
@@ -60,13 +60,19 @@ const BasicGen = () => {
             />
             <HStack
               mt="3"
-              alignItems="end"
-              alignContent={"center"}
+              alignItems="center"
+              alignContent="center"
               justifyContent="center"
               bottom="5"
             >
               <Input placeholder="Text" fieldName={BasicGenFields.INPUT} />
-              <Button type="submit" bg="orange.800" disabled={isDisabled}>
+              <Button
+                type="submit"
+                bg="orange.800"
+                disabled={
+                  formMethods.getFieldState(BasicGenFields.INPUT).invalid
+                }
+              >
                 <IoSendOutline />
               </Button>
             </HStack>

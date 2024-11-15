@@ -28,6 +28,13 @@ export const validateForm = (fieldName: BasicGenFields) => {
         },
       };
       break;
+    case BasicGenFields.INPUT:
+      validationRules = {
+        required: {
+          value: true,
+          message: "Input can not be empty",
+        },
+      };
   }
   return validationRules;
 };

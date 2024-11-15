@@ -4,16 +4,29 @@ from fastapi.responses import FileResponse
 import os
 
 
-@app.get("/download/{filename}")
-def download_file(filename: str):
-    folder = "app/media/MyTerraform"  # specify your folder path here
-    file_path = os.path.join(folder, filename)
+@app.get("/download-helm/{filename}")
+def download_file_helm(filename: str):
 
-    # Ensure the file exists
+    folder = 'app/media/MyHelm'
+    file_path = os.path.join(folder, filename)
+   
     if not os.path.isfile(file_path):
         raise HTTPException(status_code=404, detail="File not found.")
 
-    # Return the file response for download
+   
+    return FileResponse(file_path, media_type='application/octet-stream', filename=filename)
+
+
+@app.get("/download-terraform/{filename}")
+def download_file_terraform(filename: str):
+
+    folder = 'app/media/MyHelm'
+    file_path = os.path.join(folder, filename)
+    
+    if not os.path.isfile(file_path):
+        raise HTTPException(status_code=404, detail="File not found.")
+
+   
     return FileResponse(file_path, media_type='application/octet-stream', filename=filename)
 
 @app.get("/list-directory")

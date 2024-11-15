@@ -1,8 +1,8 @@
-import { RegisterOptions, FieldValues } from "react-hook-form";
-import { BasicGenFields } from "../features/constants";
+import { RegisterOptions } from "react-hook-form";
+import { BasicGenFields, BugFixFields } from "../features/constants";
 
-export const validateForm = (fieldName: BasicGenFields) => {
-  let validationRules: RegisterOptions<FieldValues, BasicGenFields> = {};
+export const validateForm = (fieldName: string) => {
+  let validationRules: RegisterOptions = {};
   switch (fieldName) {
     case BasicGenFields.MIN_TOKEN:
       validationRules = {
@@ -28,6 +28,8 @@ export const validateForm = (fieldName: BasicGenFields) => {
         },
       };
       break;
+    case BugFixFields.VERSION:
+    case BugFixFields.BUG_DESCRIPTION:
     case BasicGenFields.INPUT:
       validationRules = {
         required: {
@@ -35,6 +37,7 @@ export const validateForm = (fieldName: BasicGenFields) => {
           message: "Input can not be empty",
         },
       };
+      break;
   }
   return validationRules;
 };

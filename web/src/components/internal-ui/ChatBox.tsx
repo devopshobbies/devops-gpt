@@ -5,6 +5,7 @@ import usePost from "../../hooks/usePost";
 import { ENDPOINTS, UserType } from "../../features/constants";
 import useGptStore from "../../utils/store";
 import { useEffect } from "react";
+import { v4 as uuid } from "uuid";
 
 interface Props {
   messageData: Message[];
@@ -12,12 +13,20 @@ interface Props {
   request: any;
 }
 
+interface BasicGenApiResponse {
+  output: string;
+}
+
 const ChatBox = ({ messageData, endpoint, request }: Props) => {
   const addMessage = useGptStore((s) => s.addMessage);
-  const { data, error, isPending } = usePost(endpoint, request);
+  const { data, error, isLoading } = usePost<BasicGenApiResponse>(
+    endpoint,
+    request
+  );
 
   useEffect(() => {
-    addMessage(UserType.BOT, data?.data.output);
+    if (data?.data.output) addMessage(UserType.BOT, data?.data.output!, uuid());
+    console.log(messageData);
   }, [request, data]);
 
   return (
@@ -30,10 +39,10 @@ const ChatBox = ({ messageData, endpoint, request }: Props) => {
       p="1rem"
       overflowY="auto"
     >
-      {messageData.map((message, index) => (
+      {messageData.map((message) => (
         <ChatBubble
-          isLoading={isPending}
-          key={index}
+          isLoading={isLoading}
+          key={message.id}
           message={message.content}
           userType={message.user}
         />

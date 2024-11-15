@@ -3,13 +3,18 @@ import apiClient from "../utils/apiClient";
 import { useQuery } from "@tanstack/react-query";
 import { ENDPOINTS } from "../features/constants";
 
-const usePost = (endpoint: ENDPOINTS, data: any) =>
+const usePost = <T>(endpoint: ENDPOINTS, data: T) =>
   useQuery({
     queryKey: [endpoint],
     queryFn: () =>
-      data ? apiClient.post(endpoint, data) : Promise.reject("No request data"),
-    retry: 4,
-    staleTime: 60,
+      data
+        ? apiClient.post<T>(endpoint, data)
+        : Promise.reject("No request data"),
+    staleTime: 0,
+    enabled: !!data && Object.keys(data).length > 0,
+    refetchOnWindowFocus: false,
+    gcTime: 0,
+    retry: false,
   });
 
 export default usePost;

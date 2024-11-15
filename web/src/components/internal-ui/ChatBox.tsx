@@ -14,14 +14,14 @@ interface Props {
   id: string;
 }
 
-interface BasicGenApiResponse {
+interface BasicApiResponse {
   output: string;
 }
 
 const ChatBox = ({ messageData, endpoint, request, id }: Props) => {
   const addMessage = useGptStore((s) => s.addMessage);
 
-  const { data, error, isLoading } = usePost<BasicGenApiResponse>(
+  const { data, error, isLoading } = usePost<BasicApiResponse>(
     endpoint,
     request,
     id

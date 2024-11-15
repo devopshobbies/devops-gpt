@@ -1,18 +1,22 @@
 import { useFormContext } from "react-hook-form";
-import { BasicGenFields } from "../../features/constants";
+import { BasicGenFields, BugFixFields } from "../../features/constants";
 import { validateForm } from "../../utils/formValidator";
 
 interface Props {
-  fieldName: BasicGenFields;
+  fieldName: string;
   label?: string;
   placeholder?: string;
 }
 
-const Input = ({ fieldName, label, placeholder }: Props) => {
+const Input = ({ fieldName, label, placeholder = "Placeholder" }: Props) => {
   const {
     register,
     formState: { errors },
   } = useFormContext();
+
+  const showTextArea =
+    fieldName === BasicGenFields.INPUT ||
+    fieldName === BugFixFields.BUG_DESCRIPTION;
 
   const defaultStyle =
     "border border-stone-600 bg-stone-900 rounded-md flex h-auto p-4";
@@ -23,7 +27,7 @@ const Input = ({ fieldName, label, placeholder }: Props) => {
       <div className="label">
         <span className="label-text">{label}</span>
       </div>
-      {fieldName !== BasicGenFields.INPUT ? (
+      {!showTextArea ? (
         <input
           className={defaultStyle}
           {...register(fieldName, validateForm(fieldName))}

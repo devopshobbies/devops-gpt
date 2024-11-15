@@ -29,7 +29,6 @@ const ChatBox = ({ messageData, endpoint, request, id }: Props) => {
 
   useEffect(() => {
     if (data?.data.output) addMessage(UserType.BOT, data?.data.output!, uuid());
-    console.log(messageData);
   }, [request, data]);
 
   return (

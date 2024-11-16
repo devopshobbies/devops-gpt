@@ -6,6 +6,7 @@ import { ENDPOINTS, UserType } from "../../features/constants";
 import useGptStore from "../../utils/store";
 import { useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import { useLocation } from "react-router-dom";
 
 interface Props {
   messageData: Message[];
@@ -20,6 +21,9 @@ interface BasicApiResponse {
 
 const ChatBox = ({ messageData, endpoint, request, id }: Props) => {
   const addMessage = useGptStore((s) => s.addMessage);
+  const resetMessages = useGptStore((s) => s.resetMessages);
+
+  const location = useLocation();
 
   const { data, error, isLoading } = usePost<BasicApiResponse>(
     endpoint,
@@ -30,6 +34,10 @@ const ChatBox = ({ messageData, endpoint, request, id }: Props) => {
   useEffect(() => {
     if (data?.data.output) addMessage(UserType.BOT, data?.data.output!, uuid());
   }, [request, data]);
+
+  useEffect(() => {
+    return () => resetMessages();
+  }, [location.pathname]);
 
   return (
     <Box

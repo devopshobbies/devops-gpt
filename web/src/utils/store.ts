@@ -8,6 +8,8 @@ interface DevOpsStore {
 
   messages: Message[];
   addMessage: (user: UserType, content: string, id: string) => void;
+
+  resetMessages: () => void;
 }
 
 const initialState: Pick<DevOpsStore, "isOpen" | "messages"> = {
@@ -22,6 +24,7 @@ const useGptStore = create<DevOpsStore>((set) => ({
     set((state) => ({
       messages: [...state.messages, { user, content, id }],
     })),
+  resetMessages: () => set({ messages: [] }),
 }));
 
 export default useGptStore;

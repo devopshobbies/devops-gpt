@@ -200,7 +200,7 @@ POST /IaC-template/aws/iam
 
 Contributions are always welcome!
 
-See `CONTRIBUTING.md` for ways to get started.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for ways to get started.
 
 
 

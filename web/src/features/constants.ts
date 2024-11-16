@@ -1,8 +1,16 @@
 export enum BasicGenFields {
   MIN_TOKEN = "minToken",
   MAX_TOKEN = "maxToken",
-  INPUT = "input",
   SERVICE = "service",
+  INPUT = "input",
+}
+
+export enum BugFixFields {
+  MIN_TOKEN = "minToken",
+  MAX_TOKEN = "maxToken",
+  SERVICE = "service",
+  VERSION = "version",
+  BUG_DESCRIPTION = "bugDescription",
 }
 
 export enum UserType {
@@ -19,3 +27,18 @@ export enum ENDPOINTS {
   getDonwload = "/download",
   getDirectory = "/list-directory",
 }
+
+export const basicGenDefaultValues = {
+  minToken: 100,
+  maxToken: 500,
+  service: "terraform",
+  input: undefined,
+};
+
+export const bugFixDefaultValues = {
+  minToken: 100,
+  maxToken: 500,
+  service: "terraform",
+  version: "latest",
+  bugDescription: undefined,
+};

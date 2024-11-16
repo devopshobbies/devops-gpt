@@ -11,7 +11,7 @@ interface DevOpsStore {
 }
 
 const initialState: Pick<DevOpsStore, "isOpen" | "messages"> = {
-  isOpen: true,
+  isOpen: false,
   messages: [],
 };
 

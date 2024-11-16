@@ -14,6 +14,7 @@ const useFormHandler = <T extends FieldValues, K>(
 
   const onSubmit = (data: K, content: string) => {
     addMessage(UserType.USER, content, uuid());
+    formMethods.reset();
     if (data) setRequest({ ...data, requestId: uuid() });
   };
   return { formMethods, request, handleSubmit, onSubmit };

@@ -9,8 +9,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { index: true, element: <Landing /> },
-      { path: ENDPOINTS.postBasic, element: <BasicGen /> },
+      { index: true, element: <BasicGen /> },
       { path: ENDPOINTS.postFix, element: <BugFix /> },
     ],
   },

@@ -26,43 +26,39 @@ const BasicGen = () => {
   const messages = useGptStore((s) => s.messages);
 
   return (
-    <div>
-      <FormProvider {...formMethods}>
-        <form onSubmit={handleFormSubmit}>
-          <Stack gap="3" justifyContent="center" alignItems="center">
-            <div className="flex gap-2">
-              <Input fieldName={BasicGenFields.MIN_TOKEN} label="Min token" />
-              <Input fieldName={BasicGenFields.MAX_TOKEN} label="Max token" />
-              <Input fieldName={BasicGenFields.SERVICE} label="Service" />
-            </div>
-            <ChatBox
-              endpoint={ENDPOINTS.postBasic}
-              request={request}
-              messageData={messages}
-              id={request?.requestId ?? ""}
-            />
-            <HStack
-              mt="3"
-              alignItems="center"
-              alignContent="center"
-              justifyContent="center"
-              bottom="5"
+    <FormProvider {...formMethods}>
+      <form onSubmit={handleFormSubmit}>
+        <Stack gap="3" justifyContent="center" alignItems="center">
+          <div className="flex gap-2">
+            <Input fieldName={BasicGenFields.MIN_TOKEN} label="Min token" />
+            <Input fieldName={BasicGenFields.MAX_TOKEN} label="Max token" />
+            <Input fieldName={BasicGenFields.SERVICE} label="Service" />
+          </div>
+          <ChatBox
+            endpoint={ENDPOINTS.postBasic}
+            request={request}
+            messageData={messages}
+            id={request?.requestId ?? ""}
+          />
+          <HStack
+            mt="3"
+            alignItems="center"
+            alignContent="center"
+            justifyContent="center"
+            bottom="5"
+          >
+            <Input placeholder="Text" fieldName={BasicGenFields.INPUT} />
+            <Button
+              type="submit"
+              bg="orange.800"
+              disabled={formMethods.getFieldState(BasicGenFields.INPUT).invalid}
             >
-              <Input placeholder="Text" fieldName={BasicGenFields.INPUT} />
-              <Button
-                type="submit"
-                bg="orange.800"
-                disabled={
-                  formMethods.getFieldState(BasicGenFields.INPUT).invalid
-                }
-              >
-                <IoSendOutline />
-              </Button>
-            </HStack>
-          </Stack>
-        </form>
-      </FormProvider>
-    </div>
+              <IoSendOutline />
+            </Button>
+          </HStack>
+        </Stack>
+      </form>
+    </FormProvider>
   );
 };
 

@@ -1,7 +1,7 @@
 import { ENDPOINTS } from "../features/constants";
 
 export const btnMappings = [
-  { label: "Basic", route: ENDPOINTS.postBasic },
+  { label: "Basic", route: "/" },
   { label: "Bug fix", route: ENDPOINTS.postFix },
   { label: "Installation", route: ENDPOINTS.postInstall },
   { label: "Template - IaC", route: ENDPOINTS.PostIacTemp },

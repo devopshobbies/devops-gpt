@@ -1,12 +1,11 @@
 def IaC_template_generator_ec2(input) -> str:
 
-    ec2 = ['aws_key_pair', 'aws_security_group']
+    ec2 = ['aws_key_pair', 'aws_security_group', 'aws_instance']
 
     aws_ec2_create_key_pair = 'true' if input.key_pair else 'false'
     aws_ec2_create_security_group = 'true' if input.security_group else 'false'
+    aws_ec2_create_instance = 'true' if input.aws_instance else 'false'
 
-
-    key_path = "${path.module}/terraform.pub"
 
     prompt = f"""
               Generate a Python code to generate a Terraform project (project name is app/media/MyTerraform)
@@ -32,6 +31,8 @@ def IaC_template_generator_ec2(input) -> str:
                           key_pair_create(bool), key_pair_name(string)
                       - Sets these variables names for aws_security_group resource:
                           security_group_create(bool), security_group_name(string), security_group_ingress_rules(map(object)), security_group_egress_rule(object())
+                      - Sets these variables names for aws_instance resource:
+                          instance_create(bool), instance_type(string)
                   - terraform.tfvars:
                       - Structure as follows:
                           key_pair_create = {aws_ec2_create_key_pair}
@@ -61,6 +62,9 @@ def IaC_template_generator_ec2(input) -> str:
                             protocol    = "-1"
                             cidr_blocks = ["0.0.0.0/0"]
                           }}
+
+                          instance_create = {aws_ec2_create_instance}
+                          instance_type = "t2.micro"
                   - versions.tf:
                       - Structure as follows:
                             terraform {{
@@ -76,6 +80,28 @@ def IaC_template_generator_ec2(input) -> str:
               2. Module Directory Structure (modules/ec2):
                   - create an empty file called "terraform.pub" to store the public key for key_pair resource
                   - main.tf:
+                      - Create the below data block:
+                          ```
+                          data "aws_ami" "linux" {{
+                            most_recent = true
+                            owners      = ["amazon"]
+
+                            filter {{
+                              name   = "name"
+                              values = ["al2023-ami-2023*kernel-6.1-x86_64"]
+                            }}
+
+                            filter {{
+                              name   = "root-device-type"
+                              values = ["ebs"]
+                            }}
+
+                            filter {{
+                              name   = "virtualization-type"
+                              values = ["hvm"]
+                            }}
+                          }}
+                          ```
                       - Set the following parameters for aws_key_pair resource (name its terraform resource to "key_pair") and avoid using any other parameters:
                            - 1. count (type: number): follow the below syntax for count:
                                ```
@@ -85,9 +111,9 @@ def IaC_template_generator_ec2(input) -> str:
                                ```
                                key_name = var.key_pair_name
                                ```
-                           - 3. public_key (type: string): follow the below syntax for public_key:
+                           - 3. public_key (type: string): follow the below syntax for public_key, avoid generating double brackets {{}} for path.module in the below syntax:
                                ```
-                               public_key = file("{key_path}")
+                               public_key = file("${{path.module}}/terraform.pub")
                                ```
                       - Set the following parameters for aws_security_group resource (name its terraform resource to "security_group") and avoid using any other parameters:
                            - 1. count (type: number): follow the below syntax for count:
@@ -120,11 +146,34 @@ def IaC_template_generator_ec2(input) -> str:
                                  cidr_blocks = var.security_group_egress_rule["cidr_blocks"]
                                }}
                                ```
+                      - Set the following parameters for aws_instance resource (name its terraform resource to "instance") and avoid using any other parameters:
+                           - 1. count (type: number): follow the below syntax for count:
+                               ```
+                               count = var.instance_create ? 1 : 0
+                               ```
+                           - 2. ami (type: string): follow the below syntax for ami, it uses the data block:
+                               ```
+                               ami = data.aws_ami.linux.id
+                               ```
+                           - 3. instance_type (type: string): follow the below syntax for instance_type:
+                               ```
+                               instance_type = var.instance_type
+                               ```
+                           - 4. key_name: follow the below syntax for key_name:
+                               ```
+                               key_name = var.key_pair_create ? aws_key_pair.key_pair[0].key_name : null
+                               ```
+                           - 5. vpc_security_group_ids: follow the below syntax for vpc_security_group_ids:
+                               ```
+                               vpc_security_group_ids = var.security_group_create ? [aws_security_group.security_group[0].id] : null
+                               ```
                   - variables.tf:
                       - Sets these variables names for aws_key_pair resource:
                           key_pair_create(bool), key_pair_name(string)
                       - Sets these variables names for aws_security_group resource:
                           security_group_create(bool), security_group_name(string), security_group_ingress_rules(map(object)), security_group_egress_rule(object())
+                      - Sets these variables names for aws_instance resource:
+                          instance_create(bool), instance_type(string)
                   - terraform.tfvars:
                       - Structure as follows:
                           key_pair_create = {aws_ec2_create_key_pair}
@@ -154,6 +203,9 @@ def IaC_template_generator_ec2(input) -> str:
                             protocol    = "-1"
                             cidr_blocks = ["0.0.0.0/0"]
                           }}
+
+                          instance_create = {aws_ec2_create_instance}
+                          instance_type = "t2.micro"
                   - versions.tf:
                       - Structure as follows:
                             terraform {{

@@ -1,14 +1,23 @@
 import { useFormContext } from "react-hook-form";
 import { BasicGenFields, BugFixFields } from "../../features/constants";
 import { validateForm } from "../../utils/formValidator";
+import { CSSProperties } from "react";
 
 interface Props {
   fieldName: string;
   label?: string;
   placeholder?: string;
+  disabled?: boolean;
+  style?: CSSProperties;
 }
 
-const Input = ({ fieldName, label, placeholder = "Placeholder" }: Props) => {
+const Input = ({
+  fieldName,
+  label,
+  placeholder,
+  style,
+  disabled = false,
+}: Props) => {
   const {
     register,
     formState: { errors },
@@ -29,15 +38,19 @@ const Input = ({ fieldName, label, placeholder = "Placeholder" }: Props) => {
       </div>
       {!showTextArea ? (
         <input
+          disabled={disabled}
           className={defaultStyle}
           {...register(fieldName, validateForm(fieldName))}
           placeholder={placeholder}
+          style={style}
         />
       ) : (
         <textarea
           className={`overflow-y-auto w-[50rem] ${defaultStyle}`}
           {...register(fieldName, validateForm(fieldName))}
           placeholder={placeholder}
+          style={style}
+          disabled={disabled}
         />
       )}
       {error && (

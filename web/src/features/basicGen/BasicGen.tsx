@@ -1,6 +1,6 @@
 import { FormProvider } from "react-hook-form";
 import Input from "../../components/internal-ui/Input";
-import { basicGenDefaultValues, BasicGenFields, ENDPOINTS } from "../constants";
+import { basicGenDefaultValues, BasicGenFields, Endpoints } from "../constants";
 import { Button, HStack, Stack } from "@chakra-ui/react";
 
 import useGptStore from "../../utils/store";
@@ -35,7 +35,7 @@ const BasicGen = () => {
             <Input fieldName={BasicGenFields.SERVICE} label="Service" />
           </div>
           <ChatBox
-            endpoint={ENDPOINTS.postBasic}
+            endpoint={Endpoints.POST_BASIC}
             request={request}
             messageData={messages}
             id={request?.requestId ?? ""}

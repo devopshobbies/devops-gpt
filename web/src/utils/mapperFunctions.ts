@@ -3,6 +3,14 @@ import {
   ApiRequestBasicGen,
   BugFixFormData,
   ApiRequestBugFix,
+  TerraformDockerFormData,
+  ApiRequestTerraformDocker,
+  TerraformEc2FormData,
+  ApiRequestTerraformEc2,
+  TerraformS3FormData,
+  ApiRequestTerraformS3,
+  TerraformIAMFormData,
+  ApiRequestTerraformIam,
 } from "../features/model";
 
 export const basicGenMapper = (data: BasicGenFormData): ApiRequestBasicGen => ({
@@ -20,4 +28,34 @@ export const bugFixMapper = (data: BugFixFormData): ApiRequestBugFix => ({
   service: data.service,
   version: data.version,
   requestId: "",
+});
+
+export const terraformDockerMapper = (
+  data: TerraformDockerFormData
+): ApiRequestTerraformDocker => ({
+  docker_image: data.dockerImage,
+  docker_container: data.dockerContainer,
+});
+
+export const terraformEC2Mapper = (
+  data: TerraformEc2FormData
+): ApiRequestTerraformEc2 => ({
+  key_pair: data.keyPair,
+  security_group: data.securityGroup,
+  aws_instance: data.awsInstance,
+  ami_from_instance: data.amiFromInstance,
+});
+
+export const terraformS3Mapper = (
+  data: TerraformS3FormData
+): ApiRequestTerraformS3 => ({
+  s3_bucket: data.s3Bucket,
+  bucket_versioning: data.bucketVersioning,
+});
+
+export const terraformIAMMapper = (
+  data: TerraformIAMFormData
+): ApiRequestTerraformIam => ({
+  iam_user: data.iamGroup,
+  iam_group: data.iamUser,
 });

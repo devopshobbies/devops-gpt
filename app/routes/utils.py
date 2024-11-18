@@ -2,39 +2,33 @@ from app.app_instance import app
 from fastapi import FastAPI, HTTPException,Response
 from fastapi.responses import FileResponse
 import os
+import zipfile
 
 
-@app.get("/download-helm/{filename}")
-def download_file_helm(filename: str):
-
-    folder = 'app/media/MyHelm'
-    file_path = os.path.join(folder, filename)
-   
-    if not os.path.isfile(file_path):
-        raise HTTPException(status_code=404, detail="File not found.")
-
-   
-    return FileResponse(file_path, media_type='application/octet-stream', filename=filename)
+def zip_folder(folder_path: str, output_zip_path: str):
+    """Zip the entire folder."""
+    with zipfile.ZipFile(output_zip_path, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                # Add file to the zip file
+                zip_file.write(file_path, os.path.relpath(file_path, folder_path))
 
 
-@app.get("/download-terraform/{filename}")
-def download_file_terraform(filename: str):
 
-    folder = 'app/media/MyTerraform'
-    file_path = os.path.join(folder, filename)
-    
-    if not os.path.isfile(file_path):
-        raise HTTPException(status_code=404, detail="File not found.")
 
-   
-    return FileResponse(file_path, media_type='application/octet-stream', filename=filename)
+@app.get("/download-folder{folder_name}")
+async def download_folder_MyHelm(folder_name: str):
+    folder_path = f"app/media/{folder_name}"  # Adjust the path as needed
+    if not os.path.exists(folder_path):
+        raise HTTPException(status_code=404, detail="Folder not found")
 
-@app.get("/list-directory")
-def list_directory(folder: str):
-    # Ensure the folder exists
-    if not os.path.isdir(folder):
-        raise HTTPException(status_code=404, detail=f"{folder} does not exist.")
+    zip_file_path = f"app/media/{folder_name}_zip.zip"
 
-    # List the contents of the directory
-    contents = os.listdir(folder)
-    return {"folder": folder, "contents": contents}
+    # Zip the folder
+    zip_folder(folder_path, zip_file_path)
+
+    # Return the zip file as a response
+    return FileResponse(zip_file_path, media_type='application/zip', filename=f"app/media{folder_name}_zip.zip")
+
+

@@ -11,6 +11,7 @@ from app.models import (IaCBasicInput,
         IaCTemplateGenerationEC2,
         IaCTemplateGenerationS3,
         IaCTemplateGenerationIAM,
+        IaCTemplateGenerationArgoCD
        )
 
 from fastapi import Response
@@ -23,6 +24,7 @@ from app.template_generators.terraform.docker import (IaC_template_generator_doc
 from app.template_generators.terraform.aws.ec2 import (IaC_template_generator_ec2)
 from app.template_generators.terraform.aws.IAM import (IaC_template_generator_iam)
 from app.template_generators.terraform.aws.s3 import (IaC_template_generator_s3)
+from app.template_generators.terraform.argocd import (IaC_template_generator_argocd)
 import os
 
 @app.post("/IaC-basic/")
@@ -92,3 +94,12 @@ async def IaC_template_generation_aws_iam(request:IaCTemplateGenerationIAM) -> O
         return Output(output='output')
 
 
+@app.post("/IaC-template/argocd")
+async def IaC_template_generation_argocd(request:IaCTemplateGenerationArgoCD) -> Output:
+        if os.environ.get("TEST"):
+            return Output(output='output (nothing special)')
+        generated_prompt = IaC_template_generator_argocd(request)
+        output = gpt_service(generated_prompt)
+        edit_directory_generator("terraform_generator",output)
+        execute_pythonfile("MyTerraform","terraform_generator")
+        return Output(output='output')

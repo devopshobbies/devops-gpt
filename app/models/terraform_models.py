@@ -80,3 +80,9 @@ class IaCTemplateGenerationS3(BaseModel):
 class IaCTemplateGenerationIAM(BaseModel):
     iam_user:bool = True
     iam_group:bool = True
+
+class IaCTemplateGenerationArgoCD(BaseModel):
+    argocd_application:bool = True
+    argocd_project:bool = True
+    argocd_repository:bool = True
+    argocd_cluster:bool = True

@@ -1,10 +1,11 @@
 def IaC_template_generator_ec2(input) -> str:
-
-    ec2 = ['aws_key_pair', 'aws_security_group', 'aws_instance']
+    
+    ec2 = ['aws_key_pair', 'aws_security_group', 'aws_instance', 'aws_ami_from_instance']
 
     aws_ec2_create_key_pair = 'true' if input.key_pair else 'false'
     aws_ec2_create_security_group = 'true' if input.security_group else 'false'
     aws_ec2_create_instance = 'true' if input.aws_instance else 'false'
+    aws_ec2_create_ami_from_instance = 'true' if input.ami_from_instance else 'false'
 
 
     prompt = f"""
@@ -21,6 +22,7 @@ def IaC_template_generator_ec2(input) -> str:
                             }}
                             ```
                       - Defines a module block that references "ec2" from a subdirectory within modules.
+                        Don't forget to use source parameter to call ec2 module. this is so important.
                         This module block should expose all variables that {ec2} resources require, allowing
                         configuration at the root level rather than directly within the module.
                       - Every variable defined in {ec2} resources should be passed through the module block,
@@ -33,6 +35,8 @@ def IaC_template_generator_ec2(input) -> str:
                           security_group_create(bool), security_group_name(string), security_group_ingress_rules(map(object)), security_group_egress_rule(object())
                       - Sets these variables names for aws_instance resource:
                           instance_create(bool), instance_type(string)
+                      - Sets these variables names for aws_ami_from_instance resource:
+                          ami_from_instance_create(bool), ami_name(string)
                   - terraform.tfvars:
                       - Structure as follows:
                           key_pair_create = {aws_ec2_create_key_pair}
@@ -65,6 +69,9 @@ def IaC_template_generator_ec2(input) -> str:
 
                           instance_create = {aws_ec2_create_instance}
                           instance_type = "t2.micro"
+
+                          ami_from_instance_create = {aws_ec2_create_ami_from_instance}
+                          ami_name = "my-own-ami"
                   - versions.tf:
                       - Structure as follows:
                             terraform {{
@@ -167,6 +174,19 @@ def IaC_template_generator_ec2(input) -> str:
                                ```
                                vpc_security_group_ids = var.security_group_create ? [aws_security_group.security_group[0].id] : null
                                ```
+                      - Set the following parameters for aws_ami_from_instance resource (name its terraform resource to "ami") and avoid using any other parameters:
+                           - 1. count (type: number): follow the below syntax for count:
+                               ```
+                               count = var.instance_create && var.ami_from_instance_create ? 1 : 0
+                               ```
+                           - 2. name (type: string): follow the below syntax for name:
+                               ```
+                               name = var.ami_name
+                               ```
+                           - 3. source_instance_id: follow the below syntax for source_instance_id:
+                               ```
+                               source_instance_id = aws_instance.instance[0].id
+                               ```
                   - variables.tf:
                       - Sets these variables names for aws_key_pair resource:
                           key_pair_create(bool), key_pair_name(string)
@@ -174,6 +194,8 @@ def IaC_template_generator_ec2(input) -> str:
                           security_group_create(bool), security_group_name(string), security_group_ingress_rules(map(object)), security_group_egress_rule(object())
                       - Sets these variables names for aws_instance resource:
                           instance_create(bool), instance_type(string)
+                      - Sets these variables names for aws_ami_from_instance resource:
+                          ami_from_instance_create(bool), ami_name(string)
                   - terraform.tfvars:
                       - Structure as follows:
                           key_pair_create = {aws_ec2_create_key_pair}
@@ -206,6 +228,9 @@ def IaC_template_generator_ec2(input) -> str:
 
                           instance_create = {aws_ec2_create_instance}
                           instance_type = "t2.micro"
+
+                          ami_from_instance_create = {aws_ec2_create_ami_from_instance}
+                          ami_name = "my-own-ami"
                   - versions.tf:
                       - Structure as follows:
                             terraform {{

@@ -27,8 +27,6 @@ const Terraform = () => {
     }
   }, [isSuccess, endpoint]);
 
-  console.log(endpoint, isSuccess);
-
   return (
     <div>
       <div>

@@ -64,14 +64,6 @@ export enum UserType {
   BOT = "bot",
 }
 
-export enum ListDirectoryFields {
-  LIST_DIRECTORY = "listDirectory",
-}
-
-export enum DownloadFields {
-  DOWNLOAD = "download",
-}
-
 export const basicGenDefaultValues: BasicGenFormData = {
   minToken: 100,
   maxToken: 500,

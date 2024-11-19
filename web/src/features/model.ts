@@ -82,19 +82,6 @@ export interface ApiRequestTerraformIam {
   iam_group: boolean;
 }
 
-export interface ListDirectoryFormData {
-  listDirectory: string;
-}
-
-export interface ApiResponseListDirectory {
-  folder: string;
-  contents: string[];
-}
-
-export interface DownloadFormData {
-  download: string;
-}
-
 export interface ApiResponseDownload {
   detail: [{ loc: [string, 0]; msg: string; type: string }];
 }

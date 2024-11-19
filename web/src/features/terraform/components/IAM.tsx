@@ -12,11 +12,18 @@ import { terraformIAMMapper } from "../../../utils/mapperFunctions";
 import useTerraFormHandler from "../hooks";
 
 const IAM = () => {
-  const { formMethods, handleSubmit, onSubmit, isSuccess, isError } =
-    useTerraFormHandler<TerraformIAMFormData, ApiRequestTerraformIam>(
-      terraformIamDefaultValues,
-      Endpoints.POST_IAC_T_IAM
-    );
+  const {
+    formMethods,
+    handleSubmit,
+    onSubmit,
+    isSuccess,
+    isError,
+    status,
+    data,
+  } = useTerraFormHandler<TerraformIAMFormData, ApiRequestTerraformIam>(
+    terraformIamDefaultValues,
+    Endpoints.POST_IAC_T_IAM
+  );
 
   const handleFormSubmit = handleSubmit((data) =>
     onSubmit(terraformIAMMapper(data))
@@ -31,15 +38,25 @@ const IAM = () => {
               <p className="font-bold">IAM service: </p>
               <CheckBox
                 fieldName={TerraformIAMFields.IAM_USER}
-                label="IAM user?"
+                label="IAM user"
               />
               <CheckBox
                 fieldName={TerraformIAMFields.IAM_GROUP}
                 label="IAM group"
               />
             </HStack>
-            <Button type="submit" bg="orange.700" w="8rem" h="3rem">
-              Generate
+            <Button
+              type="submit"
+              disabled={status === "pending" && !data}
+              bg="orange.700"
+              w="8rem"
+              h="3rem"
+            >
+              {status === "pending" ? (
+                <span className="loading loading-ring loading-md "></span>
+              ) : (
+                <p>Generate</p>
+              )}
             </Button>
           </div>
         </form>

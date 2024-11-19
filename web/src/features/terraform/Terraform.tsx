@@ -4,6 +4,7 @@ import { Endpoints } from "../constants";
 import { routes, terraformBtnMapping } from "../../utils/routing";
 import { Button } from "@chakra-ui/react";
 import { Link, Outlet } from "react-router-dom";
+import { nameGenerator } from "../../utils/nameGenerator";
 
 const Terraform = () => {
   const { endpoint, isSuccess } = useGptStore((s) => s.generatorQuery);
@@ -13,13 +14,29 @@ const Terraform = () => {
 
   const [selected, setSelected] = useState<number>();
 
-  const downloadFile = useCallback(() => {
+  const downloadFile = useCallback(async () => {
     if (!isSuccess) return;
-    if (downloadRef.current) {
-      downloadRef.current.href = Endpoints.DOWNLOAD_LINK;
-      downloadRef.current.download = "media";
-      downloadRef.current.target = "_blank";
-      downloadRef.current.click();
+
+    try {
+      const response = await fetch(Endpoints.DOWNLOAD_LINK);
+      if (!response.ok) throw new Error("Failed to fetch file");
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      const fileName = nameGenerator(endpoint);
+
+      const tempLink = document.createElement("a");
+      tempLink.href = url;
+      tempLink.download = fileName;
+      tempLink.style.display = "none";
+      document.body.appendChild(tempLink);
+
+      tempLink.click();
+      document.body.removeChild(tempLink);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
     }
   }, [isSuccess, endpoint]);
 

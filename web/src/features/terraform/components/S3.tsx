@@ -12,11 +12,18 @@ import { terraformS3Mapper } from "../../../utils/mapperFunctions";
 import useTerraFormHandler from "../hooks";
 
 const S3 = () => {
-  const { formMethods, handleSubmit, onSubmit, isSuccess, isError } =
-    useTerraFormHandler<TerraformS3FormData, ApiRequestTerraformS3>(
-      terraformS3DefaultValues,
-      Endpoints.POST_IAC_T_S3
-    );
+  const {
+    formMethods,
+    handleSubmit,
+    onSubmit,
+    isSuccess,
+    isError,
+    status,
+    data,
+  } = useTerraFormHandler<TerraformS3FormData, ApiRequestTerraformS3>(
+    terraformS3DefaultValues,
+    Endpoints.POST_IAC_T_S3
+  );
 
   const handleFormSubmit = handleSubmit((data) =>
     onSubmit(terraformS3Mapper(data))
@@ -31,15 +38,25 @@ const S3 = () => {
               <p className="font-bold">S3 service: </p>
               <CheckBox
                 fieldName={TerraformS3Fields.S3_BUCKET}
-                label="S3 bucket?"
+                label="S3 bucket"
               />
               <CheckBox
                 fieldName={TerraformS3Fields.BUCKET_VERSIONING}
                 label="Bucket versioning"
               />
             </HStack>
-            <Button type="submit" bg="orange.700" w="8rem" h="3rem">
-              Generate
+            <Button
+              type="submit"
+              disabled={status === "pending" && !data}
+              bg="orange.700"
+              w="8rem"
+              h="3rem"
+            >
+              {status === "pending" ? (
+                <span className="loading loading-ring loading-md "></span>
+              ) : (
+                <p>Generate</p>
+              )}
             </Button>
           </div>
         </form>

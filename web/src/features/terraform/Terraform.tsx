@@ -7,6 +7,7 @@ import { Link, Outlet } from "react-router-dom";
 
 const Terraform = () => {
   const { endpoint, isSuccess } = useGptStore((s) => s.generatorQuery);
+  const setGeneratorQuery = useGptStore((s) => s.setGeneratorQuery);
 
   const downloadRef = useRef<HTMLAnchorElement>(null);
 
@@ -17,6 +18,7 @@ const Terraform = () => {
     if (downloadRef.current) {
       downloadRef.current.href = Endpoints.DOWNLOAD_LINK;
       downloadRef.current.download = "media";
+      downloadRef.current.target = "_blank";
       downloadRef.current.click();
     }
   }, [isSuccess, endpoint]);
@@ -24,6 +26,7 @@ const Terraform = () => {
   useEffect(() => {
     if (isSuccess) {
       downloadFile();
+      setGeneratorQuery(false, "");
     }
   }, [isSuccess, endpoint]);
 

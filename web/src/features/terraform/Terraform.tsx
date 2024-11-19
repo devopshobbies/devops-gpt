@@ -27,11 +27,13 @@ const Terraform = () => {
     }
   }, [isSuccess, endpoint]);
 
+  console.log(endpoint, isSuccess);
+
   return (
     <div>
       <div>
         {terraformBtnMapping.map((route, index) => (
-          <Link to={routes.terraformTemplate + route.route}>
+          <Link to={routes.terraformTemplate + route.route} key={route.route}>
             <Button
               w="23.7rem"
               rounded={0}

@@ -18,6 +18,7 @@ const useTerraFormHandler = <T extends FieldValues, K>(
     useMutation({
       mutationFn: () => apiClient.post(endpoint, request),
       onSuccess: () => setGeneratorQuery(true, endpoint),
+      onError: () => setGeneratorQuery(false, endpoint),
       ...options,
     });
 

@@ -26,7 +26,7 @@ const EC2 = () => {
     <div className="flex flex-col ">
       <FormProvider {...formMethods}>
         <form onSubmit={handleFormSubmit}>
-          <div className="flex justify-between w-full border border-orange-300 p-8">
+          <div className="flex justify-between w-full md:flex-col md:items-center md:gap-y-5 border border-orange-300 p-8">
             <HStack gap={5}>
               <p className="font-bold">EC2 service: </p>
               <CheckBox

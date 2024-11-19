@@ -29,8 +29,8 @@ const Docker = () => {
     <div className="flex flex-col ">
       <FormProvider {...formMethods}>
         <form onSubmit={handleFormSubmit}>
-          <div className="flex justify-between w-full border border-orange-300 p-8">
-            <HStack gap={5}>
+          <div className="flex justify-between w-full md:flex-col md:items-center md:gap-y-5 border border-orange-300 p-8">
+            <HStack lg={{ gap: 5 }} md={{ gap: 3 }}>
               <p className="font-bold">Docker service: </p>
               <CheckBox
                 fieldName={TerraformDockerFields.DOCKER_IMAGE}

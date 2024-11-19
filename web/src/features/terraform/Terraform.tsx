@@ -32,11 +32,13 @@ const Terraform = () => {
 
   return (
     <div>
-      <div>
+      <div className="flex items-center justify-center">
         {terraformBtnMapping.map((route, index) => (
           <Link to={routes.terraformTemplate + route.route} key={route.route}>
             <Button
-              w="23.7rem"
+              lg={{ w: "20rem" }}
+              md={{ w: "15rem" }}
+              sm={{ w: "10rem" }}
               rounded={0}
               bg={selected === index ? "orange.800" : ""}
               _hover={{ bg: "orange.500" }}

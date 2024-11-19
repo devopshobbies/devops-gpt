@@ -3,9 +3,12 @@ import Layout from "./layouts/Layout";
 import BasicGen from "./features/basicGen/BasicGen";
 import BugFix from "./features/bugFix/BugFix";
 import ErrorPage from "./components/internal-ui/ErrorPage";
-import { routes } from "./utils/routing";
+import { routes, terraformRoutes } from "./utils/routing";
 import Terraform from "./features/terraform/Terraform";
-import Download from "./features/listDirectory/Download";
+import Docker from "./features/terraform/components/Docker";
+import EC2 from "./features/terraform/components/EC2";
+import S3 from "./features/terraform/components/S3";
+import IAM from "./features/terraform/components/IAM";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -14,8 +17,28 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <BasicGen /> },
       { path: routes.bugFix, element: <BugFix /> },
-      { path: routes.terraformTemplate, element: <Terraform /> },
-      { path: routes.listDirectory, element: <Download /> },
+      {
+        path: routes.terraformTemplate,
+        element: <Terraform />,
+        children: [
+          {
+            path: routes.terraformTemplate + terraformRoutes.dockerService,
+            element: <Docker />,
+          },
+          {
+            path: routes.terraformTemplate + terraformRoutes.ec2Service,
+            element: <EC2 />,
+          },
+          {
+            path: routes.terraformTemplate + terraformRoutes.s3Service,
+            element: <S3 />,
+          },
+          {
+            path: routes.terraformTemplate + terraformRoutes.iamService,
+            element: <IAM />,
+          },
+        ],
+      },
     ],
   },
 ]);

@@ -17,7 +17,7 @@ export const useDirectoryDownloader = <
 
   const { handleSubmit } = formMethods;
 
-  const useGenericMutation = (options?: UseMutationOptions) =>
+  const useDownloaderMutation = (options?: UseMutationOptions) =>
     useMutation({
       mutationFn: () =>
         apiClient
@@ -26,7 +26,7 @@ export const useDirectoryDownloader = <
       ...options,
     });
 
-  const { mutate, isSuccess, error } = useGenericMutation();
+  const { mutate, isSuccess, error } = useDownloaderMutation();
 
   const onSubmit = (formData: TFormData) => {
     const resolvedEndpoint = endpointResolver(formData);

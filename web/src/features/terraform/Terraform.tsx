@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import useGptStore from "../../utils/store";
-import { Endpoints } from "../constants";
 import { routes, terraformBtnMapping } from "../../utils/routing";
 import { Button } from "@chakra-ui/react";
 import { Link, Outlet } from "react-router-dom";
@@ -18,23 +17,26 @@ const Terraform = () => {
     if (!isSuccess) return;
 
     try {
-      const response = await fetch(Endpoints.DOWNLOAD_LINK);
-      if (!response.ok) throw new Error("Failed to fetch file");
+      const response = await fetch(
+        import.meta.env.VITE_PORT + "/download-folderMyTerraform"
+      );
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
 
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
+        const fileName = nameGenerator(endpoint);
 
-      const fileName = nameGenerator(endpoint);
+        const tempLink = document.createElement("a");
+        tempLink.href = url;
+        tempLink.target = "_blank";
+        tempLink.download = `${fileName}.zip`;
+        tempLink.style.display = "none";
+        document.body.appendChild(tempLink);
 
-      const tempLink = document.createElement("a");
-      tempLink.href = url;
-      tempLink.download = fileName;
-      tempLink.style.display = "none";
-      document.body.appendChild(tempLink);
-
-      tempLink.click();
-      document.body.removeChild(tempLink);
-      URL.revokeObjectURL(url);
+        tempLink.click();
+        document.body.removeChild(tempLink);
+        URL.revokeObjectURL(url);
+      }
     } catch (error) {
       console.error("Error downloading file:", error);
     }
@@ -45,7 +47,7 @@ const Terraform = () => {
       downloadFile();
       setGeneratorQuery(false, "");
     }
-  }, [isSuccess, endpoint]);
+  }, [isSuccess, endpoint, downloadFile, setGeneratorQuery]);
 
   return (
     <div>
@@ -77,5 +79,6 @@ const Terraform = () => {
     </div>
   );
 };
+
 
 export default Terraform;

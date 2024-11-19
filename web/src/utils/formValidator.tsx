@@ -1,10 +1,5 @@
 import { RegisterOptions } from "react-hook-form";
-import {
-  BasicGenFields,
-  BugFixFields,
-  DownloadFields,
-  ListDirectoryFields,
-} from "../features/constants";
+import { BasicGenFields, BugFixFields } from "../features/constants";
 
 export const validateForm = (fieldName: string) => {
   let validationRules: RegisterOptions = {};
@@ -35,8 +30,6 @@ export const validateForm = (fieldName: string) => {
       break;
     case BugFixFields.VERSION:
     case BugFixFields.BUG_DESCRIPTION:
-    case ListDirectoryFields.LIST_DIRECTORY:
-    case DownloadFields.DOWNLOAD:
     case BasicGenFields.INPUT:
       validationRules = {
         required: {

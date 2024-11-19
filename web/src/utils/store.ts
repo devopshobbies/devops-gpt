@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import { UserType } from "../features/constants";
+import { Endpoints, UserType } from "../features/constants";
 import { Message } from "../features/model";
 
 interface GeneratorQuery {
   isSuccess: boolean;
-  endpoint: string;
+  endpoint: Endpoints | "";
 }
 
 interface DevOpsStore {
@@ -17,7 +17,7 @@ interface DevOpsStore {
   resetMessages: () => void;
 
   generatorQuery: GeneratorQuery;
-  setGeneratorQuery: (isSuccess: boolean, endpoint: string) => void;
+  setGeneratorQuery: (isSuccess: boolean, endpoint: Endpoints | "") => void;
 }
 
 const initialState: Pick<

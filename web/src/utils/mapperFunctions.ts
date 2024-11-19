@@ -56,6 +56,6 @@ export const terraformS3Mapper = (
 export const terraformIAMMapper = (
   data: TerraformIAMFormData
 ): ApiRequestTerraformIam => ({
-  iam_user: data.iamGroup,
-  iam_group: data.iamUser,
+  iam_user: data.iamUser,
+  iam_group: data.iamGroup,
 });

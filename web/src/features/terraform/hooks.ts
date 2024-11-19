@@ -22,15 +22,23 @@ const useTerraFormHandler = <T extends FieldValues, K>(
       ...options,
     });
 
-  const { mutate, isSuccess, isError } = useTerraMutation();
+  const { mutate, isSuccess, isError, status, data } = useTerraMutation();
 
   const onSubmit = (data: K) => {
-    setRequest({ ...data });
+    setRequest(data);
     mutate();
     formMethods.reset();
   };
 
-  return { formMethods, handleSubmit, onSubmit, isSuccess, isError };
+  return {
+    formMethods,
+    handleSubmit,
+    onSubmit,
+    isSuccess,
+    isError,
+    status,
+    data,
+  };
 };
 
 export default useTerraFormHandler;

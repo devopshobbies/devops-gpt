@@ -4,6 +4,7 @@ import { routes, terraformBtnMapping } from "../../utils/routing";
 import { Button } from "@chakra-ui/react";
 import { Link, Outlet } from "react-router-dom";
 import { nameGenerator } from "../../utils/nameGenerator";
+import apiClient from "../../utils/apiClient";
 
 const Terraform = () => {
   const { endpoint, isSuccess } = useGptStore((s) => s.generatorQuery);
@@ -17,26 +18,16 @@ const Terraform = () => {
     if (!isSuccess) return;
 
     try {
-      const response = await fetch(
-        import.meta.env.VITE_PORT + "/download-folderMyTerraform"
-      );
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
+      if (!downloadRef.current) return;
+      const response = await apiClient.get("/download-folderMyTerraform");
+      const blob = new Blob([response.data]);
+      const url = URL.createObjectURL(blob);
 
-        const fileName = nameGenerator(endpoint);
+      downloadRef.current.href = url;
+      downloadRef.current.target = "_blank";
+      downloadRef.current.download = `${nameGenerator(endpoint)}.zip`;
 
-        const tempLink = document.createElement("a");
-        tempLink.href = url;
-        tempLink.target = "_blank";
-        tempLink.download = `${fileName}.zip`;
-        tempLink.style.display = "none";
-        document.body.appendChild(tempLink);
-
-        tempLink.click();
-        document.body.removeChild(tempLink);
-        URL.revokeObjectURL(url);
-      }
+      downloadRef.current.click();
     } catch (error) {
       console.error("Error downloading file:", error);
     }
@@ -79,6 +70,5 @@ const Terraform = () => {
     </div>
   );
 };
-
 
 export default Terraform;

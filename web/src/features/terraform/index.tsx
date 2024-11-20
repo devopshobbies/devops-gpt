@@ -4,14 +4,16 @@ import { routes, terraformBtnMapping } from "../../utils/routing";
 import { Button } from "@chakra-ui/react";
 import { Link, Outlet } from "react-router-dom";
 import useDownload from "../../hooks/useDownload";
+import { DownloadFolders } from "../constants";
 
 const Terraform = () => {
   const setGeneratorQuery = useGptStore((s) => s.setGeneratorQuery);
 
   const [selected, setSelected] = useState<number>();
 
-  const { downloadFile, isSuccess, endpoint, downloadRef } =
-    useDownload("MyTerraform");
+  const { downloadFile, isSuccess, endpoint, downloadRef } = useDownload(
+    DownloadFolders.MY_TERRAFORM
+  );
 
   useEffect(() => {
     if (isSuccess) {

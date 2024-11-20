@@ -8,6 +8,10 @@ import {
   TerraformS3FormData,
 } from "./models";
 
+export enum DownloadFolders {
+  MY_TERRAFORM = "MyTerraform",
+}
+
 export enum TerraformServices {
   DOCKER = "DOCKER",
   S3 = "S3",

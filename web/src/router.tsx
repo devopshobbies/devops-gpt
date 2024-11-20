@@ -9,6 +9,7 @@ import Docker from "./features/terraform/components/Docker";
 import EC2 from "./features/terraform/components/EC2";
 import S3 from "./features/terraform/components/S3";
 import IAM from "./features/terraform/components/IAM";
+import Argocd from "./features/terraform/components/Argocd";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
           {
             path: routes.terraformTemplate + terraformRoutes.iamService,
             element: <IAM />,
+          },
+          {
+            path: routes.terraformTemplate + terraformRoutes.argocdService,
+            element: <Argocd />,
           },
         ],
       },

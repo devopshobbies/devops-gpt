@@ -19,6 +19,7 @@ export const terraformRoutes = {
   ec2Service: "/ec2-service",
   s3Service: "/s3-service",
   iamService: "/iam-service",
+  argocdService: "/argocd-service",
 };
 
 export const terraformBtnMapping = [
@@ -26,4 +27,5 @@ export const terraformBtnMapping = [
   { label: "EC2 service", route: terraformRoutes.ec2Service },
   { label: "S3 service", route: terraformRoutes.s3Service },
   { label: "IAM service", route: terraformRoutes.iamService },
+  { label: "ARGOCD service", route: terraformRoutes.argocdService },
 ];

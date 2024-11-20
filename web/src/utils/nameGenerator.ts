@@ -15,6 +15,9 @@ export const nameGenerator = (endpoint: Endpoints | "") => {
     case Endpoints.POST_IAC_T_IAM:
       name = "IAM";
       break;
+    case Endpoints.POST_IAC_ARGOCD:
+      name = "ARGOCD";
+      break;
   }
   return name;
 };

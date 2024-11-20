@@ -4,7 +4,7 @@ import { TerraformServices } from "../../constants";
 import {
   ApiRequestTerraformArgocd,
   TerraformArgocdFormData,
-} from "../../model";
+} from "../../models";
 
 const Argocd = () => {
   const { platform } = useFindPlatform(TerraformServices.ARGOCD);

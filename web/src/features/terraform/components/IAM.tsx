@@ -1,7 +1,7 @@
 import PlatformBox from "../../../components/internal-ui/PlatformBox";
 import useFindPlatform from "../../../hooks/useFindPlatform";
 import { TerraformServices } from "../../constants";
-import { ApiRequestTerraformIam, TerraformIAMFormData } from "../../model";
+import { ApiRequestTerraformIam, TerraformIAMFormData } from "../../models";
 
 const IAM = () => {
   const { platform } = useFindPlatform(TerraformServices.IAM);

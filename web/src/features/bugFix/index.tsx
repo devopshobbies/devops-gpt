@@ -7,7 +7,7 @@ import useFormHandler from "../../hooks/useFormHandler";
 import { bugFixMapper } from "../../utils/mapperFunctions";
 import useGptStore from "../../utils/store";
 import { bugFixDefaultValues, BugFixFields, Endpoints } from "../constants";
-import { ApiRequestBugFix, BugFixFormData } from "../model";
+import { ApiRequestBugFix, BugFixFormData } from "../models";
 
 const BugFix = () => {
   const { request, handleSubmit, onSubmit, formMethods } = useFormHandler<

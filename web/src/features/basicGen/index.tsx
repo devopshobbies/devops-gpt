@@ -6,7 +6,7 @@ import { Button, HStack, Stack } from "@chakra-ui/react";
 import useGptStore from "../../utils/store";
 import ChatBox from "../../components/internal-ui/ChatBox";
 
-import { ApiRequestBasicGen, BasicGenFormData } from "../model";
+import { ApiRequestBasicGen, BasicGenFormData } from "../models";
 
 import { IoSendOutline } from "react-icons/io5";
 

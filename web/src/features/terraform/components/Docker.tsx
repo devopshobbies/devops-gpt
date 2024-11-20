@@ -4,7 +4,7 @@ import { TerraformServices } from "../../constants";
 import {
   ApiRequestTerraformDocker,
   TerraformDockerFormData,
-} from "../../model";
+} from "../../models";
 
 const Docker = () => {
   const { platform } = useFindPlatform(TerraformServices.DOCKER);

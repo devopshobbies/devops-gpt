@@ -13,7 +13,7 @@ import {
   ApiRequestTerraformIam,
   ApiRequestTerraformArgocd,
   TerraformArgocdFormData,
-} from "../features/model";
+} from "../features/models";
 
 export const basicGenMapper = (data: BasicGenFormData): ApiRequestBasicGen => ({
   min_token: data.minToken,

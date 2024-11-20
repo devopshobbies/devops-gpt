@@ -6,7 +6,7 @@ import {
   TerraformEc2FormData,
   TerraformIAMFormData,
   TerraformS3FormData,
-} from "./model";
+} from "./models";
 
 export enum TerraformServices {
   DOCKER = "DOCKER",

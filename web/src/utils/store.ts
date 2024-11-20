@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Endpoints, UserType } from "../features/constants";
-import { Message } from "../features/model";
+import { Message } from "../features/models";
 
 interface GeneratorQuery {
   isSuccess: boolean;

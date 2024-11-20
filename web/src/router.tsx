@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "./layouts/Layout";
-import BasicGen from "./features/basicGen/BasicGen";
-import BugFix from "./features/bugFix/BugFix";
+import BasicGen from "./features/basicGen";
+import BugFix from "./features/bugFix";
 import ErrorPage from "./components/internal-ui/ErrorPage";
 import { routes, terraformRoutes } from "./utils/routing";
-import Terraform from "./features/terraform/Terraform";
+import Terraform from "./features/terraform";
 import Docker from "./features/terraform/components/Docker";
 import EC2 from "./features/terraform/components/EC2";
 import S3 from "./features/terraform/components/S3";

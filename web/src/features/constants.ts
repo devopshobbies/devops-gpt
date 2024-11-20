@@ -1,11 +1,24 @@
 import {
   BasicGenFormData,
   BugFixFormData,
+  TerraformArgocdFormData,
   TerraformDockerFormData,
   TerraformEc2FormData,
   TerraformIAMFormData,
   TerraformS3FormData,
-} from "./model";
+} from "./models";
+
+export enum DownloadFolders {
+  MY_TERRAFORM = "MyTerraform",
+}
+
+export enum TerraformServices {
+  DOCKER = "DOCKER",
+  S3 = "S3",
+  EC2 = "EC2",
+  IAM = "IAM",
+  ARGOCD = "ARGOCD",
+}
 
 export enum Endpoints {
   POST_BASIC = "/IaC-basic",
@@ -15,11 +28,11 @@ export enum Endpoints {
   POST_IAC_T_EC2 = "/IaC-template/aws/ec2",
   POST_IAC_T_S3 = "/IaC-template/aws/s3",
   POST_IAC_T_IAM = "/IaC-template/aws/iam",
+  POST_IAC_ARGOCD = "/IaC-template/argocd",
   POST_IAC_HELM = "/Helm-template",
   GET_DOWNLOAD_TERRAFORM = "/download-folder",
   GET_DOWNLOAD_HELM = "/download-helm",
   GET_DIRECTORY = "/list-directory",
-  DOWNLOAD_LINK = "http://localhost/download-folderMyTerraform",
 }
 
 export enum BasicGenFields {
@@ -59,6 +72,16 @@ export enum TerraformIAMFields {
   IAM_GROUP = "iamGroup",
 }
 
+export enum TerraformArgocdFields {
+  AUTO_PRUNE = "autoPrune",
+  SELF_HEAL = "selfHeal",
+  APPLY_OUT_OF_SYNC_ONLY = "applyOutOfSyncOnly",
+  CREATE_NAMESPACE = "createNamespace",
+  FAIL_OR_SHARE_RESOURCE = "failOrShareResource",
+  ARGOCD_REPOSITORY = "argocdRepository",
+  ARGOCD_CLUSTER = "argocdCluster",
+}
+
 export enum UserType {
   USER = "user",
   BOT = "bot",
@@ -82,6 +105,16 @@ export const bugFixDefaultValues: BugFixFormData = {
 export const terraformDockerDefaultValues: TerraformDockerFormData = {
   dockerImage: false,
   dockerContainer: false,
+};
+
+export const terraformArgocdDefaultValues: TerraformArgocdFormData = {
+  applyOutOfSyncOnly: false,
+  argocdCluster: false,
+  argocdRepository: false,
+  autoPrune: false,
+  createNamespace: false,
+  failOrShareResource: false,
+  selfHeal: false,
 };
 
 export const terraformEc2DefaultValues: TerraformEc2FormData = {

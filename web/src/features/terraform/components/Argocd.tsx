@@ -1,19 +1,23 @@
 import PlatformBox from "../../../components/internal-ui/PlatformBox";
 import useFindPlatform from "../../../hooks/useFindPlatform";
 import { TerraformServices } from "../../constants";
-import { ApiRequestTerraformEc2, TerraformEc2FormData } from "../../models";
+import {
+  ApiRequestTerraformArgocd,
+  TerraformArgocdFormData,
+} from "../../models";
 
-const EC2 = () => {
-  const { platform } = useFindPlatform(TerraformServices.EC2);
+const Argocd = () => {
+  const { platform } = useFindPlatform(TerraformServices.ARGOCD);
+
   return (
     <>
       {platform && (
         <PlatformBox
-          defaultValues={platform.defaultValues as TerraformEc2FormData}
+          defaultValues={platform.defaultValues as TerraformArgocdFormData}
           endpoint={platform.endpoint}
           fieldProperties={platform.fieldProperties}
           mapperFunction={
-            platform.mapperFunction as () => ApiRequestTerraformEc2
+            platform.mapperFunction as () => ApiRequestTerraformArgocd
           }
           serviceName={platform.serviceName}
         />
@@ -22,4 +26,4 @@ const EC2 = () => {
   );
 };
 
-export default EC2;
+export default Argocd;

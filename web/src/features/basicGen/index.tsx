@@ -6,7 +6,7 @@ import { Button, HStack, Stack } from "@chakra-ui/react";
 import useGptStore from "../../utils/store";
 import ChatBox from "../../components/internal-ui/ChatBox";
 
-import { ApiRequestBasicGen, BasicGenFormData } from "../model";
+import { ApiRequestBasicGen, BasicGenFormData } from "../models";
 
 import { IoSendOutline } from "react-icons/io5";
 
@@ -49,8 +49,9 @@ const BasicGen = () => {
           >
             <Input placeholder="Text" fieldName={BasicGenFields.INPUT} />
             <Button
+              mt="4"
               type="submit"
-              bg="orange.800"
+              bg="orange.600"
               disabled={formMethods.getFieldState(BasicGenFields.INPUT).invalid}
             >
               <IoSendOutline />

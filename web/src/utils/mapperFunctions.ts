@@ -11,7 +11,9 @@ import {
   ApiRequestTerraformS3,
   TerraformIAMFormData,
   ApiRequestTerraformIam,
-} from "../features/model";
+  ApiRequestTerraformArgocd,
+  TerraformArgocdFormData,
+} from "../features/models";
 
 export const basicGenMapper = (data: BasicGenFormData): ApiRequestBasicGen => ({
   min_token: data.minToken,
@@ -58,4 +60,22 @@ export const terraformIAMMapper = (
 ): ApiRequestTerraformIam => ({
   iam_user: data.iamUser,
   iam_group: data.iamGroup,
+});
+
+export const terraformArgocdMapper = (
+  data: TerraformArgocdFormData
+): ApiRequestTerraformArgocd => ({
+  argocd_application: {
+    sync_policy: {
+      auto_prune: data.autoPrune,
+      self_heal: data.selfHeal,
+    },
+    sync_options: {
+      apply_out_of_sync_only: data.applyOutOfSyncOnly,
+      create_namespace: data.createNamespace,
+      fail_or_share_resource: data.failOrShareResource,
+    },
+  },
+  argocd_cluster: data.argocdCluster,
+  argocd_repository: data.argocdRepository,
 });

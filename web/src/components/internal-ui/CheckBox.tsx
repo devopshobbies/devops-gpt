@@ -2,12 +2,12 @@ import { useFormContext } from "react-hook-form";
 
 import { HStack } from "@chakra-ui/react";
 
-interface Props {
+export interface Checkboxprops {
   fieldName: string;
   label: string;
 }
 
-const CheckBox = ({ fieldName, label }: Props) => {
+const CheckBox = ({ fieldName, label }: Checkboxprops) => {
   const { register } = useFormContext();
   return (
     <>

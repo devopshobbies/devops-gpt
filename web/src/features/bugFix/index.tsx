@@ -7,7 +7,7 @@ import useFormHandler from "../../hooks/useFormHandler";
 import { bugFixMapper } from "../../utils/mapperFunctions";
 import useGptStore from "../../utils/store";
 import { bugFixDefaultValues, BugFixFields, Endpoints } from "../constants";
-import { ApiRequestBugFix, BugFixFormData } from "../model";
+import { ApiRequestBugFix, BugFixFormData } from "../models";
 
 const BugFix = () => {
   const { request, handleSubmit, onSubmit, formMethods } = useFormHandler<
@@ -49,8 +49,9 @@ const BugFix = () => {
               fieldName={BugFixFields.BUG_DESCRIPTION}
             />
             <Button
+              mt="4"
               type="submit"
-              bg="orange.800"
+              bg="orange.700"
               disabled={
                 formMethods.getFieldState(BugFixFields.BUG_DESCRIPTION).invalid
               }

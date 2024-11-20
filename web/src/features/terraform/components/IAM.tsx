@@ -1,69 +1,24 @@
-import { Button, HStack } from "@chakra-ui/react";
-import { FormProvider } from "react-hook-form";
-import CheckBox from "../../../components/internal-ui/CheckBox";
-import {
-  Endpoints,
-  terraformIamDefaultValues,
-  TerraformIAMFields,
-} from "../../constants";
-import { ApiRequestTerraformIam, TerraformIAMFormData } from "../../model";
-
-import { terraformIAMMapper } from "../../../utils/mapperFunctions";
-import useTerraFormHandler from "../hooks";
+import PlatformBox from "../../../components/internal-ui/PlatformBox";
+import useFindPlatform from "../../../hooks/useFindPlatform";
+import { TerraformServices } from "../../constants";
+import { ApiRequestTerraformIam, TerraformIAMFormData } from "../../models";
 
 const IAM = () => {
-  const {
-    formMethods,
-    handleSubmit,
-    onSubmit,
-    isSuccess,
-    isError,
-    status,
-    data,
-  } = useTerraFormHandler<TerraformIAMFormData, ApiRequestTerraformIam>(
-    terraformIamDefaultValues,
-    Endpoints.POST_IAC_T_IAM
-  );
-
-  const handleFormSubmit = handleSubmit((data) =>
-    onSubmit(terraformIAMMapper(data))
-  );
-
+  const { platform } = useFindPlatform(TerraformServices.IAM);
   return (
-    <div className="flex flex-col ">
-      <FormProvider {...formMethods}>
-        <form onSubmit={handleFormSubmit}>
-          <div className="flex justify-between w-full items-center border gap-y-5 flex-col border-orange-300 p-8">
-            <HStack gap={5}>
-              <p className="font-bold">IAM service: </p>
-              <CheckBox
-                fieldName={TerraformIAMFields.IAM_USER}
-                label="IAM user"
-              />
-              <CheckBox
-                fieldName={TerraformIAMFields.IAM_GROUP}
-                label="IAM group"
-              />
-            </HStack>
-            <Button
-              type="submit"
-              disabled={status === "pending" && !data}
-              bg="orange.700"
-              w="8rem"
-              h="3rem"
-            >
-              {status === "pending" ? (
-                <span className="loading loading-ring loading-md "></span>
-              ) : (
-                <p>Generate</p>
-              )}
-            </Button>
-          </div>
-        </form>
-      </FormProvider>
-      {isSuccess && <p className="text-green-600">Generated Succesfully</p>}
-      {isError && <p className="text-red-700">Operation failed</p>}
-    </div>
+    <>
+      {platform && (
+        <PlatformBox
+          defaultValues={platform.defaultValues as TerraformIAMFormData}
+          endpoint={platform.endpoint}
+          fieldProperties={platform.fieldProperties}
+          mapperFunction={
+            platform.mapperFunction as () => ApiRequestTerraformIam
+          }
+          serviceName={platform.serviceName}
+        />
+      )}
+    </>
   );
 };
 

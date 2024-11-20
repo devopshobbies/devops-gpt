@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import ChatBubble from "./ChatBubble";
-import { Message } from "../../features/model";
+import { Message } from "../../features/models";
 import { Endpoints, UserType } from "../../features/constants";
 import useGptStore from "../../utils/store";
 import { useEffect } from "react";

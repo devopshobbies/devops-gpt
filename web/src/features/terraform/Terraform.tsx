@@ -19,13 +19,12 @@ const Terraform = () => {
 
     try {
       if (!downloadRef.current) return;
-      const response = await apiClient.get("/download-folderMyTerraform");
-      const blob = new Blob([response.data]);
-      const url = URL.createObjectURL(blob);
+
+      const url = apiClient.defaults.baseURL + "/download-folderMyTerraform";
 
       downloadRef.current.href = url;
       downloadRef.current.target = "_blank";
-      downloadRef.current.download = `${nameGenerator(endpoint)}.zip`;
+      downloadRef.current.download = `${nameGenerator(endpoint)}`;
 
       downloadRef.current.click();
     } catch (error) {

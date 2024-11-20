@@ -5,10 +5,10 @@ import { UserType } from "../features/constants";
 import useGptStore from "../utils/store";
 
 const useFormHandler = <T extends FieldValues, K>(
-  initialValues: UseFormProps<T>["defaultValues"]
+  defaultValues: UseFormProps<T>["defaultValues"]
 ) => {
   const [request, setRequest] = useState<K & { requestId: string }>();
-  const formMethods = useForm<T>({ defaultValues: initialValues });
+  const formMethods = useForm<T>({ defaultValues });
   const addMessage = useGptStore((s) => s.addMessage);
   const { handleSubmit } = formMethods;
 

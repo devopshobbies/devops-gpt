@@ -82,6 +82,32 @@ export interface ApiRequestTerraformIam {
   iam_group: boolean;
 }
 
+export interface TerraformArgocdFormData {
+  autoPrune: boolean;
+  selfHeal: boolean;
+  applyOutOfSyncOnly: boolean;
+  createNamespace: boolean;
+  failOrShareResource: boolean;
+  argocdRepository: boolean;
+  argocdCluster: boolean;
+}
+
+export interface ApiRequestTerraformArgocd {
+  argocd_application: {
+    sync_policy: {
+      auto_prune: boolean;
+      self_heal: boolean;
+    };
+    sync_options: {
+      apply_out_of_sync_only: boolean;
+      create_namespace: boolean;
+      fail_or_share_resource: boolean;
+    };
+  };
+  argocd_repository: boolean;
+  argocd_cluster: boolean;
+}
+
 export interface ApiResponseDownload {
   detail: [{ loc: [string, 0]; msg: string; type: string }];
 }

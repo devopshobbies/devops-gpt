@@ -1,69 +1,23 @@
-import { Button, HStack } from "@chakra-ui/react";
-import { FormProvider } from "react-hook-form";
-import CheckBox from "../../../components/internal-ui/CheckBox";
-import {
-  Endpoints,
-  terraformS3DefaultValues,
-  TerraformS3Fields,
-} from "../../constants";
+import PlatformBox from "../../../components/internal-ui/PlatformBox";
+import useFindPlatform from "../../../hooks/useFindPlatform";
 import { ApiRequestTerraformS3, TerraformS3FormData } from "../../model";
 
-import { terraformS3Mapper } from "../../../utils/mapperFunctions";
-import useTerraFormHandler from "../hooks";
-
-const S3 = () => {
-  const {
-    formMethods,
-    handleSubmit,
-    onSubmit,
-    isSuccess,
-    isError,
-    status,
-    data,
-  } = useTerraFormHandler<TerraformS3FormData, ApiRequestTerraformS3>(
-    terraformS3DefaultValues,
-    Endpoints.POST_IAC_T_S3
-  );
-
-  const handleFormSubmit = handleSubmit((data) =>
-    onSubmit(terraformS3Mapper(data))
-  );
-
+export const S3 = () => {
+  const { platform } = useFindPlatform("S3");
   return (
-    <div className="flex flex-col">
-      <FormProvider {...formMethods}>
-        <form onSubmit={handleFormSubmit}>
-          <div className="flex justify-center items-center w-full border gap-y-5 flex-col border-orange-300 p-8">
-            <HStack gap={5}>
-              <p className="font-bold">S3 service: </p>
-              <CheckBox
-                fieldName={TerraformS3Fields.S3_BUCKET}
-                label="S3 bucket"
-              />
-              <CheckBox
-                fieldName={TerraformS3Fields.BUCKET_VERSIONING}
-                label="Bucket versioning"
-              />
-            </HStack>
-            <Button
-              type="submit"
-              disabled={status === "pending" && !data}
-              bg="orange.700"
-              w="8rem"
-              h="3rem"
-            >
-              {status === "pending" ? (
-                <span className="loading loading-ring loading-md "></span>
-              ) : (
-                <p>Generate</p>
-              )}
-            </Button>
-          </div>
-        </form>
-      </FormProvider>
-      {isSuccess && <p className="text-green-600">Generated Succesfully</p>}
-      {isError && <p className="text-red-700">Operation failed</p>}
-    </div>
+    <>
+      {platform && (
+        <PlatformBox
+          defaultValues={platform.defaultValues as TerraformS3FormData}
+          endpoint={platform.endpoint}
+          fieldProperties={platform.fieldProperties}
+          mapperFunction={
+            platform.mapperFunction as () => ApiRequestTerraformS3
+          }
+          serviceName={platform.serviceName}
+        />
+      )}
+    </>
   );
 };
 

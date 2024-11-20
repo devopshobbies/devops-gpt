@@ -17,7 +17,7 @@ const useDownload = (folderName: string) => {
         `/download-folder${folderName}/${nameGenerator(endpoint)}`;
 
       downloadRef.current.href = url;
-      //   downloadRef.current.target = "_blank";
+      // downloadRef.current.target = "_blank";
 
       downloadRef.current.click();
     } catch (error) {

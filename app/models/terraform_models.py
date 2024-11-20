@@ -96,6 +96,5 @@ class ArgoApplication(BaseModel):
 
 class IaCTemplateGenerationArgoCD(BaseModel):
     argocd_application:ArgoApplication | None = None
-    argocd_project:bool = True
     argocd_repository:bool = True
     argocd_cluster:bool = True

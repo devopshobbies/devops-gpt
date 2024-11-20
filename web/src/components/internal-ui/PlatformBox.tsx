@@ -55,7 +55,7 @@ const PlatformBox = <FormData extends {}, RequestData extends {}>({
               h="3rem"
             >
               {status === "pending" ? (
-                <span className="loading loading-ring loading-md "></span>
+                <span className="loading loading-ring loading-lg "></span>
               ) : (
                 <p>Generate</p>
               )}

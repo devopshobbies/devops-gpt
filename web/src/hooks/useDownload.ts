@@ -12,11 +12,12 @@ const useDownload = (folderName: string) => {
     try {
       if (!downloadRef.current) return;
 
-      const url = apiClient.defaults.baseURL + `/download-folder${folderName}`;
+      const url =
+        apiClient.defaults.baseURL +
+        `/download-folder${folderName}/${nameGenerator(endpoint)}`;
 
       downloadRef.current.href = url;
-      downloadRef.current.target = "_blank";
-      downloadRef.current.download = nameGenerator(endpoint);
+      //   downloadRef.current.target = "_blank";
 
       downloadRef.current.click();
     } catch (error) {

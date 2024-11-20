@@ -1,36 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useGptStore from "../../utils/store";
 import { routes, terraformBtnMapping } from "../../utils/routing";
 import { Button } from "@chakra-ui/react";
 import { Link, Outlet } from "react-router-dom";
-import { nameGenerator } from "../../utils/nameGenerator";
-import apiClient from "../../utils/apiClient";
+import useDownload from "../../hooks/useDownload";
 
 const Terraform = () => {
-  const { endpoint, isSuccess } = useGptStore((s) => s.generatorQuery);
   const setGeneratorQuery = useGptStore((s) => s.setGeneratorQuery);
-
-  const downloadRef = useRef<HTMLAnchorElement>(null);
 
   const [selected, setSelected] = useState<number>();
 
-  const downloadFile = useCallback(async () => {
-    if (!isSuccess) return;
-
-    try {
-      if (!downloadRef.current) return;
-
-      const url = apiClient.defaults.baseURL + "/download-folderMyTerraform";
-
-      downloadRef.current.href = url;
-      downloadRef.current.target = "_blank";
-      downloadRef.current.download = `${nameGenerator(endpoint)}`;
-
-      downloadRef.current.click();
-    } catch (error) {
-      console.error("Error downloading file:", error);
-    }
-  }, [isSuccess, endpoint]);
+  const { downloadFile, isSuccess, endpoint, downloadRef } =
+    useDownload("MyTerraform");
 
   useEffect(() => {
     if (isSuccess) {

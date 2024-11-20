@@ -1,12 +1,13 @@
 import PlatformBox from "../../../components/internal-ui/PlatformBox";
 import useFindPlatform from "../../../hooks/useFindPlatform";
+import { TerraformServices } from "../../constants";
 import {
   ApiRequestTerraformArgocd,
   TerraformArgocdFormData,
 } from "../../model";
 
 const Argocd = () => {
-  const { platform } = useFindPlatform("ARGOCD");
+  const { platform } = useFindPlatform(TerraformServices.ARGOCD);
 
   return (
     <>

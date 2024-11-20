@@ -1,12 +1,13 @@
 import PlatformBox from "../../../components/internal-ui/PlatformBox";
 import useFindPlatform from "../../../hooks/useFindPlatform";
+import { TerraformServices } from "../../constants";
 import {
   ApiRequestTerraformDocker,
   TerraformDockerFormData,
 } from "../../model";
 
 const Docker = () => {
-  const { platform } = useFindPlatform("Docker");
+  const { platform } = useFindPlatform(TerraformServices.DOCKER);
   return (
     <>
       {platform && (

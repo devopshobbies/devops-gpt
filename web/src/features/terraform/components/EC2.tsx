@@ -1,9 +1,10 @@
 import PlatformBox from "../../../components/internal-ui/PlatformBox";
 import useFindPlatform from "../../../hooks/useFindPlatform";
+import { TerraformServices } from "../../constants";
 import { ApiRequestTerraformEc2, TerraformEc2FormData } from "../../model";
 
 const EC2 = () => {
-  const { platform } = useFindPlatform("EC2");
+  const { platform } = useFindPlatform(TerraformServices.EC2);
   return (
     <>
       {platform && (

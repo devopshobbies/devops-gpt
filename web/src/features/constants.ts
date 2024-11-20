@@ -8,6 +8,14 @@ import {
   TerraformS3FormData,
 } from "./model";
 
+export enum TerraformServices {
+  DOCKER = "DOCKER",
+  S3 = "S3",
+  EC2 = "EC2",
+  IAM = "IAM",
+  ARGOCD = "ARGOCD",
+}
+
 export enum Endpoints {
   POST_BASIC = "/IaC-basic",
   POST_FIX = "/IaC-bugfix",

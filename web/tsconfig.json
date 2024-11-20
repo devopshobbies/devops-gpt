@@ -1,7 +1,7 @@
 {
   "files": [],
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "ES6",
     "types": ["vite/client", "node"],
     "moduleResolution": "Bundler",
     "skipLibCheck": true,

@@ -22,7 +22,10 @@ def IaC_template_generator_ec2(input) -> str:
                             }}
                             ```
                       - Defines a module block that references "ec2" from a subdirectory within modules.
-                        Don't forget to use source parameter to call ec2 module. this is so important.
+                        Don't forget to use source parameter to call ec2 module as follows:
+                        ```
+                        source = "./modules/ec2"
+                        ```
                         This module block should expose all variables that {ec2} resources require, allowing
                         configuration at the root level rather than directly within the module.
                       - Every variable defined in {ec2} resources should be passed through the module block,
@@ -33,6 +36,25 @@ def IaC_template_generator_ec2(input) -> str:
                           key_pair_create(bool), key_pair_name(string)
                       - Sets these variables names for aws_security_group resource:
                           security_group_create(bool), security_group_name(string), security_group_ingress_rules(map(object)), security_group_egress_rule(object())
+                          Sets security_group_ingress_rules as follows:
+                              ```
+                              type = map(object({{
+                                description = string
+                                from_port   = number
+                                to_port     = number
+                                protocol    = string
+                                cidr_blocks = list(string)
+                              }}))
+                              ```
+                          Sets security_group_egress_rule as follows:
+                              ```
+                              type        = object({{
+                                from_port   = number
+                                to_port     = number
+                                protocol    = string
+                                cidr_blocks = list(string)
+                              }})
+                              ```
                       - Sets these variables names for aws_instance resource:
                           instance_create(bool), instance_type(string)
                       - Sets these variables names for aws_ami_from_instance resource:
@@ -192,6 +214,25 @@ def IaC_template_generator_ec2(input) -> str:
                           key_pair_create(bool), key_pair_name(string)
                       - Sets these variables names for aws_security_group resource:
                           security_group_create(bool), security_group_name(string), security_group_ingress_rules(map(object)), security_group_egress_rule(object())
+                          Sets security_group_ingress_rules as follows:
+                              ```
+                              type = map(object({{
+                                description = string
+                                from_port   = number
+                                to_port     = number
+                                protocol    = string
+                                cidr_blocks = list(string)
+                              }}))
+                              ```
+                          Sets security_group_egress_rule as follows:
+                              ```
+                              type        = object({{
+                                from_port   = number
+                                to_port     = number
+                                protocol    = string
+                                cidr_blocks = list(string)
+                              }})
+                              ```
                       - Sets these variables names for aws_instance resource:
                           instance_create(bool), instance_type(string)
                       - Sets these variables names for aws_ami_from_instance resource:

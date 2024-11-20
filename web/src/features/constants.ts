@@ -19,7 +19,6 @@ export enum Endpoints {
   GET_DOWNLOAD_TERRAFORM = "/download-folder",
   GET_DOWNLOAD_HELM = "/download-helm",
   GET_DIRECTORY = "/list-directory",
-  DOWNLOAD_LINK = "http://localhost/download-folderMyTerraform",
 }
 
 export enum BasicGenFields {

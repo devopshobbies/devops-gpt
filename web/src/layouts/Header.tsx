@@ -5,7 +5,7 @@ const Header = () => {
   const setIsOpen = useGptStore((s) => s.setIsOpen);
   return (
     <>
-      <div className="flex h-24 w-full pt-0 mt-[-10px] bg-orange-700">
+      <div className="flex h-24 w-full bg-orange-700">
         <button onClick={() => setIsOpen(true)}>
           <Image
             mt="-2"

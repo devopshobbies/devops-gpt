@@ -112,7 +112,7 @@ export const platformData = [
     fieldProperties: argocdFieldProperties,
   },
   {
-    serviceName: "Docker",
+    serviceName: "DOCKER",
     defaultValues: terraformDockerDefaultValues,
     endpoint: Endpoints.POST_IAC_T_DOCKER,
     mapperFunction: terraformDockerMapper,

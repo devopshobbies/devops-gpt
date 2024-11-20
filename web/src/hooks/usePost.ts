@@ -1,9 +1,9 @@
 import apiClient from "../utils/apiClient";
 
 import { useQuery } from "@tanstack/react-query";
-import { ENDPOINTS } from "../features/constants";
+import { Endpoints } from "../features/constants";
 
-const usePost = <T>(endpoint: ENDPOINTS, data: T, id: string) =>
+const usePost = <T>(endpoint: Endpoints, data: T, id: string) =>
   useQuery({
     queryKey: [endpoint, id],
     queryFn: () =>

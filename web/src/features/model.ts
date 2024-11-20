@@ -37,3 +37,51 @@ export interface ApiRequestBugFix {
   version: string;
   requestId: string;
 }
+
+export interface TerraformDockerFormData {
+  dockerImage: boolean;
+  dockerContainer: boolean;
+}
+
+export interface ApiRequestTerraformDocker {
+  docker_image: boolean;
+  docker_container: boolean;
+}
+
+export interface TerraformEc2FormData {
+  keyPair: boolean;
+  securityGroup: boolean;
+  awsInstance: boolean;
+  amiFromInstance: boolean;
+}
+
+export interface ApiRequestTerraformEc2 {
+  key_pair: boolean;
+  security_group: boolean;
+  aws_instance: boolean;
+  ami_from_instance: boolean;
+}
+
+export interface TerraformS3FormData {
+  s3Bucket: boolean;
+  bucketVersioning: boolean;
+}
+
+export interface ApiRequestTerraformS3 {
+  s3_bucket: boolean;
+  bucket_versioning: boolean;
+}
+
+export interface TerraformIAMFormData {
+  iamUser: boolean;
+  iamGroup: boolean;
+}
+
+export interface ApiRequestTerraformIam {
+  iam_user: boolean;
+  iam_group: boolean;
+}
+
+export interface ApiResponseDownload {
+  detail: [{ loc: [string, 0]; msg: string; type: string }];
+}

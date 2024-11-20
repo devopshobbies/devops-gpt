@@ -81,8 +81,20 @@ class IaCTemplateGenerationIAM(BaseModel):
     iam_user:bool = True
     iam_group:bool = True
 
+class SyncPolicy(BaseModel):
+    auto_prune: bool = True
+    self_heal: bool = True
+
+class SyncOptions(BaseModel):
+    apply_out_of_sync_only: bool = True
+    create_namespace: bool = True
+    fail_or_share_resource:bool = True
+
+class ArgoApplication(BaseModel):
+    sync_policy: SyncPolicy | None = None
+    sync_options: SyncOptions | None = None
+
 class IaCTemplateGenerationArgoCD(BaseModel):
-    argocd_application:bool = True
-    argocd_project:bool = True
+    argocd_application:ArgoApplication | None = None
     argocd_repository:bool = True
     argocd_cluster:bool = True

@@ -17,8 +17,8 @@ def zip_folder(folder_path: str, output_zip_path: str):
 
 
 
-@app.get("/download-folder{folder_name}")
-async def download_folder_MyHelm(folder_name: str):
+@app.get("/download-folder{folder_name}/{source}")
+async def download_folder_MyHelm(folder_name: str,source:str):
     folder_path = f"app/media/{folder_name}"  # Adjust the path as needed
     if not os.path.exists(folder_path):
         raise HTTPException(status_code=404, detail="Folder not found")
@@ -29,6 +29,6 @@ async def download_folder_MyHelm(folder_name: str):
     zip_folder(folder_path, zip_file_path)
 
     # Return the zip file as a response
-    return FileResponse(zip_file_path, media_type='application/zip', filename=f"app/media{folder_name}_zip.zip")
+    return FileResponse(zip_file_path, media_type='application/zip', filename=f"{folder_name}_{source}.zip")
 
 

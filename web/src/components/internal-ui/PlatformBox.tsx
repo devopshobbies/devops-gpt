@@ -50,7 +50,8 @@ const PlatformBox = <FormData extends {}, RequestData extends {}>({
             <Button
               type="submit"
               disabled={status === "pending" && !data}
-              bg="orange.700"
+              bg="orange.600"
+              color="gray.100"
               w="8rem"
               h="3rem"
             >
@@ -63,8 +64,8 @@ const PlatformBox = <FormData extends {}, RequestData extends {}>({
           </div>
         </form>
       </FormProvider>
-      {isSuccess && <p className="text-green-600">Generated Successfully</p>}
-      {isError && <p className="text-red-700">Operation failed</p>}
+      {isSuccess && <p className="text-green-500">Generated Successfully</p>}
+      {isError && <p className="text-red-600">Operation failed</p>}
     </div>
   );
 };

@@ -23,7 +23,7 @@ const Layout = () => {
         ))}
       />
       <Header />
-      <div className="w-full px-28 h-full ">
+      <div className="w-full text-gray-200 px-28 h-full ">
         <Outlet />
       </div>
     </>

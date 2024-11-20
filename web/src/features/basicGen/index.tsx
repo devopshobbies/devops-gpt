@@ -49,8 +49,9 @@ const BasicGen = () => {
           >
             <Input placeholder="Text" fieldName={BasicGenFields.INPUT} />
             <Button
+              mt="4"
               type="submit"
-              bg="orange.800"
+              bg="orange.600"
               disabled={formMethods.getFieldState(BasicGenFields.INPUT).invalid}
             >
               <IoSendOutline />

@@ -49,8 +49,9 @@ const BugFix = () => {
               fieldName={BugFixFields.BUG_DESCRIPTION}
             />
             <Button
+              mt="4"
               type="submit"
-              bg="orange.800"
+              bg="orange.700"
               disabled={
                 formMethods.getFieldState(BugFixFields.BUG_DESCRIPTION).invalid
               }

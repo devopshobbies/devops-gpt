@@ -30,7 +30,7 @@ const Drawer = ({ title, content, isOpen, onClose }: Props) => {
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>
-        <DrawerBody>{content}</DrawerBody>
+        <DrawerBody color="gray.200">{content}</DrawerBody>
 
         <DrawerCloseTrigger />
       </DrawerContent>

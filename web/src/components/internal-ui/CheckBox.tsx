@@ -31,7 +31,7 @@ const CheckBox = ({
             />
           </>
         ) : (
-          <div className="flex rounded-md border-[0.5px] border-orange-300 py-4 px-8 gap-x-5 items-center justify-between">
+          <div className="flex rounded-md border-[0.5px] border-orange-300 py-4 px-14 gap-x-5 items-center justify-between">
             <p>{label}</p>
             <input
               className=" w-8 h-8  accent-orange-700"

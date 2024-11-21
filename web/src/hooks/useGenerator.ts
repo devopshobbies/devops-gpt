@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { FieldValues, useForm, UseFormProps } from "react-hook-form";
-import { Endpoints } from "../constants";
+import { Endpoints } from "../features/constants";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import apiClient from "../../utils/apiClient";
-import useGptStore from "../../utils/store";
+import apiClient from "../utils/apiClient";
+import useGptStore from "../utils/store";
 
-const useTerraFormHandler = <T extends FieldValues, K>(
+const useGenerator = <T extends FieldValues, K>(
   initialValues: UseFormProps<T>["defaultValues"],
   endpoint: Endpoints
 ) => {
@@ -14,7 +14,7 @@ const useTerraFormHandler = <T extends FieldValues, K>(
   const formMethods = useForm<T>({ defaultValues: initialValues });
   const { handleSubmit } = formMethods;
 
-  const useTerraMutation = (options?: UseMutationOptions) =>
+  const useGeneratorMutation = (options?: UseMutationOptions) =>
     useMutation({
       mutationFn: () => apiClient.post(endpoint, request),
       onSuccess: () => setGeneratorQuery(true, endpoint),
@@ -22,7 +22,7 @@ const useTerraFormHandler = <T extends FieldValues, K>(
       ...options,
     });
 
-  const { mutate, isSuccess, isError, status, data } = useTerraMutation();
+  const { mutate, isSuccess, isError, status, data } = useGeneratorMutation();
 
   const onSubmit = (data: K) => {
     setRequest(data);
@@ -41,4 +41,4 @@ const useTerraFormHandler = <T extends FieldValues, K>(
   };
 };
 
-export default useTerraFormHandler;
+export default useGenerator;

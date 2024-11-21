@@ -1,6 +1,6 @@
 import { Button, HStack } from "@chakra-ui/react";
 import { DefaultValues, FormProvider } from "react-hook-form";
-import useTerraFormHandler from "../../features/terraform/hooks";
+import useGenerator from "../../hooks/useGenerator";
 import CheckBox, { Checkboxprops } from "./CheckBox";
 import { Endpoints } from "../../features/constants";
 
@@ -27,7 +27,7 @@ const PlatformBox = <FormData extends {}, RequestData extends {}>({
     status,
     data,
     isSuccess,
-  } = useTerraFormHandler<FormData, RequestData>(defaultValues, endpoint);
+  } = useGenerator<FormData, RequestData>(defaultValues, endpoint);
   const handleFormSubmit = handleSubmit((formData) =>
     onSubmit(mapperFunction(formData))
   );

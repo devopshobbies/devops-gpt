@@ -3,7 +3,7 @@ import CheckBox from "../../components/internal-ui/CheckBox";
 import Input from "../../components/internal-ui/Input";
 import { helmMapper } from "../../utils/mapperFunctions";
 import { DownloadFolders, Endpoints, helmDefaultValues } from "../constants";
-import useTerraFormHandler from "../terraform/hooks";
+import useGenerator from "../../hooks/useGenerator";
 import { helmFieldProperties } from "./constants";
 import useDownload from "../../hooks/useDownload";
 import { useEffect } from "react";
@@ -12,7 +12,7 @@ import { ApiRequestHelm, HelmFormData } from "../models";
 
 const Helm = () => {
   const { formMethods, data, handleSubmit, isError, onSubmit, status } =
-    useTerraFormHandler<HelmFormData, ApiRequestHelm>(
+    useGenerator<HelmFormData, ApiRequestHelm>(
       helmDefaultValues,
       Endpoints.POST_IAC_HELM
     );

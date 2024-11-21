@@ -1,6 +1,7 @@
 import {
   BasicGenFormData,
   BugFixFormData,
+  HelmFormData,
   TerraformArgocdFormData,
   TerraformDockerFormData,
   TerraformEc2FormData,
@@ -10,6 +11,7 @@ import {
 
 export enum DownloadFolders {
   MY_TERRAFORM = "MyTerraform",
+  MY_HELM = "MyHelm",
 }
 
 export enum TerraformServices {
@@ -30,8 +32,7 @@ export enum Endpoints {
   POST_IAC_T_IAM = "/IaC-template/aws/iam",
   POST_IAC_ARGOCD = "/IaC-template/argocd",
   POST_IAC_HELM = "/Helm-template",
-  GET_DOWNLOAD_TERRAFORM = "/download-folder",
-  GET_DOWNLOAD_HELM = "/download-helm",
+  GET_DOWNLOAD = "/download-folder",
   GET_DIRECTORY = "/list-directory",
 }
 
@@ -80,6 +81,21 @@ export enum TerraformArgocdFields {
   FAIL_OR_SHARE_RESOURCE = "failOrShareResource",
   ARGOCD_REPOSITORY = "argocdRepository",
   ARGOCD_CLUSTER = "argocdCluster",
+}
+
+export enum HelmFields {
+  API_VERSION = "apiVersion",
+  NAME = "name",
+  IMAGE = "image",
+  TARGET_PORT = "targetPort",
+  REPLICAS = "replicas",
+  SIZE = "size",
+  ACCESS_MODES = "accessModeS",
+  ENVIRONMENT_NAME = "environmentName",
+  VALUE = "value",
+  STATELESS = "stateless",
+  ENABLED = "enabled",
+  HOST = "host",
 }
 
 export enum UserType {
@@ -132,4 +148,19 @@ export const terraformS3DefaultValues: TerraformS3FormData = {
 export const terraformIamDefaultValues: TerraformIAMFormData = {
   iamUser: false,
   iamGroup: false,
+};
+
+export const helmDefaultValues: HelmFormData = {
+  accessModes: "ReadWriteOnce",
+  apiVersion: 2,
+  enabled: false,
+  environmentName: "ENV1",
+  host: "www.example.com",
+  image: "nginx",
+  name: "web ",
+  replicas: 1,
+  size: "1Gi",
+  stateless: false,
+  targetPort: 80,
+  value: "Hi",
 };

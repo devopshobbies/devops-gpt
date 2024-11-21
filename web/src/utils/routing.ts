@@ -4,14 +4,15 @@ export const routes = {
   basicGen: "/",
   bugFix: "/IaC-bugfix",
   terraformTemplate: "/terraform-template",
+  helm: "/helm",
 };
 
 export const btnMappings = [
   { label: "Basic", route: routes.basicGen },
   { label: "Bug fix", route: routes.bugFix },
   { label: "Terraform template", route: routes.terraformTemplate },
+  { label: "Helm Template", route: routes.helm },
   { label: "Installation", route: Endpoints.POST_INSTALL },
-  { label: "Helm Template", route: Endpoints.POST_IAC_HELM },
 ];
 
 export const terraformRoutes = {

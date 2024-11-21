@@ -13,6 +13,8 @@ import {
   ApiRequestTerraformIam,
   ApiRequestTerraformArgocd,
   TerraformArgocdFormData,
+  HelmFormData,
+  ApiRequestHelm,
 } from "../features/models";
 
 export const basicGenMapper = (data: BasicGenFormData): ApiRequestBasicGen => ({
@@ -78,4 +80,31 @@ export const terraformArgocdMapper = (
   },
   argocd_cluster: data.argocdCluster,
   argocd_repository: data.argocdRepository,
+});
+
+export const helmMapper = (data: HelmFormData): ApiRequestHelm => ({
+  api_version: Number(data.apiVersion),
+  pods: [
+    {
+      name: data.name,
+      image: data.image,
+      target_port: Number(data.targetPort),
+      replicas: Number(data.replicas),
+      persistance: {
+        size: data.size,
+        accessModes: data.accessModes,
+      },
+      environment: [
+        {
+          name: data.environmentName,
+          value: data.value,
+        },
+      ],
+      stateless: data.stateless,
+      ingress: {
+        enabled: data.enabled,
+        host: data.host,
+      },
+    },
+  ],
 });

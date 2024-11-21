@@ -10,6 +10,7 @@ import EC2 from "./features/terraform/components/EC2";
 import S3 from "./features/terraform/components/S3";
 import IAM from "./features/terraform/components/IAM";
 import Argocd from "./features/terraform/components/Argocd";
+import Helm from "./features/helm";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <BasicGen /> },
       { path: routes.bugFix, element: <BugFix /> },
+      { path: routes.helm, element: <Helm /> },
       {
         path: routes.terraformTemplate,
         element: <Terraform />,

@@ -28,7 +28,7 @@ const Input = ({
     fieldName === BugFixFields.BUG_DESCRIPTION;
 
   const defaultStyle =
-    "border border-stone-600 bg-stone-900 rounded-md flex h-auto p-4";
+    "border border-stone-600 bg-stone-900 rounded-md flex h-auto p-4 placeholder-gray-600 ";
 
   const error = errors[fieldName];
   return (

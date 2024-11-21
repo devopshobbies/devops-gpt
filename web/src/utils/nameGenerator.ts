@@ -18,6 +18,8 @@ export const nameGenerator = (endpoint: Endpoints | "") => {
     case Endpoints.POST_IAC_ARGOCD:
       name = "ARGOCD";
       break;
+    case Endpoints.POST_IAC_HELM:
+      name = "zip";
   }
   return name;
 };

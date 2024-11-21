@@ -1,16 +1,16 @@
 import { Box } from "@chakra-ui/react";
 import ChatBubble from "./ChatBubble";
-import { Message } from "../../features/model";
-import usePost from "../../hooks/usePost";
-import { ENDPOINTS, UserType } from "../../features/constants";
+import { Message } from "../../features/models";
+import { Endpoints, UserType } from "../../features/constants";
 import useGptStore from "../../utils/store";
 import { useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import { useLocation } from "react-router-dom";
+import usePost from "../../hooks/usePost";
 
 interface Props {
   messageData: Message[];
-  endpoint: ENDPOINTS;
+  endpoint: Endpoints;
   request: any;
   id: string;
 }

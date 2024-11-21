@@ -3,7 +3,17 @@ import {
   ApiRequestBasicGen,
   BugFixFormData,
   ApiRequestBugFix,
-} from "../features/model";
+  TerraformDockerFormData,
+  ApiRequestTerraformDocker,
+  TerraformEc2FormData,
+  ApiRequestTerraformEc2,
+  TerraformS3FormData,
+  ApiRequestTerraformS3,
+  TerraformIAMFormData,
+  ApiRequestTerraformIam,
+  ApiRequestTerraformArgocd,
+  TerraformArgocdFormData,
+} from "../features/models";
 
 export const basicGenMapper = (data: BasicGenFormData): ApiRequestBasicGen => ({
   min_token: data.minToken,
@@ -20,4 +30,52 @@ export const bugFixMapper = (data: BugFixFormData): ApiRequestBugFix => ({
   service: data.service,
   version: data.version,
   requestId: "",
+});
+
+export const terraformDockerMapper = (
+  data: TerraformDockerFormData
+): ApiRequestTerraformDocker => ({
+  docker_image: data.dockerImage,
+  docker_container: data.dockerContainer,
+});
+
+export const terraformEC2Mapper = (
+  data: TerraformEc2FormData
+): ApiRequestTerraformEc2 => ({
+  key_pair: data.keyPair,
+  security_group: data.securityGroup,
+  aws_instance: data.awsInstance,
+  ami_from_instance: data.amiFromInstance,
+});
+
+export const terraformS3Mapper = (
+  data: TerraformS3FormData
+): ApiRequestTerraformS3 => ({
+  s3_bucket: data.s3Bucket,
+  bucket_versioning: data.bucketVersioning,
+});
+
+export const terraformIAMMapper = (
+  data: TerraformIAMFormData
+): ApiRequestTerraformIam => ({
+  iam_user: data.iamUser,
+  iam_group: data.iamGroup,
+});
+
+export const terraformArgocdMapper = (
+  data: TerraformArgocdFormData
+): ApiRequestTerraformArgocd => ({
+  argocd_application: {
+    sync_policy: {
+      auto_prune: data.autoPrune,
+      self_heal: data.selfHeal,
+    },
+    sync_options: {
+      apply_out_of_sync_only: data.applyOutOfSyncOnly,
+      create_namespace: data.createNamespace,
+      fail_or_share_resource: data.failOrShareResource,
+    },
+  },
+  argocd_cluster: data.argocdCluster,
+  argocd_repository: data.argocdRepository,
 });

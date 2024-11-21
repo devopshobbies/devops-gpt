@@ -12,12 +12,12 @@ const ChatBubble = ({ message, userType, isLoading }: Props) => {
     <div
       className={`chat ${
         userType === UserType.USER ? "chat-end" : "chat-start"
-      }`}
+      } `}
     >
       <div
         className={`chat-bubble  ${
           userType === UserType.USER ? "bg-stone-600" : ""
-        }`}
+        } text-gray-200`}
       >
         {userType === UserType.USER
           ? message

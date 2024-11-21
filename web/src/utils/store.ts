@@ -1,6 +1,11 @@
 import { create } from "zustand";
-import { UserType } from "../features/constants";
-import { Message } from "../features/model";
+import { Endpoints, UserType } from "../features/constants";
+import { Message } from "../features/models";
+
+interface GeneratorQuery {
+  isSuccess: boolean;
+  endpoint: Endpoints | "";
+}
 
 interface DevOpsStore {
   isOpen: boolean;
@@ -10,10 +15,17 @@ interface DevOpsStore {
   addMessage: (user: UserType, content: string, id: string) => void;
 
   resetMessages: () => void;
+
+  generatorQuery: GeneratorQuery;
+  setGeneratorQuery: (isSuccess: boolean, endpoint: Endpoints | "") => void;
 }
 
-const initialState: Pick<DevOpsStore, "isOpen" | "messages"> = {
+const initialState: Pick<
+  DevOpsStore,
+  "isOpen" | "messages" | "generatorQuery"
+> = {
   isOpen: false,
+  generatorQuery: { isSuccess: false, endpoint: "" },
   messages: [],
 };
 
@@ -25,6 +37,8 @@ const useGptStore = create<DevOpsStore>((set) => ({
       messages: [...state.messages, { user, content, id }],
     })),
   resetMessages: () => set({ messages: [] }),
+  setGeneratorQuery: (bool, endpoint) =>
+    set({ generatorQuery: { isSuccess: bool, endpoint: endpoint } }),
 }));
 
 export default useGptStore;

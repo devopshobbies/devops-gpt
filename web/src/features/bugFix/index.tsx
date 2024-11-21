@@ -6,8 +6,8 @@ import Input from "../../components/internal-ui/Input";
 import useFormHandler from "../../hooks/useFormHandler";
 import { bugFixMapper } from "../../utils/mapperFunctions";
 import useGptStore from "../../utils/store";
-import { bugFixDefaultValues, BugFixFields, ENDPOINTS } from "../constants";
-import { ApiRequestBugFix, BugFixFormData } from "../model";
+import { bugFixDefaultValues, BugFixFields, Endpoints } from "../constants";
+import { ApiRequestBugFix, BugFixFormData } from "../models";
 
 const BugFix = () => {
   const { request, handleSubmit, onSubmit, formMethods } = useFormHandler<
@@ -32,7 +32,7 @@ const BugFix = () => {
             <Input fieldName={BugFixFields.VERSION} label="Version" />
           </div>
           <ChatBox
-            endpoint={ENDPOINTS.postFix}
+            endpoint={Endpoints.POST_FIX}
             request={request}
             messageData={messages}
             id={request?.requestId ?? ""}
@@ -49,8 +49,9 @@ const BugFix = () => {
               fieldName={BugFixFields.BUG_DESCRIPTION}
             />
             <Button
+              mt="4"
               type="submit"
-              bg="orange.800"
+              bg="orange.700"
               disabled={
                 formMethods.getFieldState(BugFixFields.BUG_DESCRIPTION).invalid
               }

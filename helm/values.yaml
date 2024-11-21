@@ -1,14 +1,8 @@
-web:
+app:
   replicaCount: 1
   image:
     repository: 81318131/fastapi_gpt
     tag: latest
-  persistence:
-    enabled: true
-    size: 1Gi
-    accessModes:
-      - ReadWriteOnce
-    storageClass: ""
   service:
     type: ClusterIP
     port: 80
@@ -17,28 +11,4 @@ web:
     nodePort: 30080
   environment:
     OPENAI_API_KEY: ""
-  nodeSelector: {}
-  affinity: {}
-
-db:
-  replicaCount: 1 
-  image:
-    repository: mongo
-    tag: latest
-  persistence:
-    enabled: true
-    size: 1Gi
-    accessModes:
-      - ReadWriteOnce
-    storageClass: ""
-  service:
-    type: ClusterIP
-    port: 27017
-    targetPort: 27017
-    protocol: TCP
-  environment:
-    MONGO_INITDB_DATABASE: "testdb"
-    MONGO_INITDB_ROOT_USERNAME: "admin"
-    MONGO_INITDB_ROOT_PASSWORD: "admin"
-  nodeSelector: {}
   affinity: {}

@@ -47,7 +47,7 @@ const Install = () => {
     if (isSuccess && data && request) {
       downloadFile(request);
     }
-  }, [request, isError, data]);
+  }, [request, isSuccess, data]);
 
   return (
     <>

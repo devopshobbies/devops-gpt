@@ -82,7 +82,7 @@ export const helmFieldProperties: FieldProperties[] = [
       fields: [
         {
           fieldName: HelmFields.ENVIRONMENT_NAME,
-          label: "Enivronement name",
+          label: "Environment name",
           type: "input",
           placeholder: "ENV1",
         },

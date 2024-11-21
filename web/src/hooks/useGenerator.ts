@@ -37,6 +37,7 @@ const useGenerator = <T extends FieldValues, K>(
     isSuccess,
     isError,
     status,
+    request,
     data,
   };
 };

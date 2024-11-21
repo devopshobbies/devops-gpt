@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { UserType } from "../features/constants";
 import useGptStore from "../utils/store";
 
-const useFormHandler = <T extends FieldValues, K>(
+const useAiChat = <T extends FieldValues, K>(
   defaultValues: UseFormProps<T>["defaultValues"]
 ) => {
   const [request, setRequest] = useState<K & { requestId: string }>();
@@ -21,4 +21,4 @@ const useFormHandler = <T extends FieldValues, K>(
   return { formMethods, request, handleSubmit, onSubmit };
 };
 
-export default useFormHandler;
+export default useAiChat;

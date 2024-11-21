@@ -10,11 +10,11 @@ import { ApiRequestBasicGen, BasicGenFormData } from "../models";
 
 import { IoSendOutline } from "react-icons/io5";
 
-import useFormHandler from "../../hooks/useFormHandler";
+import useAiChat from "../../hooks/useAiChat";
 import { basicGenMapper } from "../../utils/mapperFunctions";
 
 const BasicGen = () => {
-  const { formMethods, handleSubmit, onSubmit, request } = useFormHandler<
+  const { formMethods, handleSubmit, onSubmit, request } = useAiChat<
     BasicGenFormData,
     ApiRequestBasicGen
   >(basicGenDefaultValues);

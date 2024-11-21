@@ -11,6 +11,7 @@ import S3 from "./features/terraform/components/S3";
 import IAM from "./features/terraform/components/IAM";
 import Argocd from "./features/terraform/components/Argocd";
 import Helm from "./features/helm";
+import Install from "./features/install";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { index: true, element: <BasicGen /> },
       { path: routes.bugFix, element: <BugFix /> },
       { path: routes.helm, element: <Helm /> },
+      { path: routes.install, element: <Install /> },
       {
         path: routes.terraformTemplate,
         element: <Terraform />,

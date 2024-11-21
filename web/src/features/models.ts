@@ -149,6 +149,18 @@ export interface ApiRequestHelm {
   ];
 }
 
+export interface InstallFormData {
+  os: string;
+  service: string;
+}
+
+export interface ApiRequestInstall {
+  os: string;
+  service: string;
+}
+
 export interface ApiResponseDownload {
-  detail: [{ loc: [string, 0]; msg: string; type: string }];
+  data: {
+    output: string;
+  };
 }

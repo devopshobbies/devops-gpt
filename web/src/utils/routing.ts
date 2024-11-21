@@ -1,10 +1,9 @@
-import { Endpoints } from "../features/constants";
-
 export const routes = {
   basicGen: "/",
   bugFix: "/IaC-bugfix",
   terraformTemplate: "/terraform-template",
   helm: "/helm",
+  install: "/install",
 };
 
 export const btnMappings = [
@@ -12,7 +11,7 @@ export const btnMappings = [
   { label: "Bug fix", route: routes.bugFix },
   { label: "Terraform template", route: routes.terraformTemplate },
   { label: "Helm Template", route: routes.helm },
-  { label: "Installation", route: Endpoints.POST_INSTALL },
+  { label: "Installation", route: routes.install },
 ];
 
 export const terraformRoutes = {

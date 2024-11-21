@@ -2,6 +2,7 @@ import {
   BasicGenFormData,
   BugFixFormData,
   HelmFormData,
+  InstallFormData,
   TerraformArgocdFormData,
   TerraformDockerFormData,
   TerraformEc2FormData,
@@ -98,6 +99,11 @@ export enum HelmFields {
   HOST = "host",
 }
 
+export enum InstallFields {
+  OS = "os",
+  SERVICE = "service",
+}
+
 export enum UserType {
   USER = "user",
   BOT = "bot",
@@ -163,4 +169,9 @@ export const helmDefaultValues: HelmFormData = {
   stateless: false,
   targetPort: 80,
   value: "Hi",
+};
+
+export const installDefaultValues: InstallFormData = {
+  os: "",
+  service: "",
 };

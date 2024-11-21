@@ -3,14 +3,14 @@ import { FormProvider } from "react-hook-form";
 import { IoSendOutline } from "react-icons/io5";
 import ChatBox from "../../components/internal-ui/ChatBox";
 import Input from "../../components/internal-ui/Input";
-import useFormHandler from "../../hooks/useFormHandler";
+import useAiChat from "../../hooks/useAiChat";
 import { bugFixMapper } from "../../utils/mapperFunctions";
 import useGptStore from "../../utils/store";
 import { bugFixDefaultValues, BugFixFields, Endpoints } from "../constants";
 import { ApiRequestBugFix, BugFixFormData } from "../models";
 
 const BugFix = () => {
-  const { request, handleSubmit, onSubmit, formMethods } = useFormHandler<
+  const { request, handleSubmit, onSubmit, formMethods } = useAiChat<
     BugFixFormData,
     ApiRequestBugFix
   >(bugFixDefaultValues);

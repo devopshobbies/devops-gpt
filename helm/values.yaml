@@ -11,4 +11,5 @@ app:
     nodePort: 30080
   environment:
     OPENAI_API_KEY: ""
+  nodeSelector: {}
   affinity: {}

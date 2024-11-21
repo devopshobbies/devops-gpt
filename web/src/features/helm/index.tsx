@@ -79,7 +79,7 @@ const Helm = () => {
                 )}
               </div>
             ))}
-            <div className="flex items-center justify-center">
+            <div className="flex items-center flex-col justify-center">
               {isSuccess && (
                 <p className="text-green-500">Generated Successfully</p>
               )}

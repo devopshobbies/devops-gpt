@@ -9,7 +9,6 @@ COPY . .
 RUN pnpm run build
 
 FROM nginx:stable-alpine AS production
-ENV VITE_API_CLIENT_BASE_URL="http://localhost:8080"
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=builder /app/dist ./

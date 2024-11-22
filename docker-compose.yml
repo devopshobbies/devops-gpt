@@ -1,15 +1,39 @@
 version: '3.6'
 
 services:
-  web:
-    build: .
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: 81318131/fastapi_gpt
     container_name: fastapi_gpt
-    command: fastapi run app/main.py --port 80
+    command: fastapi run app/main.py --port 8080
     volumes:
       - './app:/code/app'
     environment:
       OPENAI_API_KEY: ${KEY:-}
       TEST: ${TEST:-}
     ports:
-      - "80:80"
+      - "8080:8080"
+    networks:
+      - app_network
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_CLIENT_BASE_URL: "http://localhost:8080"
+    image: 81318131/web_gpt
+    container_name: web_gpt
+    ports:
+      - "80:4173"
+    depends_on:
+      - app
+    networks:
+      - app_network
+
+
+networks:
+  app_network:
+    driver: bridge

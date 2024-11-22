@@ -1,3 +1,5 @@
 venv
 data
 .pytest*
+.env
+**/__pycache__/

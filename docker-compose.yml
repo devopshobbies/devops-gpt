@@ -1,12 +1,6 @@
 version: '3.6'
 
-x-common-variables: &common-variables
-    MONGO_INITDB_DATABASE: testdb
-    MONGO_INITDB_ROOT_USERNAME: admin
-    MONGO_INITDB_ROOT_PASSWORD: admin
-
 services:
-        
   web:
     build: .
     image: 81318131/fastapi_gpt
@@ -15,22 +9,7 @@ services:
     volumes:
       - './app:/code/app'
     environment:
-      <<: *common-variables
       OPENAI_API_KEY: ${KEY:-}
-      MONGO_HOST: mongo_gpt
-      MONGO_PORT: 27017
-
+      TEST: ${TEST:-}
     ports:
       - "80:80"
-   
-   
-  
-  mongo:
-    image: mongo
-    container_name: mongo_gpt
-    restart: always
-    volumes:
-      - './data:/data/db'
-    ports:
-      - "27017:27017"
-    environment: *common-variables

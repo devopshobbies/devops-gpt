@@ -63,21 +63,34 @@ class IaCInstallationInput(BaseModel):
             raise ValueError(f"Service must be one of {allowed_services}.")
         return value
 
-class IaCTemplateGeneration(BaseModel):
-    CI_integration:bool = True
-    base_config:str = 'ec2'
-    service:str = 'terraform'
+class IaCTemplateGenerationDocker(BaseModel):
+    docker_image: bool = True
+    docker_container: bool = True
 
-    @validator("base_config")
-    def validate_base_config(cls, value):
-        allowed_configs = ['ec2','s3','rds','docker_image','docker_container']
-        if value not in allowed_configs:
-            raise ValueError(f"Base config must be one of {allowed_configs}.")
-        return value
+class IaCTemplateGenerationEC2(BaseModel):
+    key_pair:bool = True
+    security_group:bool = True
+    aws_instance:bool = True
+    ami_from_instance:bool = True
 
-    @validator("service")
-    def validate_service(cls, value):
-        allowed_services = ['terraform']
-        if value not in allowed_services:
-            raise ValueError(f"Service must be one of {allowed_services}.")
-        return value
+class IaCTemplateGenerationS3(BaseModel):
+    s3_bucket:bool = True
+    bucket_versioning:bool = True
+
+class IaCTemplateGenerationIAM(BaseModel):
+    iam_user:bool = True
+    iam_group:bool = True
+
+class SyncPolicy(BaseModel):
+    auto_prune: bool = True
+    self_heal: bool = True
+
+
+class ArgoApplication(BaseModel):
+    sync_policy: SyncPolicy | None = None
+   
+
+class IaCTemplateGenerationArgoCD(BaseModel):
+    argocd_application:ArgoApplication | None = None
+    argocd_repository:bool = True
+   

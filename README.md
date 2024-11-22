@@ -1,67 +1,212 @@
+
 # DevOps-GPT
-Use a brilliant assistant as your friend in your DevOps Journey.
 
-## What does this project offer?
-This project helps you to balance your daily work as a DevOps engineer, from simple bug fixes to project template generation.<br />
-you don't need to search on Google for some routine jobs and it helps you with a robust prompt to simplify your career.
+This project helps you to balance your daily work as a DevOps engineer, from simple bug fixes to project template generation. you don't need to search on Google for some routine jobs and it helps you with a robust prompt to simplify your career.
 
-## How it works?
-This is a wrapper between DevOps engineers and large language models like GPT-4-mini. The main strength of it is prompt engineering.<br />
 
-We have developed some (Extendable) prompt-driven solutions with a simplified interface for the DevOps process cost reduction.<br />
+## Run Locally
 
-### Docker services
-We run our services using docker-compose (the main Fast-API-based backend and MongoDB), so we package all dependencies and don't use any external service.<br />
-The second one is Mongodb. we need to save the prompt and GPT-4_mini response in the Mongo document for future use. (for example, fine-tuning the other model with our data) <br />
+Clone the project
 
-### Media directory
-The third one is in the media directory. for now, We save a project called (MyTerraform) which is a Terraform template generated based on user requirements. so users can download it and use it.<be />
-surely we can save any static data in the `/media`.
+```
+git clone https://github.com/devopshobbies/devops-gpt.git
+```
 
-![teramedia](https://github.com/user-attachments/assets/b8e10d83-68ac-4efc-b064-45f1d1a870dc)
+Go to the project directory
 
-This is an example of a template generated in the `/media`
+```
+cd devops-gpt
+```
 
-and the input is something like that
+Run the project by its docker-compose
 
-![Screenshot from 2024-10-27 10-56-54](https://github.com/user-attachments/assets/63d1db07-2c25-4c10-a841-69a2c1235d9d)
+```
+sh run.sh
+```
 
 
 
-### directory_generators
-This directory becomes updated when we trigger the template generation API. finally, It generates the MyTerraform directory based on user input which is a template.
 
+## Deployment
 
-## ToolChain
-1. Python
-2. Docker
-3. GPT-4o-mini
-4. FastAPI
-5. Helm
-
-## Pre-requisites
-1. Python
-2. Docker
-
-## How to use?
-execute `sh run.sh` in your terminal
-
-> [!WARNING]  
-> Do Not change the GPT model! Prompts have been developed for the GPT-4-mini model and they can't be integrated with other GPT models. it can cause horrible incompatibility.
-
-## Run it local on kubernetes
 If you want to run and use this chatbot app within your Kubernetes cluster, you can easily install it using the Helm chart provided in this repository
 
-    helm install [RELEASE_NAME] helm/ -f helm/values.yaml
-# Test
+```
+helm install [RELEASE_NAME] helm/ -f helm/values.yaml
+```
 
-Run tests:
+
+
+
+## Running Tests
+
+To run tests, run the following command
+
 ```
-cd app
-pytest tests/
+cd app && pytest tests/
 ```
-# Contributing
-please read the [Contribution guide](https://github.com/abolfazl8131/devops-gpt/blob/master/CONTRIBUTING.md)
+
+
+
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`KEY` (OpenAI API Key)
+
+
+
+
+## API Reference
+
+#### Get helm items
+
+```
+GET /download-helm/{filename}
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `filename` | `string` | **Required** |
+
+#### Get terraform items
+
+```
+GET /download-terraform/{filename}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `filename`      | `string` | **Required** |
+
+#### Get list dirs
+
+```
+GET /list-directory
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `folder`      | `string` | **Required** |
+
+
+#### Post terraform basic questions
+
+```
+POST /IaC-basic/
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `max_tokens`      | `int` | **Required** |
+| `min_tokens`      | `int` | **Required** |
+| `service`      | `string` | **Required** |
+| `input`      | `string` | **Required** |
+
+
+#### Post terraform bugfix
+
+```
+POST /IaC-bugfix/
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `max_tokens`      | `int` | **Required** |
+| `min_tokens`      | `int` | **Required** |
+| `service`      | `string` | **Required** |
+| `bug_description`      | `string` | **Required** |
+| `version`      | `string` | **Required** |
+
+
+
+#### Post terraform installation
+
+```
+POST /IaC-install/
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `os`      | `string` | **Required** |
+| `service`      | `string` | **Required** |
+
+
+#### Post terraform template generation of docker resources
+
+```
+POST /IaC-template/docker
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `docker_image`      | `boolean` | **Required** |
+| `docker_container`      | `boolean` | **Required** |
+
+
+#### Post terraform template generation of Ec2 resources
+
+```
+POST /IaC-template/aws/ec2
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `key_pair`      | `boolean` | **Required** |
+| `security_group`      | `boolean` | **Required** |
+| `aws_instance`      | `boolean` | **Required** |
+| `ami_from_instance`      | `boolean` | **Required** |
+
+#### Post terraform template generation of S3 resources
+
+```
+POST /IaC-template/aws/s3
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `s3_bucket`      | `boolean` | **Required** |
+| `s3_bucket_versioning`      | `boolean` | **Required** |
+
+
+#### Post terraform template generation of IAM resources
+
+```
+POST /IaC-template/aws/iam
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `iam_user`      | `boolean` | **Required** |
+| `iam_group`      | `boolean` | **Required** |
+
+
+
+## Tech Stack
+
+**Client:** React + TypeScript + Vite
+
+**Server:** Python + FastAPI
+
+**Containerization:** Docker + Kubernetes
+
+**CI/CD**: Github Actions
+
+
+
+
+## Contributing
+
+Contributions are always welcome!
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for ways to get started.
+
+
+
+
 # Maintenance
-** [Abolfazl Andalib](https://github.com/abolfazl8131) - abolfazlandalib@gmail.com **<br />
+
+** [Abolfazl Andalib](https://github.com/abolfazl8131) - abolfazlandalib@gmail.com **
+
 ** [Mohammad Madanipour](https://github.com/mohammadll) - m.madanipourr@gmail.com **

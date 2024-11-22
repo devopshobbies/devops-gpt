@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "myhelm.fullname" . }}
+spec:
+  replicas: {{ .Values.web.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "myhelm.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "myhelm.name" . }}
+    spec:
+      containers:
+        - name: {{ .Values.web.image }}
+          image: {{ .Values.web.image }}:latest
+          ports:
+            - containerPort: {{ .Values.web.targetPort }}
+          env:
+          {{- range .Values.web.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+          {{- end }}
+      

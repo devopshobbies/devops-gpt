@@ -1,143 +1,316 @@
 import os
 project_name = "app/media/MyTerraform"
 modules_dir = os.path.join(project_name, "modules")
-docker_dir = os.path.join(modules_dir, "docker")
+ec2_dir = os.path.join(modules_dir, "ec2")
 
 # Create project directories
-os.makedirs(docker_dir, exist_ok=True)
+os.makedirs(ec2_dir, exist_ok=True)
 
-# Create main.tf at root
+# Create main.tf
 with open(os.path.join(project_name, "main.tf"), "w") as main_file:
-    main_file.write('''provider "docker" {
-  host = var.docker_host
+    main_file.write('''
+provider "aws" {
+  region = "us-east-1"
 }
 
-module "docker" {
-  source = "./modules/docker"
-  image  = var.image
-  name   = var.container_name
-  ports  = var.ports
+module "ec2" {
+  source = "./modules/ec2"
+
+  key_pair_create = var.key_pair_create
+  key_pair_name = var.key_pair_name
+
+  security_group_create = var.security_group_create
+  security_group_name = var.security_group_name
+  security_group_ingress_rules = var.security_group_ingress_rules
+  security_group_egress_rule = var.security_group_egress_rule
+
+  instance_create = var.instance_create
+  instance_type = var.instance_type
+
+  ami_from_instance_create = var.ami_from_instance_create
+  ami_name = var.ami_name
 }
 ''')
 
-# Create variables.tf at root
+# Create variables.tf
 with open(os.path.join(project_name, "variables.tf"), "w") as variables_file:
-    variables_file.write('''variable "docker_host" {
-  description = "The Docker host Uri."
-  type        = string
+    variables_file.write('''
+variable "key_pair_create" {
+  type = bool
 }
 
-variable "image" {
-  description = "The Docker image to use."
-  type        = string
+variable "key_pair_name" {
+  type = string
 }
 
-variable "container_name" {
-  description = "The name of the Docker container."
-  type        = string
+variable "security_group_create" {
+  type = bool
 }
 
-variable "ports" {
-  description = "List of ports to expose."
-  type        = list(string)
+variable "security_group_name" {
+  type = string
+}
+
+variable "security_group_ingress_rules" {
+  type = map(object({
+    description = string
+    from_port = number
+    to_port = number
+    protocol = string
+    cidr_blocks = list(string)
+  }))
+}
+
+variable "security_group_egress_rule" {
+  type = object({
+    from_port = number
+    to_port = number
+    protocol = string
+    cidr_blocks = list(string)
+  })
+}
+
+variable "instance_create" {
+  type = bool
+}
+
+variable "instance_type" {
+  type = string
+}
+
+variable "ami_from_instance_create" {
+  type = bool
+}
+
+variable "ami_name" {
+  type = string
 }
 ''')
 
-# Create terraform.tfvars at root
+# Create terraform.tfvars
 with open(os.path.join(project_name, "terraform.tfvars"), "w") as tfvars_file:
-    tfvars_file.write('''docker_host = "tcp://localhost:2375"
-image       = "nginx:latest"
-container_name = "my_nginx"
-ports      = ["80:80"]
+    tfvars_file.write('''
+key_pair_create = true
+key_pair_name = "ec2"
+
+security_group_create = true
+security_group_name = "my_rules"
+security_group_ingress_rules = {
+  ssh_rule = {
+    description = "SSH Ingress"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  },
+  http_rule = {
+    description = "HTTP Ingress"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+security_group_egress_rule = {
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+instance_create = false
+instance_type = "t2.micro"
+
+ami_from_instance_create = true
+ami_name = "my-own-ami"
 ''')
 
-# Create versions.tf at root
+# Create versions.tf
 with open(os.path.join(project_name, "versions.tf"), "w") as versions_file:
-    versions_file.write('''terraform {
+    versions_file.write('''
+terraform {
   required_version = ">= 1.0"
 
   required_providers {
-    docker = {
-      source  = "hashicorp/docker"
-      version = ">= 2.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.20"
     }
   }
 }
 ''')
 
-# Create outputs.tf at root
-with open(os.path.join(project_name, "outputs.tf"), "w") as outputs_file:
-    outputs_file.write('''output "container_id" {
-  description = "The ID of the Docker container."
-  value       = module.docker.container_id
-}
+# Create ec2 module files
+with open(os.path.join(ec2_dir, "terraform.pub"), "w") as pub_file:
+    pass
 
-output "container_ip" {
-  description = "The IP address of the Docker container."
-  value       = module.docker.container_ip
-}
-''')
+with open(os.path.join(ec2_dir, "main.tf"), "w") as ec2_main_file:
+    ec2_main_file.write('''
+data "aws_ami" "linux" {
+  most_recent = true
+  owners      = ["amazon"]
 
-# Create main.tf in modules/docker
-with open(os.path.join(docker_dir, "main.tf"), "w") as docker_main_file:
-    docker_main_file.write('''resource "docker_container" "this" {
-  name  = var.name
-  image = var.image
-  ports {
-    internal = var.ports[0]
-    external = var.ports[1]
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023*kernel-6.1-x86_64"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
 }
-''')
 
-# Create variables.tf in modules/docker
-with open(os.path.join(docker_dir, "variables.tf"), "w") as docker_variables_file:
-    docker_variables_file.write('''variable "image" {
-  description = "The Docker image to use."
-  type        = string
+resource "aws_key_pair" "key_pair" {
+  count = var.key_pair_create ? 1 : 0
+  key_name = var.key_pair_name
+  public_key = file("${path.module}/terraform.pub")
 }
 
-variable "name" {
-  description = "The name of the Docker container."
-  type        = string
+resource "aws_security_group" "security_group" {
+  count = var.security_group_create ? 1 : 0
+  name  = var.security_group_name
+
+  dynamic "ingress" {
+    for_each = var.security_group_ingress_rules
+    content {
+      description = ingress.value["description"]
+      from_port   = ingress.value["from_port"]
+      to_port     = ingress.value["to_port"]
+      protocol    = ingress.value["protocol"]
+      cidr_blocks = ingress.value["cidr_blocks"]
+    }
+  }
+
+  egress {
+    from_port   = var.security_group_egress_rule["from_port"]
+    to_port     = var.security_group_egress_rule["to_port"]
+    protocol    = var.security_group_egress_rule["protocol"]
+    cidr_blocks = var.security_group_egress_rule["cidr_blocks"]
+  }
 }
 
-variable "ports" {
-  description = "List of ports for the container."
-  type        = list(string)
+resource "aws_instance" "instance" {
+  count = var.instance_create ? 1 : 0
+  ami = data.aws_ami.linux.id
+  instance_type = var.instance_type
+  key_name = var.key_pair_create ? aws_key_pair.key_pair[0].key_name : null
+  vpc_security_group_ids = var.security_group_create ? [aws_security_group.security_group[0].id] : null
+}
+
+resource "aws_ami_from_instance" "ami" {
+  count = var.instance_create && var.ami_from_instance_create ? 1 : 0
+  name = var.ami_name
+  source_instance_id = aws_instance.instance[0].id
 }
 ''')
 
-# Create terraform.tfvars in modules/docker
-with open(os.path.join(docker_dir, "terraform.tfvars"), "w") as docker_tfvars_file:
-    docker_tfvars_file.write('''image = "nginx:latest"
-name  = "my_nginx"
-ports = ["80", "80"]
+with open(os.path.join(ec2_dir, "variables.tf"), "w") as ec2_variables_file:
+    ec2_variables_file.write('''
+variable "key_pair_create" {
+  type = bool
+}
+
+variable "key_pair_name" {
+  type = string
+}
+
+variable "security_group_create" {
+  type = bool
+}
+
+variable "security_group_name" {
+  type = string
+}
+
+variable "security_group_ingress_rules" {
+  type = map(object({
+    description = string
+    from_port = number
+    to_port = number
+    protocol = string
+    cidr_blocks = list(string)
+  }))
+}
+
+variable "security_group_egress_rule" {
+  type = object({
+    from_port = number
+    to_port = number
+    protocol = string
+    cidr_blocks = list(string)
+  })
+}
+
+variable "instance_create" {
+  type = bool
+}
+
+variable "instance_type" {
+  type = string
+}
+
+variable "ami_from_instance_create" {
+  type = bool
+}
+
+variable "ami_name" {
+  type = string
+}
 ''')
 
-# Create versions.tf in modules/docker
-with open(os.path.join(docker_dir, "versions.tf"), "w") as docker_versions_file:
-    docker_versions_file.write('''terraform {
+with open(os.path.join(ec2_dir, "terraform.tfvars"), "w") as ec2_tfvars_file:
+    ec2_tfvars_file.write('''
+key_pair_create = true
+key_pair_name = "ec2"
+
+security_group_create = true
+security_group_name = "my_rules"
+security_group_ingress_rules = {
+  ssh_rule = {
+    description = "SSH Ingress"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  },
+  http_rule = {
+    description = "HTTP Ingress"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+security_group_egress_rule = {
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+instance_create = false
+instance_type = "t2.micro"
+
+ami_from_instance_create = true
+ami_name = "my-own-ami"
+''')
+
+with open(os.path.join(ec2_dir, "versions.tf"), "w") as ec2_versions_file:
+    ec2_versions_file.write('''
+terraform {
   required_version = ">= 1.0"
 
   required_providers {
-    docker = {
-      source  = "hashicorp/docker"
-      version = ">= 2.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.20"
     }
   }
-}
-''')
-
-# Create outputs.tf in modules/docker
-with open(os.path.join(docker_dir, "outputs.tf"), "w") as docker_outputs_file:
-    docker_outputs_file.write('''output "container_id" {
-  description = "The ID of the Docker container."
-  value       = docker_container.this.id
-}
-
-output "container_ip" {
-  description = "The IP address of the Docker container."
-  value       = docker_container.this.ip_address
 }
 ''')

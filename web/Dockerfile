@@ -12,6 +12,6 @@ FROM nginx:stable-alpine AS production
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=builder /app/dist ./
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 4173
 CMD ["nginx", "-g", "daemon off;"]

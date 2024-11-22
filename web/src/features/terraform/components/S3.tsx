@@ -1,4 +1,4 @@
-import PlatformBox from "../../../components/internal-ui/PlatformBox";
+import Platform from "../../../components/internal-ui/Platform";
 import useFindPlatform from "../../../hooks/useFindPlatform";
 import { TerraformServices } from "../../constants";
 import { ApiRequestTerraformS3, TerraformS3FormData } from "../../models";
@@ -8,7 +8,7 @@ export const S3 = () => {
   return (
     <>
       {platform && (
-        <PlatformBox
+        <Platform
           defaultValues={platform.defaultValues as TerraformS3FormData}
           endpoint={platform.endpoint}
           fieldProperties={platform.fieldProperties}

@@ -1,4 +1,4 @@
-import PlatformBox from "../../../components/internal-ui/PlatformBox";
+import Platform from "../../../components/internal-ui/Platform";
 import useFindPlatform from "../../../hooks/useFindPlatform";
 import { TerraformServices } from "../../constants";
 import { ApiRequestTerraformIam, TerraformIAMFormData } from "../../models";
@@ -8,7 +8,7 @@ const IAM = () => {
   return (
     <>
       {platform && (
-        <PlatformBox
+        <Platform
           defaultValues={platform.defaultValues as TerraformIAMFormData}
           endpoint={platform.endpoint}
           fieldProperties={platform.fieldProperties}

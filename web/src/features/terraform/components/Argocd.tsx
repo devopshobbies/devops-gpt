@@ -1,4 +1,4 @@
-import PlatformBox from "../../../components/internal-ui/PlatformBox";
+import Platform from "../../../components/internal-ui/Platform";
 import useFindPlatform from "../../../hooks/useFindPlatform";
 import { TerraformServices } from "../../constants";
 import {
@@ -12,7 +12,7 @@ const Argocd = () => {
   return (
     <>
       {platform && (
-        <PlatformBox
+        <Platform
           defaultValues={platform.defaultValues as TerraformArgocdFormData}
           endpoint={platform.endpoint}
           fieldProperties={platform.fieldProperties}

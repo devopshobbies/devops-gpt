@@ -5,7 +5,7 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import apiClient from "../utils/apiClient";
 import useGptStore from "../utils/store";
 
-const useGenerator = <T extends FieldValues, K>(
+const useQueryGenerator = <T extends FieldValues, K>(
   initialValues: UseFormProps<T>["defaultValues"],
   endpoint: Endpoints
 ) => {
@@ -42,4 +42,4 @@ const useGenerator = <T extends FieldValues, K>(
   };
 };
 
-export default useGenerator;
+export default useQueryGenerator;

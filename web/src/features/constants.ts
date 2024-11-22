@@ -91,7 +91,7 @@ export enum HelmFields {
   TARGET_PORT = "targetPort",
   REPLICAS = "replicas",
   SIZE = "size",
-  ACCESS_MODES = "accessModeS",
+  ACCESS_MODES = "accessModes",
   ENVIRONMENT_NAME = "environmentName",
   VALUE = "value",
   STATELESS = "stateless",
@@ -161,14 +161,14 @@ export const helmDefaultValues: HelmFormData = {
   apiVersion: 2,
   enabled: false,
   environmentName: "ENV1",
-  host: "www.example.com",
+  host: "",
   image: "nginx",
-  name: "web ",
+  name: "",
   replicas: 1,
   size: "1Gi",
   stateless: false,
   targetPort: 80,
-  value: "Hi",
+  value: "",
 };
 
 export const installDefaultValues: InstallFormData = {

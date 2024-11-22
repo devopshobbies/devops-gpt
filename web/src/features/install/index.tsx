@@ -5,7 +5,7 @@ import {
   ApiResponseDownload,
   InstallFormData,
 } from "../models";
-import useGenerator from "../../hooks/useGenerator";
+import useQueryGenerator from "../../hooks/useQueryGenerator";
 import Input from "../../components/internal-ui/Input";
 import { useCallback, useEffect, useRef } from "react";
 
@@ -19,7 +19,7 @@ const Install = () => {
     isSuccess,
     status,
     request,
-  } = useGenerator<InstallFormData, ApiRequestInstall>(
+  } = useQueryGenerator<InstallFormData, ApiRequestInstall>(
     installDefaultValues,
     Endpoints.POST_INSTALL
   );

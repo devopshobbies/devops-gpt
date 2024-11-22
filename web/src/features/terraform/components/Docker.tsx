@@ -1,4 +1,4 @@
-import PlatformBox from "../../../components/internal-ui/PlatformBox";
+import Platform from "../../../components/internal-ui/Platform";
 import useFindPlatform from "../../../hooks/useFindPlatform";
 import { TerraformServices } from "../../constants";
 import {
@@ -11,7 +11,7 @@ const Docker = () => {
   return (
     <>
       {platform && (
-        <PlatformBox
+        <Platform
           defaultValues={platform.defaultValues as TerraformDockerFormData}
           endpoint={platform.endpoint}
           fieldProperties={platform.fieldProperties}

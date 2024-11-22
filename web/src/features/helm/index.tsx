@@ -3,7 +3,7 @@ import CheckBox from "../../components/internal-ui/CheckBox";
 import Input from "../../components/internal-ui/Input";
 import { helmMapper } from "../../utils/mapperFunctions";
 import { DownloadFolders, Endpoints, helmDefaultValues } from "../constants";
-import useGenerator from "../../hooks/useGenerator";
+import useQueryGenerator from "../../hooks/useQueryGenerator";
 import { helmFieldProperties } from "./constants";
 import useDownload from "../../hooks/useDownload";
 import { useEffect } from "react";
@@ -12,7 +12,7 @@ import { ApiRequestHelm, HelmFormData } from "../models";
 
 const Helm = () => {
   const { formMethods, data, handleSubmit, isError, onSubmit, status } =
-    useGenerator<HelmFormData, ApiRequestHelm>(
+    useQueryGenerator<HelmFormData, ApiRequestHelm>(
       helmDefaultValues,
       Endpoints.POST_IAC_HELM
     );
@@ -31,6 +31,16 @@ const Helm = () => {
       setGeneratorQuery(false, "");
     }
   }, [endpoint, isSuccess, downloadFile, downloadRef]);
+
+  const formValues = formMethods.watch();
+
+  const isAllFieldsFilled = helmFieldProperties.every(({ group }) =>
+    group.fields.every(
+      (field) =>
+        field.fieldName in formValues &&
+        formValues[field.fieldName as keyof HelmFormData] !== ""
+    )
+  );
 
   return (
     <div className=" w-full mt-6 p-6">
@@ -86,8 +96,8 @@ const Helm = () => {
               {isError && <p className="text-red-600">Operation failed</p>}
               <button
                 type="submit"
-                className="bg-orange-600 w-32 h-12 rounded-sm"
-                disabled={status === "pending" && !data}
+                className="bg-orange-600 w-32 h-12 rounded-md disabled:bg-gray-700 disabled:text-gray-400 disabled:hover:cursor-not-allowed"
+                disabled={(status === "pending" && !data) || !isAllFieldsFilled}
               >
                 {status === "pending" ? (
                   <span className="loading loading-ring loading-lg "></span>

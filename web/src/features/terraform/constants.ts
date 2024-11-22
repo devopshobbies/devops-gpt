@@ -18,9 +18,11 @@ import {
   TerraformIAMFields,
   TerraformArgocdFields,
   terraformArgocdDefaultValues,
+  TerraformServices,
 } from "../constants";
+import { PlatformData } from "./models";
 
-const dockerFieldProperties: Checkboxprops[] = [
+export const dockerFieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformDockerFields.DOCKER_IMAGE,
     label: "Docker Image",
@@ -31,7 +33,7 @@ const dockerFieldProperties: Checkboxprops[] = [
   },
 ];
 
-const ec2FieldProperties: Checkboxprops[] = [
+export const ec2FieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformEC2Fields.KEY_PAIR,
     label: "Key pair",
@@ -50,7 +52,7 @@ const ec2FieldProperties: Checkboxprops[] = [
   },
 ];
 
-const s3FieldProperties: Checkboxprops[] = [
+export const s3FieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformS3Fields.S3_BUCKET,
     label: "S3 bucker",
@@ -61,7 +63,7 @@ const s3FieldProperties: Checkboxprops[] = [
   },
 ];
 
-const iamFieldProperties: Checkboxprops[] = [
+export const iamFieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformIAMFields.IAM_USER,
     label: "IAM user",
@@ -72,7 +74,7 @@ const iamFieldProperties: Checkboxprops[] = [
   },
 ];
 
-const argocdFieldProperties: Checkboxprops[] = [
+export const argocdFieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformArgocdFields.AUTO_PRUNE,
     label: "Auto prune",
@@ -103,37 +105,37 @@ const argocdFieldProperties: Checkboxprops[] = [
   },
 ];
 
-export const platformData = [
+export const platformData: PlatformData[] = [
   {
-    serviceName: "ARGOCD",
+    serviceName: TerraformServices.ARGOCD,
     defaultValues: terraformArgocdDefaultValues,
     endpoint: Endpoints.POST_IAC_ARGOCD,
     mapperFunction: terraformArgocdMapper,
     fieldProperties: argocdFieldProperties,
   },
   {
-    serviceName: "DOCKER",
+    serviceName: TerraformServices.DOCKER,
     defaultValues: terraformDockerDefaultValues,
     endpoint: Endpoints.POST_IAC_T_DOCKER,
     mapperFunction: terraformDockerMapper,
     fieldProperties: dockerFieldProperties,
   },
   {
-    serviceName: "EC2",
+    serviceName: TerraformServices.EC2,
     defaultValues: terraformEc2DefaultValues,
     endpoint: Endpoints.POST_IAC_T_EC2,
     mapperFunction: terraformEC2Mapper,
     fieldProperties: ec2FieldProperties,
   },
   {
-    serviceName: "S3",
+    serviceName: TerraformServices.S3,
     defaultValues: terraformS3DefaultValues,
     endpoint: Endpoints.POST_IAC_T_S3,
     mapperFunction: terraformS3Mapper,
     fieldProperties: s3FieldProperties,
   },
   {
-    serviceName: "IAM",
+    serviceName: TerraformServices.IAM,
     defaultValues: terraformIamDefaultValues,
     endpoint: Endpoints.POST_IAC_T_IAM,
     mapperFunction: terraformIAMMapper,

@@ -5,12 +5,10 @@ const Header = () => {
   const setIsOpen = useGptStore((s) => s.setIsOpen);
   return (
     <>
-      <div className="flex h-24 w-full bg-orange-700">
-        <button onClick={() => setIsOpen(true)}>
+      <div className="flex h-24 w-full px-10  bg-orange-700">
+        <button onClick={() => setIsOpen(true)} className="">
           <Image
-            mt="-2"
-            ml="4"
-            className="w-28 h-28"
+            className="w-[5.5rem] h-[5.5rem] rounded-md shadow-2xl"
             src="/IMG_20240909_212657_482-removebg.png"
           />
         </button>

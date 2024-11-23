@@ -94,3 +94,24 @@ class IaCTemplateGenerationArgoCD(BaseModel):
     argocd_application:ArgoApplication | None = None
     argocd_repository:bool = True
    
+
+class IaCTemplateGenerationELB(BaseModel):
+    security_group:bool = True
+    lb_target_group:bool = True
+    lb:bool = True
+    lb_listener:bool = True
+    lb_listener_rule:bool = True
+    key_pair:bool = True
+    launch_configuration:bool = True
+    autoscaling_group:bool = True
+    autoscaling_attachment:bool = True
+    autoscaling_policy:bool = True
+
+
+
+class IaCTemplateGenerationEFS(BaseModel):
+    security_group:bool = True
+    efs_file_system:bool = True
+    efs_mount_target:bool = True
+    efs_backup_policy:bool = True
+    

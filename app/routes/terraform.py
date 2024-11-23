@@ -11,7 +11,9 @@ from app.models import (IaCBasicInput,
         IaCTemplateGenerationEC2,
         IaCTemplateGenerationS3,
         IaCTemplateGenerationIAM,
-        IaCTemplateGenerationArgoCD
+        IaCTemplateGenerationArgoCD,
+        IaCTemplateGenerationELB,
+        IaCTemplateGenerationEFS
        )
 
 from fastapi import Response
@@ -25,6 +27,8 @@ from app.template_generators.terraform.aws.ec2 import (IaC_template_generator_ec
 from app.template_generators.terraform.aws.IAM import (IaC_template_generator_iam)
 from app.template_generators.terraform.aws.s3 import (IaC_template_generator_s3)
 from app.template_generators.terraform.argocd import (IaC_template_generator_argocd)
+from app.template_generators.terraform.aws.ELB import (IaC_template_generator_elb)
+from app.template_generators.terraform.aws.EFS import (IaC_template_generator_efs)
 import os
 
 @app.post("/IaC-basic/")
@@ -99,6 +103,28 @@ async def IaC_template_generation_argocd(request:IaCTemplateGenerationArgoCD) ->
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
         generated_prompt = IaC_template_generator_argocd(request)
+        output = gpt_service(generated_prompt)
+        edit_directory_generator("terraform_generator",output)
+        execute_pythonfile("MyTerraform","terraform_generator")
+        return Output(output='output')
+
+
+
+@app.post("/IaC-template/aws/elb")
+async def IaC_template_generation_aws_elb(request:IaCTemplateGenerationELB) -> Output:
+        if os.environ.get("TEST"):
+            return Output(output='output (nothing special)')
+        generated_prompt = IaC_template_generator_elb(request)
+        output = gpt_service(generated_prompt)
+        edit_directory_generator("terraform_generator",output)
+        execute_pythonfile("MyTerraform","terraform_generator")
+        return Output(output='output')
+
+@app.post("/IaC-template/aws/efs")
+async def IaC_template_generation_aws_efs(request:IaCTemplateGenerationEFS) -> Output:
+        if os.environ.get("TEST"):
+            return Output(output='output (nothing special)')
+        generated_prompt = IaC_template_generator_efs(request)
         output = gpt_service(generated_prompt)
         edit_directory_generator("terraform_generator",output)
         execute_pythonfile("MyTerraform","terraform_generator")

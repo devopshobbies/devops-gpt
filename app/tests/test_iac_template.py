@@ -21,6 +21,7 @@ class TestTerraformTemplates:
 
     def test_iac_template_docker(self, client, iac_template_docker_sample_input):
         response = client.post(self.iac_template_docker_url, json=iac_template_docker_sample_input)
+        print(response.json())
         assert response.status_code == 200
 
     def test_iac_template_ec2(self, client, iac_template_ec2_sample_input):

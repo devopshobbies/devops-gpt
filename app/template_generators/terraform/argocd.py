@@ -11,6 +11,10 @@ def IaC_template_generator_argocd(input) -> str:
       argocd_create_application = 'false'
       argocd_application_auto_prune = ""
       argocd_application_selfheal = ""
+    
+    depends_on = 'depends_on = []'
+    if input.application_depends_repository == True:
+        depends_on = 'depends_on = [argocd_repository.repository]'
 
     prompt = f"""
               Generate a Python code to generate a Terraform project (project name is app/media/MyTerraform)
@@ -112,7 +116,13 @@ def IaC_template_generator_argocd(input) -> str:
                                ```
                                count = var.application_create ? 1 : 0
                                ```
-                           - 2. metadata (A block): Define a metadata block as follows:
+                           - 2. add depends_on block following :
+                                ```
+                                {depends_on}
+                                
+                                ```
+                                
+                           - 3. metadata (A block): Define a metadata block as follows:
                                ```
                                metadata {{
                                  name      = var.argocd_application["name"]
@@ -122,7 +132,7 @@ def IaC_template_generator_argocd(input) -> str:
                                  }}
                                }}
                                ```
-                           - 3. spec (A block): Define a spec block as follows:
+                           - 4. spec (A block): Define a spec block as follows:
                                ```
                                spec {{
                                  destination {{

@@ -1,3 +1,21 @@
+template_generator_terraform_aws:
+- changed-files:
+  - any-glob-to-any-file: 'app/template_generators/terraform/aws/*.py'
+
+template_generator_terraform_argocd:
+- changed-files:
+  - any-glob-to-any-file: 'app/template_generators/terraform/argocd.py'
+
+
+template_generator_terraform_docker:
+- changed-files:
+  - any-glob-to-any-file: 'app/template_generators/terraform/docker.py'
+
+crawler:
+- changed-files:
+  - any-glob-to-any-file: 'crawl/**'
+
+  
 helm:
 - changed-files:
   - any-glob-to-any-file: helm/**

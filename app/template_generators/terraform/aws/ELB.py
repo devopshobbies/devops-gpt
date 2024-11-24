@@ -10,21 +10,23 @@ def IaC_template_generator_elb(input) -> str:
         'aws_elb_create_autoscaling_group_attachment',
         'aws_elb_create_autoscaling_policy'
     ]
-
-    # Set boolean flags based on input
+    
+    # Set boolean flags based on input using attribute access
     aws_elb_create_security_group = 'true' if input.security_group else 'false'
-    aws_elb_create_target_group = 'true' if input.target_group else 'false'
-    aws_elb_create_listener = 'true' if input.listener else 'false'
+    aws_elb_create_target_group = 'true' if input.lb_target_group else 'false'
+    aws_elb_create_listener = 'true' if input.lb_listener else 'false'
+    aws_elb_create_listener_rule = 'true' if input.lb_listener_rule else 'false'
     aws_elb_create_launch_config = 'true' if input.launch_configuration else 'false'
     aws_elb_create_asg = 'true' if input.autoscaling_group else 'false'
-    aws_elb_create_asg_attachment = 'true' if input.asg_attachment else 'false'
-    aws_elb_create_asg_policy = 'true' if input.asg_policy else 'false'
+    aws_elb_create_asg_attachment = 'true' if input.autoscaling_attachment else 'false'
+    aws_elb_create_asg_policy = 'true' if input.autoscaling_policy else 'false'
 
     tfvars_content = f"""
     # Resource creation flags
     create_security_group        = {aws_elb_create_security_group}
     create_target_group         = {aws_elb_create_target_group}
-    create_listener_rule        = {aws_elb_create_listener}
+    create_listener             = {aws_elb_create_listener}
+    create_listener_rule        = {aws_elb_create_listener_rule}
     create_launch_configuration = {aws_elb_create_launch_config}
     create_autoscaling_group    = {aws_elb_create_asg}
     create_asg_attachment       = {aws_elb_create_asg_attachment}

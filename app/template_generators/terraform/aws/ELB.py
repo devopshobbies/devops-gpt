@@ -3,7 +3,6 @@ def IaC_template_generator_elb(input) -> str:
     elb = [
         'aws_elb',
         'aws_elb_create_security_group',
-        'aws_elb_create_load_balancer',
         'aws_elb_create_target_group',
         'aws_elb_create_listener_rule',
         'aws_elb_create_launch_configuration',
@@ -14,7 +13,6 @@ def IaC_template_generator_elb(input) -> str:
 
     # Set boolean flags based on input
     aws_elb_create_security_group = 'true' if input.security_group else 'false'
-    aws_elb_create_lb = 'true' if input.load_balancer else 'false'
     aws_elb_create_target_group = 'true' if input.target_group else 'false'
     aws_elb_create_listener = 'true' if input.listener else 'false'
     aws_elb_create_launch_config = 'true' if input.launch_configuration else 'false'
@@ -25,7 +23,6 @@ def IaC_template_generator_elb(input) -> str:
     tfvars_content = f"""
     # Resource creation flags
     create_security_group        = {aws_elb_create_security_group}
-    create_load_balancer        = {aws_elb_create_lb}
     create_target_group         = {aws_elb_create_target_group}
     create_listener_rule        = {aws_elb_create_listener}
     create_launch_configuration = {aws_elb_create_launch_config}
@@ -38,12 +35,6 @@ def IaC_template_generator_elb(input) -> str:
     variables_content = """
     variable "create_security_group" {
       description = "Whether to create security group"
-      type        = bool
-      default     = true
-    }
-
-    variable "create_load_balancer" {
-      description = "Whether to create load balancer"
       type        = bool
       default     = true
     }
@@ -91,7 +82,7 @@ def IaC_template_generator_elb(input) -> str:
               markdown formatting. The project should be organized as follows:
 
               1. terraform.tfvars with the following content:
-                {tfvars_content}
+              {tfvars_content}
 
               2. variables.tf with the following content:
               {variables_content}
@@ -104,10 +95,6 @@ def IaC_template_generator_elb(input) -> str:
                   ├── versions.tf
                   └── modules/
                       ├── security_group/
-                      │   ├── main.tf
-                      │   ├── variables.tf
-                      │   └── outputs.tf
-                      ├── load_balancer/
                       │   ├── main.tf
                       │   ├── variables.tf
                       │   └── outputs.tf
@@ -155,20 +142,6 @@ def IaC_template_generator_elb(input) -> str:
                     security_ingress_rules = var.security_ingress_rules
                   }}
 
-                  # Load Balancer Module
-                  module "load_balancer" {{
-                    source = "./modules/load_balancer"
-                    count  = var.create_load_balancer ? 1 : 0
-
-                    name                     = var.load_balancer.name
-                    internal                 = var.load_balancer.scheme
-                    load_balancer_type       = var.load_balancer.type
-                    security_groups          = var.create_security_group ? [module.security_group[0].security_group_id] : []
-                    subnets                  = data.aws_subnets.default.ids
-                    deletion_protection      = var.deletion_protection
-                    enable_cross_zone_lb     = var.cross_zone_load_balancing
-                  }}
-
                   # Target Group Module
                   module "target_group" {{
                     source = "./modules/target_group"
@@ -186,9 +159,8 @@ def IaC_template_generator_elb(input) -> str:
                   # Listener Module
                   module "listener" {{
                     source = "./modules/listener"
-                    count  = var.create_listener_rule && var.create_load_balancer && var.create_target_group ? 1 : 0
+                    count  = var.create_listener_rule && var.create_target_group ? 1 : 0
 
-                    load_balancer_arn = module.load_balancer[0].lb_arn
                     target_group_arn  = module.target_group[0].target_group_arn
                     port              = var.load_balancer_listener.port
                     protocol          = var.load_balancer_listener.protocol
@@ -251,25 +223,8 @@ def IaC_template_generator_elb(input) -> str:
                   }}
                   ```
 
-                  b. load_balancer/main.tf:
-                  ```
-                  resource "aws_lb" "this" {{
-                    name               = var.name
-                    internal           = var.internal
-                    load_balancer_type = var.load_balancer_type
-                    security_groups    = var.security_groups
-                    subnets           = var.subnets
 
-                    enable_deletion_protection = var.deletion_protection
-                    enable_cross_zone_load_balancing = var.enable_cross_zone_lb
-
-                    tags = {{
-                      Environment = "production"
-                    }}
-                  }}
-                  ```
-
-                  c. target_group/main.tf:
+                  b. target_group/main.tf:
                   ```
                   resource "aws_lb_target_group" "this" {{
                     name             = var.name
@@ -288,7 +243,7 @@ def IaC_template_generator_elb(input) -> str:
                   }}
                   ```
 
-                  d. listener/main.tf:
+                  c. listener/main.tf:
                   ```
                   resource "aws_lb_listener" "this" {{
                     load_balancer_arn = var.load_balancer_arn

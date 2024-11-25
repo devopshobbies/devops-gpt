@@ -111,7 +111,7 @@ class IaCTemplateGenerationELB(BaseModel):
 
 
 class IaCTemplateGenerationEFS(BaseModel):
-    security_group:bool = True
+    
     efs_file_system:bool = True
     efs_mount_target:bool = True
     efs_backup_policy:bool = True

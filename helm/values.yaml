@@ -1,0 +1,15 @@
+app:
+  replicaCount: 1
+  image:
+    repository: 81318131/fastapi_gpt
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+    nodePort: 30080
+  environment:
+    OPENAI_API_KEY: ""
+  nodeSelector: {}
+  affinity: {}

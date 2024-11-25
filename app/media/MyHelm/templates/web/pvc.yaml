@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: web-pvc
+spec:
+  accessModes:
+    - {{ .Values.web.persistence.accessModes[0] }}
+  resources:
+    requests:
+      storage: {{ .Values.web.persistence.size }}

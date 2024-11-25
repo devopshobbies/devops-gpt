@@ -1,0 +1,70 @@
+template_generator_terraform_aws:
+- changed-files:
+  - any-glob-to-any-file: 'app/template_generators/terraform/aws/*.py'
+
+template_generator_terraform_argocd:
+- changed-files:
+  - any-glob-to-any-file: 'app/template_generators/terraform/argocd.py'
+
+
+template_generator_terraform_docker:
+- changed-files:
+  - any-glob-to-any-file: 'app/template_generators/terraform/docker.py'
+
+crawler:
+- changed-files:
+  - any-glob-to-any-file: 'crawl/**'
+
+  
+helm:
+- changed-files:
+  - any-glob-to-any-file: helm/**
+
+web-ui:
+- changed-files:
+  - any-glob-to-any-file: web/**
+
+doc:
+- changed-files:
+  - any-glob-to-any-file: '**/*.md'
+
+unit-test:
+- changed-files:
+  - any-glob-to-any-file: 'app/tests/*.py'
+
+docker-compose:
+- changed-files:
+  - any-glob-to-any-file: '**/docker-compose.yml'
+
+dockerfile:
+- changed-files:
+  - any-glob-to-any-file: '**/Dockerfile'
+
+
+requirements:
+- changed-files:
+  - any-glob-to-any-file: '**/requirements.txt'
+
+gpt:
+- changed-files:
+  - any-glob-to-any-file: 'app/gpt_services.py'
+
+services:
+- changed-files:
+  - any-glob-to-any-file: 'app/services.py'
+
+fastapi:
+- changed-files:
+  - any-glob-to-any-file: 'app/main.py'
+
+prompt:
+- changed-files:
+  - any-glob-to-any-file: 'app/prompt_generators.py'
+  
+directory-generators:
+- changed-files:
+  - any-glob-to-any-file: 'app/directory_generators/**'
+
+pydantic-models:
+- changed-files:
+   - any-glob-to-any-file: 'app/models/**'

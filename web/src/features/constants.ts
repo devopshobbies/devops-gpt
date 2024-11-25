@@ -157,18 +157,22 @@ export const terraformIamDefaultValues: TerraformIAMFormData = {
 };
 
 export const helmDefaultValues: HelmFormData = {
-  accessModes: "ReadWriteOnce",
   apiVersion: 2,
-  enabled: false,
-  environmentName: "ENV1",
-  host: "",
-  image: "nginx",
-  name: "",
-  replicas: 1,
-  size: "1Gi",
-  stateless: false,
-  targetPort: 80,
-  value: "",
+  pods: [
+    {
+      accessModes: "ReadWriteOnce",
+      enabled: false,
+      environmentName: "ENV1",
+      host: "www.example.com",
+      image: "nginx",
+      name: "web",
+      replicas: 1,
+      size: "1Gi",
+      stateless: false,
+      targetPort: 80,
+      value: "hi",
+    },
+  ],
 };
 
 export const installDefaultValues: InstallFormData = {

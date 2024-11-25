@@ -20,12 +20,6 @@ export const helmFieldProperties: FieldProperties[] = [
       name: "Generic settings",
       fields: [
         {
-          fieldName: HelmFields.API_VERSION,
-          type: "input",
-          label: "Api version",
-          placeholder: "2.0",
-        },
-        {
           fieldName: HelmFields.NAME,
           label: "Name",
           type: "input",

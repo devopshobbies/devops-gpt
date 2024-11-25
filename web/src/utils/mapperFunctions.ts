@@ -84,27 +84,20 @@ export const terraformArgocdMapper = (
 
 export const helmMapper = (data: HelmFormData): ApiRequestHelm => ({
   api_version: Number(data.apiVersion),
-  pods: [
-    {
-      name: data.name,
-      image: data.image,
-      target_port: Number(data.targetPort),
-      replicas: Number(data.replicas),
-      persistance: {
-        size: data.size,
-        accessModes: data.accessModes,
-      },
-      environment: [
-        {
-          name: data.environmentName,
-          value: data.value,
-        },
-      ],
-      stateless: data.stateless,
-      ingress: {
-        enabled: data.enabled,
-        host: data.host,
-      },
+  pods: data.pods.map((item) => ({
+    environment: [{ name: item.name, value: item.value }],
+    image: item.image,
+    ingress: {
+      enabled: item.enabled,
+      host: item.host,
     },
-  ],
+    name: item.name,
+    persistance: {
+      accessModes: item.accessModes,
+      size: item.size,
+    },
+    replicas: item.replicas,
+    stateless: item.stateless,
+    target_port: item.targetPort,
+  })),
 });

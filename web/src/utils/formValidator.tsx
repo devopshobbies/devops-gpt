@@ -44,6 +44,13 @@ export const validateForm = (fieldName: string) => {
         },
       };
       break;
+    default:
+      validationRules = {
+        required: {
+          value: true,
+          message: "Input can not be empty",
+        },
+      };
   }
   return validationRules;
 };

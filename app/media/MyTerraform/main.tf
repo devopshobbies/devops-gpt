@@ -1,17 +1,17 @@
-
-provider "argocd" {
-  server_addr = var.argocd_instance_info["server_addr"]
-  username    = var.argocd_instance_info["username"]
-  password    = var.argocd_instance_info["password"]
-  insecure    = var.argocd_instance_info["insecure"]
+provider "aws" {
+  region = "us-east-1"
 }
 
-module "argocd" {
-  source = "./modules/argocd"
+module "efs" {
+  source = "./modules/efs"
 
-  repository_create = var.repository_create
-  argocd_repository_info = var.argocd_repository_info
-  application_create = var.application_create
-  argocd_application = var.argocd_application
-  argocd_sync_options = var.argocd_sync_options
+  security_group_name = var.security_group_name
+  security_group_ingress_rules = var.security_group_ingress_rules
+  security_group_egress_rule = var.security_group_egress_rule
+
+  file_system_create = var.file_system_create
+  efs = var.efs
+
+  mount_target_create = var.mount_target_create
+  backup_policy_create = var.backup_policy_create
 }

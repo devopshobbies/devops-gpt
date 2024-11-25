@@ -11,8 +11,9 @@ from app.models import (
 
 @pytest.fixture
 def client():
-    with TestClient(app) as client:
-        yield client
+    # with TestClient(app) as client:
+    #     yield client
+    return TestClient(app)
 
 
 @pytest.fixture

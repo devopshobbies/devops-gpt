@@ -85,16 +85,34 @@ class SyncPolicy(BaseModel):
     auto_prune: bool = True
     self_heal: bool = True
 
-class SyncOptions(BaseModel):
-    apply_out_of_sync_only: bool = True
-    create_namespace: bool = True
-    fail_or_share_resource:bool = True
 
 class ArgoApplication(BaseModel):
     sync_policy: SyncPolicy | None = None
-    sync_options: SyncOptions | None = None
+   
 
 class IaCTemplateGenerationArgoCD(BaseModel):
     argocd_application:ArgoApplication | None = None
     argocd_repository:bool = True
-    argocd_cluster:bool = True
+    application_depends_repository:bool = True
+   
+
+class IaCTemplateGenerationELB(BaseModel):
+    security_group:bool = True
+    lb_target_group:bool = True
+    lb:bool = True
+    lb_listener:bool = True
+    lb_listener_rule:bool = True
+    key_pair:bool = True
+    launch_configuration:bool = True
+    autoscaling_group:bool = True
+    autoscaling_attachment:bool = True
+    autoscaling_policy:bool = True
+
+
+
+class IaCTemplateGenerationEFS(BaseModel):
+    
+    efs_file_system:bool = True
+    efs_mount_target:bool = True
+    efs_backup_policy:bool = True
+    

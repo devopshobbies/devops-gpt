@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "app.deploymentName" . }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "app.labels" . | nindent 8 }}
+  template:
+    metadata:
+      labels:
+        {{- include "app.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "app.deploymentName" . }}
+          image: {{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}
+          command: ["fastapi", "run", "app/main.py", "--port", "8080"]
+          ports:
+            - containerPort: {{ .Values.app.service.targetPort }}
+          envFrom:
+            - secretRef:
+                name: {{ include "app.secretName" . }}
+      {{- if .Values.app.nodeSelector }}
+      nodeSelector: {{ .Values.app.nodeSelector | toYaml | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.app.affinity }}
+      affinity: {{ .Values.app.affinity | toYaml | nindent 8 }}
+      {{- end }}

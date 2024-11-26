@@ -43,12 +43,14 @@ const Helm = () => {
       pods: [...(prevData?.pods ?? [], submittedData.pods)],
     }));
     setPod((prev) => (prev !== 7 ? prev + 1 : prev + 0));
+    formMethods.reset({ pods: [helmDefaultValues.pods[0]] });
   });
 
   const handleAddEnvironment = environmentFormMethods.handleSubmit(
     (data: Environment) => {
       if (environments.length === 8) return;
       setEnvironments((prevEnv) => [...prevEnv, data]);
+      formData && console.log(helmMapper(formData, environments));
     }
   );
 
@@ -181,6 +183,7 @@ const Helm = () => {
           <button
             className="btn-success btn btn-square w-20"
             type="button"
+            disabled={!environmentFormMethods.formState.isSubmitted}
             onClick={handlePodsAddition}
           >
             Add Pod

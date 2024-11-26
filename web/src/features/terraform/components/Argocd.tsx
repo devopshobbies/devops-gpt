@@ -21,7 +21,7 @@ const Argocd = () => {
 
   const [error, setError] = useState(false);
 
-  const {data, isPending, isError, isSuccess, mutate} = useMutation<AxiosResponse, Error, {body: {argocd_application: {sync_policy: {auto_prune: boolean, self_heal: boolean}}, argocd_repository: boolean, application_depends_repository: boolean}}>({
+  const {data, isPending, isError, isSuccess, mutate} = useMutation<AxiosResponse, Error, {body: {argocd_application: {sync_policy: {auto_prune: boolean, self_heal: boolean}} | null, argocd_repository: boolean, application_depends_repository: boolean}}>({
     mutationKey: ["argocd"],
     mutationFn: async ({body}) => {
        await apiClient.post(Endpoints.POST_IAC_ARGOCD, {...body});
@@ -43,7 +43,7 @@ const Argocd = () => {
        const blob = new Blob([data.data], { type: data.headers['content-type'] });
        const link = document.createElement('a');
        link.href = URL.createObjectURL(blob);
-       link.download = "Argpcd.zip";
+       link.download = "Argocd.zip";
        document.body.appendChild(link);
        link.click();
        document.body.removeChild(link);
@@ -60,15 +60,19 @@ const Argocd = () => {
 
   const handleSubmit = async () => {
       const body = {
-        "argocd_application": {
-          "sync_policy": {
-            "auto_prune": buttons.auto_prune,
-            "self_heal": buttons.self_heal
-          }
-        },
-        "argocd_repository": buttons.argocd_repository,
-        "application_depends_repository": buttons.application_depends_repository
-      }
+        argocd_application: (
+          buttons.auto_prune || buttons.self_heal
+            ? {
+                sync_policy: {
+                  auto_prune: buttons.auto_prune,
+                  self_heal: buttons.self_heal
+                }
+              }
+            : null
+        ),
+        argocd_repository: buttons.argocd_repository,
+        application_depends_repository: buttons.application_depends_repository
+      };
      
       mutate({body})
   }

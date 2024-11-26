@@ -4,6 +4,7 @@ import { FaChevronDown } from "react-icons/fa";
 import apiClient from "../../../utils/apiClient";
 import { Endpoints } from "../../constants";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 
 const Argocd = () => {
   const [buttons, setButtons] = useState({
@@ -20,10 +21,11 @@ const Argocd = () => {
 
   const [error, setError] = useState(false);
 
-  const {data, isPending, isError, isSuccess, mutate} = useMutation<{output: string}, Error, {body: {argocd_application: {sync_policy: {auto_prune: boolean, self_heal: boolean}}, argocd_repository: boolean, application_depends_repository: boolean}}>({
+  const {data, isPending, isError, isSuccess, mutate} = useMutation<AxiosResponse, Error, {body: {argocd_application: {sync_policy: {auto_prune: boolean, self_heal: boolean}}, argocd_repository: boolean, application_depends_repository: boolean}}>({
     mutationKey: ["argocd"],
     mutationFn: async ({body}) => {
-       return await apiClient.post(Endpoints.POST_IAC_ARGOCD, {...body});
+       await apiClient.post(Endpoints.POST_IAC_ARGOCD, {...body});
+       return await apiClient.get(`${Endpoints.GET_DOWNLOAD_TERRAFORM}MyTerraform/argocd`, {responseType: "blob"});
     }
   })
 
@@ -38,14 +40,13 @@ const Argocd = () => {
 
   useEffect(() => {
     if (isSuccess && data) {
-      const {output} = data;
-      const link = document.createElement('a');
-      link.href = output;
-      document.body.appendChild(link);
-      link.click();
-
-      document.body.removeChild(link);
-
+       const blob = new Blob([data.data], { type: data.headers['content-type'] });
+       const link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = "Argpcd.zip";
+       document.body.appendChild(link);
+       link.click();
+       document.body.removeChild(link);
     }
   }, [isSuccess, data])
 
@@ -91,7 +92,7 @@ const Argocd = () => {
                   <p>Auto Prune</p>
                   <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
                   'bg-[#5b6372] hover:bg-[#5b6372]': !buttons.auto_prune,
-                }) } checked={buttons.auto_prune} onClick={() => handleButtons("auto_prune")} />
+                }) } defaultChecked={buttons.auto_prune} onClick={() => handleButtons("auto_prune")} />
                 </div>
               </div>
               <div className="py-2 pl-16 pr-4">
@@ -99,7 +100,7 @@ const Argocd = () => {
                   <p>Self Heal</p>
                   <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
                   'bg-[#5b6372] hover:bg-[#5b6372]': !buttons.self_heal,
-                }) } checked={buttons.self_heal} onClick={() => handleButtons("self_heal")} />
+                }) } defaultChecked={buttons.self_heal} onClick={() => handleButtons("self_heal")} />
                 </div>
               </div>
             </div>
@@ -109,7 +110,7 @@ const Argocd = () => {
               <p>Argocd Repository</p>
               <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
                 'bg-[#5b6372] hover:bg-[#5b6372]': !buttons.argocd_repository,
-              }) } checked={buttons.argocd_repository} onClick={() => handleButtons("argocd_repository")} />
+              }) } defaultChecked={buttons.argocd_repository} onClick={() => handleButtons("argocd_repository")} />
             </div>
           </div>
           <div className="px-4 py-2">
@@ -117,7 +118,7 @@ const Argocd = () => {
               <p>Application Depends Repository</p>
               <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
                 'bg-[#5b6372] hover:bg-[#5b6372]': !buttons.application_depends_repository,
-              }) } checked={buttons.application_depends_repository} onClick={() => handleButtons("application_depends_repository")} />
+              }) } defaultChecked={buttons.application_depends_repository} onClick={() => handleButtons("application_depends_repository")} />
             </div>
           </div>
         </div>

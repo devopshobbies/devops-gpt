@@ -12,7 +12,7 @@ interface PlatformProps<FormData, RequestData> {
   mapperFunction: (data: FormData) => RequestData;
 }
 
-const PlatformBox = <FormData extends {}, RequestData extends {}>({
+const PlatformBox = <FormData extends object, RequestData extends object>({
   serviceName,
   defaultValues,
   endpoint,
@@ -36,7 +36,7 @@ const PlatformBox = <FormData extends {}, RequestData extends {}>({
     <div className="flex flex-col ">
       <FormProvider {...formMethods}>
         <form onSubmit={handleFormSubmit}>
-          <div className="flex flex-col justify-between w-full border items-center gap-y-5 border-orange-300 p-8">
+          <div className="flex flex-col items-center justify-between w-full p-8 border border-orange-300 gap-y-5">
             <HStack lg={{ gap: 5 }} md={{ gap: 3 }}>
               <p className="font-bold">{serviceName}: </p>
               {fieldProperties.map((field) => (

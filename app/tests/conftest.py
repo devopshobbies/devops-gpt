@@ -5,7 +5,8 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.models import (
     IaCTemplateGenerationDocker, IaCTemplateGenerationEC2, IaCTemplateGenerationS3, IaCTemplateGenerationIAM,
-    IaCTemplateGenerationArgoCD, IaCTemplateGenerationELB, IaCTemplateGenerationEFS, SyncPolicy, ArgoApplication
+    IaCTemplateGenerationArgoCD, IaCTemplateGenerationELB, IaCTemplateGenerationEFS, SyncPolicy, ArgoApplication,
+    HelmTemplateGeneration, Pod, Persistance, Ingress, Environment, IaCBasicInput, IaCBugfixInput, IaCInstallationInput
 )
 
 
@@ -51,3 +52,106 @@ def iac_template_elb_sample_input():
 @pytest.fixture
 def iac_template_efs_sample_input():
     return IaCTemplateGenerationEFS().model_dump()
+
+
+@pytest.fixture
+def helm_template_sample_input():
+    nginx_pod = Pod(
+        name='nginx',
+        image='nginx:latest',
+        target_port=80,
+        replicas=2,
+        persistance=Persistance(),
+        environment=[Environment(name='DEBUG', value='true')],
+        stateless=True,
+        ingress=Ingress(enabled=True)
+    )
+
+    redis_pod = Pod(
+        name='redis',
+        image='redis:latest',
+        target_port=6379,
+        replicas=1,
+        persistance=Persistance(),
+        environment=[],
+        stateless=False,
+        ingress=Ingress(enabled=False)
+    )
+
+    return HelmTemplateGeneration(api_version=3, pods=[nginx_pod, redis_pod]).model_dump()
+
+@pytest.fixture
+def helm_template_invalid_sample_input():
+    return {
+        'api_version': 0,
+        'pods': [
+            {
+                'name': '',
+                'image': 'nginx:latest',
+                'target_port': 70000,
+                'replicas': 0,
+                'persistance': {'size': 'invalid_size', 'accessModes': 'InvalidMode'},
+                'environment': [{'name': '', 'value': ''}],
+                'stateless': True,
+                'ingress': {'enabled': True, 'host': ''}
+            }
+        ]
+    }
+
+
+@pytest.fixture
+def iac_basic_sample_input():
+    return IaCBasicInput(
+        input='How do I manage state effectively in Terraform?',
+        service='terraform',
+        min_tokens=100,
+        max_tokens=500
+    ).model_dump()
+
+
+@pytest.fixture
+def iac_basic_invalid_sample_input():
+    return {
+        'input': 'Create a basic configuration',
+        'service': 'invalid_service',
+        'min_tokens': 100,
+        'max_tokens': 500
+    }
+
+
+@pytest.fixture
+def ias_bugfix_sample_input():
+    return IaCBugfixInput(
+        bug_description='Application fails to start on version latest',
+        version='latest',
+        service='terraform',
+        min_tokens=100,
+        max_tokens=500
+    ).model_dump()
+
+
+@pytest.fixture
+def iac_bugfix_invalid_sample_input():
+    return {
+        'bug_description': '',
+        'version': 'latest',
+        'service': 'terraform',
+        'min_tokens': 100,
+        'max_tokens': 500
+    }
+
+
+@pytest.fixture
+def iac_install_sample_input():
+    return IaCInstallationInput(
+        os='ubuntu',
+        service='terraform'
+    ).model_dump()
+
+
+@pytest.fixture
+def iac_install_invalid_sample_input():
+    return {
+        'os': 'Kali',  # Unsupported OS
+        'service': 'terraform',
+    }

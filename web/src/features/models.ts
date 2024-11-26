@@ -107,6 +107,12 @@ export interface ApiRequestTerraformArgocd {
   argocd_repository: boolean;
   argocd_cluster: boolean;
 }
+
+export interface Environment {
+  environmentName: string;
+  value: string;
+}
+
 export interface HelmFormData {
   apiVersion: number;
   pods: Array<{
@@ -116,8 +122,6 @@ export interface HelmFormData {
     replicas: number;
     size: string;
     accessModes: string;
-    environmentName: string;
-    value: string;
     stateless: boolean;
     enabled: boolean;
     host: string;
@@ -133,12 +137,10 @@ export interface Pod {
     size: string;
     accessModes: string;
   };
-  environment: [
-    {
-      name: string;
-      value: string;
-    }
-  ];
+  environment: Array<{
+    name: string;
+    value: string;
+  }>;
   stateless: boolean;
   ingress: {
     enabled: boolean;

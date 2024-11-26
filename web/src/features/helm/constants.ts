@@ -66,25 +66,6 @@ export const helmFieldProperties: FieldProperties[] = [
   },
   {
     group: {
-      name: HelmGroupNames.ENVIRONMENT,
-      fields: [
-        {
-          fieldName: HelmFields.ENVIRONMENT_NAME,
-          label: "Environment name",
-          type: "input",
-          placeholder: "ex: ENV1",
-        },
-        {
-          fieldName: HelmFields.VALUE,
-          label: "Value",
-          type: "input",
-          placeholder: "ex: Hi",
-        },
-      ],
-    },
-  },
-  {
-    group: {
       name: HelmGroupNames.INGRESS,
       fields: [
         {

@@ -9,6 +9,7 @@ interface Props {
   placeholder?: string;
   disabled?: boolean;
   style?: CSSProperties;
+  classname?: string;
 }
 
 const Input = ({

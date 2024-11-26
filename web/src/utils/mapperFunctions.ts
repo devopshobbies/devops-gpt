@@ -15,6 +15,7 @@ import {
   TerraformArgocdFormData,
   HelmFormData,
   ApiRequestHelm,
+  Environment,
 } from "../features/models";
 
 export const basicGenMapper = (data: BasicGenFormData): ApiRequestBasicGen => ({
@@ -82,10 +83,16 @@ export const terraformArgocdMapper = (
   argocd_repository: data.argocdRepository,
 });
 
-export const helmMapper = (data: HelmFormData): ApiRequestHelm => ({
+export const helmMapper = (
+  data: HelmFormData,
+  environments: Environment[]
+): ApiRequestHelm => ({
   api_version: Number(data.apiVersion),
   pods: data.pods.map((item) => ({
-    environment: [{ name: item.name, value: item.value }],
+    environment: environments.map((env) => ({
+      name: env.environmentName,
+      value: env.value,
+    })),
     image: item.image,
     ingress: {
       enabled: item.enabled,

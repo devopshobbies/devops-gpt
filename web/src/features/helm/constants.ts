@@ -1,23 +1,17 @@
 import { HelmFields } from "../constants";
+import { FieldProperties } from "./models";
 
-interface Field {
-  fieldName: string;
-  label: string;
-  placeholder?: string;
-  type: string;
-}
-
-export interface FieldProperties {
-  group: {
-    name: string;
-    fields: Field[];
-  };
+export enum HelmGroupNames {
+  GENERIC_SETTINGS = "Generic settings",
+  PERSISTANCE = "Persistance",
+  ENVIRONMENT = "Environment",
+  INGRESS = "Ingress",
 }
 
 export const helmFieldProperties: FieldProperties[] = [
   {
     group: {
-      name: "Generic settings",
+      name: HelmGroupNames.GENERIC_SETTINGS,
       fields: [
         {
           fieldName: HelmFields.NAME,
@@ -53,7 +47,7 @@ export const helmFieldProperties: FieldProperties[] = [
   },
   {
     group: {
-      name: "Persistance",
+      name: HelmGroupNames.PERSISTANCE,
       fields: [
         {
           fieldName: HelmFields.SIZE,
@@ -72,7 +66,7 @@ export const helmFieldProperties: FieldProperties[] = [
   },
   {
     group: {
-      name: "Environment",
+      name: HelmGroupNames.ENVIRONMENT,
       fields: [
         {
           fieldName: HelmFields.ENVIRONMENT_NAME,
@@ -91,7 +85,7 @@ export const helmFieldProperties: FieldProperties[] = [
   },
   {
     group: {
-      name: "Ingress",
+      name: HelmGroupNames.INGRESS,
       fields: [
         {
           fieldName: HelmFields.HOST,

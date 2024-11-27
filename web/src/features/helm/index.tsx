@@ -1,29 +1,28 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import CheckBox from "../../components/internal-ui/CheckBox";
 import Input from "../../components/internal-ui/Input";
 import {
   DownloadFolders,
   Endpoints,
-  environmentDefaultValues,
-  EnvironmentFields,
   helmDefaultValues,
   HelmFields,
 } from "../constants";
 import useQueryGenerator from "../../hooks/useQueryGenerator";
-import { helmFieldProperties } from "./constants";
+import { helmFieldProperties, HelmGroupNames } from "./constants";
 import useDownload from "../../hooks/useDownload";
 import { useEffect, useState } from "react";
 import useGptStore from "../../utils/store";
-import { ApiRequestHelm, Environment, HelmFormData } from "../models";
+import { ApiRequestHelm, HelmFormData } from "../models";
 import { helmMapper } from "../../utils/mapperFunctions";
+import { CompleteHelmForm } from "./models";
 
 const Helm = () => {
-  const [formData, setFormData] = useState<HelmFormData>();
   const [pod, setPod] = useState(0);
-  const [environments, setEnvironments] = useState<Environment[]>([]);
-  const environmentFormMethods = useForm<Environment>({
-    defaultValues: environmentDefaultValues,
-  });
+  const [completeFrom, setCompleteForm] = useState<any>();
+
+  const [environment, setEnvironment] = useState<
+    { environmentName: string; value: string }[]
+  >([]);
 
   const { formMethods, handleSubmit, isError, onSubmit, status } =
     useQueryGenerator<HelmFormData, ApiRequestHelm>(
@@ -38,28 +37,36 @@ const Helm = () => {
   );
 
   const handlePodsAddition = handleSubmit((submittedData) => {
-    setFormData((prevData) => ({
-      apiVersion: prevData?.apiVersion ?? submittedData.apiVersion ?? 2,
-      pods: [...(prevData?.pods ?? [], submittedData.pods)],
+    const newPod = {
+      ...submittedData.pods[pod],
+      environment: environment,
+    };
+
+    setCompleteForm((prevData: any) => ({
+      apiVersion: submittedData?.apiVersion ?? 2,
+      pods: [...(prevData?.pods ?? []), newPod],
     }));
-    setPod((prev) => (prev !== 7 ? prev + 1 : prev + 0));
-    formMethods.reset({ pods: [helmDefaultValues.pods[0]] });
+    setPod((prev) => (prev !== 7 ? prev + 1 : prev));
+
+    setEnvironment([]);
   });
 
-  const handleAddEnvironment = environmentFormMethods.handleSubmit(
-    (data: Environment) => {
-      if (environments.length === 8) return;
-      setEnvironments((prevEnv) => [...prevEnv, data]);
-      formData && console.log(helmMapper(formData, environments));
-    }
-  );
-
   const handleFormSubmit = handleSubmit(() => {
-    if (formData && formMethods.formState.isSubmitted) {
-      onSubmit(helmMapper(formData, environments));
+    if (completeFrom && formMethods.formState.isSubmitted) {
+      onSubmit(helmMapper(completeFrom as CompleteHelmForm));
     } else {
       console.error("Form data is invalid");
     }
+  });
+
+  const handleEnvAddition = handleSubmit((data) => {
+    const environmentName = data.pods[pod].environmentName;
+    const value = data.pods[pod].value;
+    setEnvironment((prevEnv) =>
+      environment.length !== 8
+        ? [...prevEnv, { environmentName, value }]
+        : [...prevEnv]
+    );
   });
 
   useEffect(() => {
@@ -97,7 +104,7 @@ const Helm = () => {
                     {group.group.fields.map((field, fieldIndex) => (
                       <div
                         key={fieldIndex}
-                        className="flex flex-col justify-center items-center"
+                        className="flex justify-center items-center"
                       >
                         {field.type === "input" ? (
                           <Input
@@ -116,6 +123,16 @@ const Helm = () => {
                         )}
                       </div>
                     ))}
+                    {group.group.name === HelmGroupNames.ENVIRONMENT && (
+                      <button
+                        onClick={handleEnvAddition}
+                        type="submit"
+                        className="btn btn-square btn-accent w-48 mt-10"
+                      >
+                        Add environment{" "}
+                        {environment.length > 0 && environment.length}
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -125,56 +142,22 @@ const Helm = () => {
                 )}
               </div>
             ))}
-            <hr className="border-t border-gray-300 mt-4" />
           </div>
         </form>
       </FormProvider>
-      <FormProvider {...environmentFormMethods}>
-        <form
-          id="envForm"
-          onSubmit={handleAddEnvironment}
-          className="mt-4 pb-4 ml-4 flex items-center w-[70%]"
-        >
-          <div className="flex gap-x-48 w-full items-center align-middle justify-evenly ">
-            <p className="font-bold text-lg flex justify-center items-center ">
-              Environments
-            </p>
-            <div>
-              <Input
-                fieldName={EnvironmentFields.ENVIRONMENT_NAME}
-                label="Environment Name"
-                placeholder="e.g., Development"
-              />
-            </div>
-            <div>
-              <Input
-                fieldName={EnvironmentFields.VALUE}
-                label="Value"
-                placeholder="e.g., NODE_ENV=development"
-              />
-            </div>
-            <button
-              className="btn btn-primary mt-8"
-              type="submit"
-              form="envForm"
-            >
-              Add Environment {environments.length > 0 && environments.length}
-            </button>
-          </div>
-        </form>
-      </FormProvider>
-      <hr className="border-t border-gray-300 mt-4" />
+
       <div className="flex items-center flex-col justify-center">
         <div className="flex flex-col py-5">
           {isSuccess && (
             <p className="text-green-500">Generated Successfully</p>
           )}
-          {formData?.pods.length && !isSuccess && (
+          {completeFrom?.pods.length && !isSuccess && (
             <p className="text-green-700">
-              {formData.pods.length} Pod{formData.pods.length > 1 && "'s"} added
+              {completeFrom.pods.length} Pod
+              {completeFrom.pods.length > 1 && "'s"} added
             </p>
           )}
-          {formData?.pods.length === 8 && (
+          {completeFrom?.pods.length === 8 && (
             <p className="text-warning">You can add up to 8 pods</p>
           )}
           {isError && <p className="text-red-600">Operation failed</p>}
@@ -183,7 +166,7 @@ const Helm = () => {
           <button
             className="btn-success btn btn-square w-20"
             type="button"
-            disabled={!environmentFormMethods.formState.isSubmitted}
+            disabled={environment.length === 0}
             onClick={handlePodsAddition}
           >
             Add Pod

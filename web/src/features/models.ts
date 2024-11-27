@@ -120,6 +120,8 @@ export interface HelmFormData {
     image: string;
     targetPort: number;
     replicas: number;
+    environmentName: string;
+    value: string;
     size: string;
     accessModes: string;
     stateless: boolean;

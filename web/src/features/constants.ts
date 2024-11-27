@@ -1,7 +1,6 @@
 import {
   BasicGenFormData,
   BugFixFormData,
-  Environment,
   HelmFormData,
   InstallFormData,
   TerraformArgocdFormData,
@@ -85,16 +84,13 @@ export enum TerraformArgocdFields {
   ARGOCD_CLUSTER = "argocdCluster",
 }
 
-export enum EnvironmentFields {
-  ENVIRONMENT_NAME = "environmentName",
-  VALUE = "value",
-}
-
 export enum HelmFields {
   API_VERSION = "apiVersion",
   NAME = "name",
   IMAGE = "image",
   TARGET_PORT = "targetPort",
+  ENVIRONMENT_NAME = "environmentName",
+  VALUE = "value",
   REPLICAS = "replicas",
   SIZE = "size",
   ACCESS_MODES = "accessModes",
@@ -160,11 +156,6 @@ export const terraformIamDefaultValues: TerraformIAMFormData = {
   iamGroup: false,
 };
 
-export const environmentDefaultValues: Environment = {
-  environmentName: "ENV1",
-  value: "Hi",
-};
-
 export const helmDefaultValues: HelmFormData = {
   apiVersion: 2,
   pods: [
@@ -172,6 +163,8 @@ export const helmDefaultValues: HelmFormData = {
       accessModes: "ReadWriteOnce",
       enabled: false,
       host: "www.example.com",
+      environmentName: "ENV1",
+      value: "Hi",
       image: "nginx",
       name: "web",
       replicas: 1,

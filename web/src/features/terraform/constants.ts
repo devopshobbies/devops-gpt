@@ -82,24 +82,12 @@ const argocdFieldProperties: Checkboxprops[] = [
     label: "Self heal",
   },
   {
-    fieldName: TerraformArgocdFields.APPLY_OUT_OF_SYNC_ONLY,
-    label: "Apply out of sync only",
-  },
-  {
-    fieldName: TerraformArgocdFields.CREATE_NAMESPACE,
-    label: "Create namespace",
-  },
-  {
-    fieldName: TerraformArgocdFields.FAIL_OR_SHARE_RESOURCE,
-    label: "Fail or share resource",
-  },
-  {
     fieldName: TerraformArgocdFields.ARGOCD_REPOSITORY,
     label: "ARGOCD repository",
   },
   {
-    fieldName: TerraformArgocdFields.ARGOCD_CLUSTER,
-    label: "ARGOCD cluster",
+    fieldName: TerraformArgocdFields.APPLICATION_DEPENDS_REPOSITORY ,
+    label: "Application depends repository",
   },
 ];
 

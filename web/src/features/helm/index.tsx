@@ -81,7 +81,8 @@ const Helm = () => {
       <FormProvider {...formMethods}>
         <form id="helmForm" onSubmit={handleFormSubmit}>
           <div className="grid grid-cols-1 gap-6">
-            <div className="flex items-center justify-center">
+            <div className="grid grid-cols-2 ">
+              <div></div>
               <Input
                 fieldName={HelmFields.API_VERSION}
                 label="Api version"

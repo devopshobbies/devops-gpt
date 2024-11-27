@@ -4,6 +4,7 @@ from pydantic import BaseModel, validator, ValidationError
 
     
 class AnsibleInstallNginx(BaseModel):
+
     os: str = 'ubuntu'
     hosts:List[str] = ['www.example.com']
     version:str = 'latest'

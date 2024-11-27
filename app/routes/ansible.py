@@ -7,6 +7,7 @@ import os
 
 @app.post("/ansible-install/nginx/")
 async def ansible_install_generation_nginx(request:AnsibleInstallNginx) -> Output:
+    
         if os.environ.get("TEST"):
             return Output(output='output')
         generated_prompt = ansible_install_template(request,"nginx")

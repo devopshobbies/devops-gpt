@@ -10,6 +10,7 @@ class AnsibleInstallNginx(BaseModel):
     
     @validator("os")
     def validator_os(cls, value):
-        if value not in ['ubuntu']:
-            raise ValueError("Size must be a valid string ending with 'Gi', 'Mi', or 'Ti'.")
+        valid_oss = ['ubuntu']
+        if value not in valid_oss:
+            raise ValueError(f"your selected OS must be in {valid_oss}")
         return value

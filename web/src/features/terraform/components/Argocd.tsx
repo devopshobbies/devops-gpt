@@ -15,8 +15,8 @@ const Argocd = () => {
   });
 
   const [menus, setMenus] = useState({
-    argocd_application: false,
-    sync_policy: false
+    argocd_application: true,
+    sync_policy: true
   });
 
   const [error, setError] = useState(false);
@@ -50,6 +50,16 @@ const Argocd = () => {
     }
   }, [isSuccess, data])
 
+  useEffect(() => {
+    if (!menus.argocd_application) {
+       setButtons({
+         ...buttons,
+         auto_prune: false,
+         self_heal: false
+       })
+    }
+  }, [menus])
+
   const handleButtons = (button: keyof typeof buttons) => {
     setButtons({...buttons, [button]: !buttons[button]})
   }
@@ -61,7 +71,7 @@ const Argocd = () => {
   const handleSubmit = async () => {
       const body = {
         argocd_application: (
-          buttons.auto_prune || buttons.self_heal
+          menus.argocd_application
             ? {
                 sync_policy: {
                   auto_prune: buttons.auto_prune,
@@ -81,22 +91,24 @@ const Argocd = () => {
     <div className="flex flex-col items-center justify-center">
       <div className="w-full bg-orange-800 divide-y-2 divide-gray-300 rounded-md max-w-96">
         <div className="divide-y-2 divide-gray-300">
-          <button className="flex items-center justify-between w-full px-4 py-2" onClick={() => handleMenus("argocd_application")}>
+          <div className="flex items-center justify-between w-full px-4 py-2">
             <p>Argocd Application</p>
-            <FaChevronDown className={cn('transition-all', {"rotate-180": menus.argocd_application})} />
-          </button>
-          <div className={cn("divide-y-2 divide-gray-300 max-h-0 overflow-hidden transition-all ease-linear duration-300", {"max-h-96": !menus.argocd_application})}>
+            <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
+                  'bg-[#5b6372] hover:bg-[#5b6372]': !menus.argocd_application,
+                }) } checked={menus.argocd_application} onChange={() => {handleMenus("argocd_application")}} />
+          </div>
+          <div className={cn("divide-y-2 divide-gray-300 max-h-0 overflow-hidden transition-all ease-linear duration-300", {"max-h-96": menus.argocd_application})}>
             <button className="flex items-center justify-between w-full py-2 pl-10 pr-4" onClick={() => handleMenus("sync_policy")}>
-            <p>Sync Policy</p>
-            <FaChevronDown className={cn('transition-all', {"rotate-180": menus.sync_policy})} />
-          </button>
-            <div className={cn("divide-y-2 divide-gray-300 max-h-0 overflow-hidden transition-all ease-linear duration-300", {"max-h-96": !menus.sync_policy})}>
+              <p>Sync Policy</p>
+              <FaChevronDown className={cn('transition-all', {"rotate-180": menus.sync_policy})} />
+            </button>
+            <div className={cn("divide-y-2 divide-gray-300 max-h-0 overflow-hidden transition-all ease-linear duration-300", {"max-h-96":   menus.sync_policy})}>
               <div className="py-2 pl-16 pr-4">
                 <div className="flex items-center justify-between">
                   <p>Auto Prune</p>
                   <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
                   'bg-[#5b6372] hover:bg-[#5b6372]': !buttons.auto_prune,
-                }) } defaultChecked={buttons.auto_prune} onClick={() => handleButtons("auto_prune")} />
+                }) } checked={buttons.auto_prune} onChange={() => handleButtons("auto_prune")} />
                 </div>
               </div>
               <div className="py-2 pl-16 pr-4">
@@ -104,7 +116,7 @@ const Argocd = () => {
                   <p>Self Heal</p>
                   <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
                   'bg-[#5b6372] hover:bg-[#5b6372]': !buttons.self_heal,
-                }) } defaultChecked={buttons.self_heal} onClick={() => handleButtons("self_heal")} />
+                }) } checked={buttons.self_heal} onChange={() => handleButtons("self_heal")} />
                 </div>
               </div>
             </div>
@@ -114,7 +126,7 @@ const Argocd = () => {
               <p>Argocd Repository</p>
               <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
                 'bg-[#5b6372] hover:bg-[#5b6372]': !buttons.argocd_repository,
-              }) } defaultChecked={buttons.argocd_repository} onClick={() => handleButtons("argocd_repository")} />
+              }) } checked={buttons.argocd_repository} onChange={() => handleButtons("argocd_repository")} />
             </div>
           </div>
           <div className="px-4 py-2">
@@ -122,12 +134,12 @@ const Argocd = () => {
               <p>Application Depends Repository</p>
               <input type="checkbox" className={cn('border-orange-[#2e323a] toggle [--tglbg:#2e323a] bg-orange-300 hover:bg-orange-400', {
                 'bg-[#5b6372] hover:bg-[#5b6372]': !buttons.application_depends_repository,
-              }) } defaultChecked={buttons.application_depends_repository} onClick={() => handleButtons("application_depends_repository")} />
+              }) } checked={buttons.application_depends_repository} onChange={() => handleButtons("application_depends_repository")} />
             </div>
           </div>
         </div>
       </div>
-      <button disabled={isPending} onClick={handleSubmit} className="w-full py-2 mt-4 text-center transition-all bg-orange-800 rounded-md btn max-w-96 hover:bg-orange-900">{isPending ? <div className="flex items-center justify-center gap-4 disabled:opacity-80"><span className="loading loading-spinner"></span>Loading</div>: error ? "Error" : "Submit"}</button>
+      <button disabled={isPending} onClick={() => handleSubmit()} className="w-full py-2 mt-4 text-center transition-all bg-orange-800 rounded-md btn max-w-96 hover:bg-orange-900">{isPending ? <div className="flex items-center justify-center gap-4 disabled:opacity-80"><span className="loading loading-spinner"></span>Loading</div>: error ? "Error" : "Submit"}</button>
     </div>
   );
 };

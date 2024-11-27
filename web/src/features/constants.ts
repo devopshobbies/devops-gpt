@@ -77,11 +77,8 @@ export enum TerraformIAMFields {
 export enum TerraformArgocdFields {
   AUTO_PRUNE = "autoPrune",
   SELF_HEAL = "selfHeal",
-  APPLY_OUT_OF_SYNC_ONLY = "applyOutOfSyncOnly",
-  CREATE_NAMESPACE = "createNamespace",
-  FAIL_OR_SHARE_RESOURCE = "failOrShareResource",
   ARGOCD_REPOSITORY = "argocdRepository",
-  ARGOCD_CLUSTER = "argocdCluster",
+  APPLICATION_DEPENDS_REPOSITORY = "applicationDependsRepository",
 }
 
 export enum HelmFields {

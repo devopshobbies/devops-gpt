@@ -1,12 +1,18 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch, mock_open
 
 
-class TestTerraformTemplates:
+class TestIaCTemplates:
     def setup_method(self):
-        self.mock_execute_pythonfile = patch('app.main.execute_pythonfile').start()
+        mock_client_instance = MagicMock()
+        mock_client_instance.chat.completions.create.return_value = MagicMock(
+            choices=[MagicMock(message=MagicMock(content='Mocked OpenAI Response'))]
+        )
+
+        self.mock_execute_python_file = patch('app.main.execute_pythonfile').start()
         self.mock_edit_directory_generator = patch('app.main.edit_directory_generator').start()
-        self.mock_gpt_service = patch('app.main.gpt_service').start()
-        self.mock_gpt_service.return_value = 'Generated Python Code'
+        self.mock_gpt_service = patch('app.main.gpt_service', return_value='Mocked GPT Response').start()
+        self.mock_openai = patch('app.gpt_services.OpenAI', return_value=mock_client_instance).start()
+        self.mock_builtin_open = patch('builtins.open', mock_open()).start()
 
         self.iac_template_docker_url = '/IaC-template/docker'
         self.iac_template_ec2_url = '/IaC-template/aws/ec2'
@@ -21,7 +27,6 @@ class TestTerraformTemplates:
 
     def test_iac_template_docker(self, client, iac_template_docker_sample_input):
         response = client.post(self.iac_template_docker_url, json=iac_template_docker_sample_input)
-        print(response.json())
         assert response.status_code == 200
 
     def test_iac_template_ec2(self, client, iac_template_ec2_sample_input):

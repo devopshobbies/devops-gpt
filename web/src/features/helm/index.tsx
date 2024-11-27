@@ -124,14 +124,16 @@ const Helm = () => {
                       </div>
                     ))}
                     {group.group.name === HelmGroupNames.ENVIRONMENT && (
-                      <button
-                        onClick={handleEnvAddition}
-                        type="submit"
-                        className="btn btn-square btn-accent w-48 mt-10"
-                      >
-                        Add environment{" "}
-                        {environment.length > 0 && environment.length}
-                      </button>
+                      <div className="flex justify-center items-center">
+                        <button
+                          onClick={handleEnvAddition}
+                          type="submit"
+                          className="btn btn-square items-center btn-accent w-48 mt-10"
+                        >
+                          Add environment{" "}
+                          {environment.length > 0 && environment.length}
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>

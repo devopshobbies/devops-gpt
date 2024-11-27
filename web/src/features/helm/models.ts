@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { HelmFields } from "../constants";
 
 interface Field {
@@ -6,7 +5,6 @@ interface Field {
   label: string;
   placeholder?: string;
   type: string;
-  components?: ReactNode;
 }
 
 export interface FieldProperties {

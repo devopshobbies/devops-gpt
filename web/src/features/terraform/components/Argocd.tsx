@@ -38,7 +38,7 @@ const Argocd = () => {
     mutationFn: async ({ body }) => {
       await apiClient.post(Endpoints.POST_IAC_ARGOCD, { ...body });
       return await apiClient.get(
-        `${Endpoints.GET_DOWNLOAD_TERRAFORM}MyTerraform/argocd`,
+        `${Endpoints.GET_DOWNLOAD}MyTerraform/argocd`,
         { responseType: "blob" }
       );
     },

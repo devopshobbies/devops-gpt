@@ -1,13 +1,20 @@
-
 def ansible_nginx_install_ubuntu(input):
+
     nginx_hosts = input.hosts
-    inventory = (f"[nginx_nodes]\n" + "\n".join(nginx_hosts))
-    nginx_version = input.version
+    nginx_inventory = (f"[nginx_nodes]\n" + "\n".join(nginx_hosts))
+    nginx_version = '*' if input.version == 'latest' else input.version
+    nginx_ansible_port = input.ansible_port
+    nginx_ansible_user = input.ansible_user
+    nginx_repo_key_in_task = "{{ nginx_repo_key_url }}"
+    nginx_repo_in_task = "deb {{ nginx_repo_url }} {{ ansible_distribution_release }} nginx"
+    nginx_version_in_task = "nginx={{ nginx_version }}~{{ ansible_distribution_release }}"
+
 
     prompt = f"""
               Generate a Python code to generate an Ansible project (project name is app/media/MyAnsible)
               that dynamically provisions Ansible resources ensuring a modular, flexible structure. Only provide
-              Python code, no explanations or markdown formatting. The project should be organized as follows:
+              Python code, no explanations or markdown formatting, without ```python entry.
+              The project should be organized as follows:
 
               The structure of this project must be as follows:
               ```
@@ -38,12 +45,12 @@ def ansible_nginx_install_ubuntu(input):
               ```
             - group_vars directory includes a single file called "nginx_nodes" and the content of this file must be as follows:
               ```
-              ansible_port: 22
-              ansible_user: root
+              ansible_port: {nginx_ansible_port}
+              ansible_user: {nginx_ansible_user}
               ```
             - there is file called "hosts" which its content must be as follows:
                   ```
-              {inventory}
+              {nginx_inventory}
               ```
             - There is an empty directory called "host_vars" with no files included
             - There is a file called "nginx_playbook.yml" which its content must be as follows:
@@ -64,12 +71,12 @@ def ansible_nginx_install_ubuntu(input):
 
                    - name: Add Nginx signing key
                      apt_key:
-                       url: "{{ nginx_repo_key_url }}"
+                       url: "{nginx_repo_key_in_task}"
                        state: present
 
                    - name: Add Nginx repository
                      apt_repository:
-                       repo: "deb {{ nginx_repo_url }} {{ ansible_distribution_release }} nginx"
+                       repo: "{nginx_repo_in_task}"
                        state: present
                        filename: nginx
 
@@ -79,7 +86,7 @@ def ansible_nginx_install_ubuntu(input):
 
                    - name: Install specific version of Nginx
                      apt:
-                       name: "nginx={{ nginx_version }}~{{ ansible_distribution_release }}"
+                       name: "{nginx_version_in_task}"
                        state: present
 
                    - name: Ensure Nginx service is running and enabled
@@ -92,12 +99,12 @@ def ansible_nginx_install_ubuntu(input):
                    ```
                    nginx_repo_key_url: "https://nginx.org/keys/nginx_signing.key"
                    nginx_repo_url: "http://nginx.org/packages/mainline/ubuntu/"
-                   nginx_version: "1.23.4-1"
+                   nginx_version: "{nginx_version}"
                    ```
                    
-                    finally just give me a python code without any note that can generate a project folder with the given
-                    schema without ```python entry. and we dont need any base directory in the python code. the final
-                    terraform template must work very well without any error!
+                    finally just give me a python code without any note that can generate a project folder with the
+                    given schema without ```python entry. and we dont need any base directory in the python code.
+                    the final ansible template must work very well without any error!
                     
                     the python code you give me, must have structure like that:
                     
@@ -114,12 +121,9 @@ def ansible_nginx_install_ubuntu(input):
                         # any thing you need
             """
     return prompt
-    
-    
+     
     
 def ansible_nginx_install(input):
     
     if input.os == 'ubuntu':
         return ansible_nginx_install_ubuntu(input)
-    
-    

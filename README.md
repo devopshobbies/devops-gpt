@@ -60,35 +60,16 @@ To run this project, you will need to add the following environment variables to
 
 ## API Reference
 
-#### Get helm items
+#### Download the generated projects
 
 ```
-GET /download-helm/{filename}
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `filename` | `string` | **Required** |
-
-#### Get terraform items
-
-```
-GET /download-terraform/{filename}
+GET /download-folder{folder_name}/{source}
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `filename`      | `string` | **Required** |
-
-#### Get list dirs
-
-```
-GET /list-directory
-```
-
-| Request Body | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `folder`      | `string` | **Required** |
+| `folder_name`      | `string` | **Required** |
+| `source`      | `string` | **Required** |
 
 
 #### Post terraform basic questions

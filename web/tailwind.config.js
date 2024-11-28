@@ -1,10 +1,16 @@
-import daisyui from "daisyui";
+import daisyui from 'daisyui';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        mainOrange: {
+          500: '#fe6601',
+        },
+      },
+    },
   },
-  plugins: [daisyui],
+  plugins: [daisyui, require('tailwind-scrollbar')],
 };

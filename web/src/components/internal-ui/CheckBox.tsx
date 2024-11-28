@@ -1,6 +1,4 @@
-import { useFormContext } from "react-hook-form";
-
-import { HStack } from "@chakra-ui/react";
+import { useFormContext } from 'react-hook-form';
 
 export interface Checkboxprops {
   fieldName: string;
@@ -10,16 +8,15 @@ export interface Checkboxprops {
 const CheckBox = ({ fieldName, label }: Checkboxprops) => {
   const { register } = useFormContext();
   return (
-    <>
-      <HStack alignItems={"center"} justifyContent={"center"}>
-        <p>{label}</p>
-        <input
-          className=" w-4 h-4 accent-orange-700"
-          {...register(fieldName)}
-          type="checkbox"
-        />
-      </HStack>
-    </>
+    <div className="flex gap-2 justify-center items-center">
+      <label htmlFor={label}>{label}</label>
+      <input
+        id={label}
+        className=" w-4 h-4 accent-mainOrange-500"
+        {...register(fieldName)}
+        type="checkbox"
+      />
+    </div>
   );
 };
 

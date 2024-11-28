@@ -13,14 +13,14 @@ import {
   ApiRequestTerraformIam,
   ApiRequestTerraformArgocd,
   TerraformArgocdFormData,
-} from "../features/models";
+} from '../features/models';
 
 export const basicGenMapper = (data: BasicGenFormData): ApiRequestBasicGen => ({
   min_token: data.minToken,
   max_token: data.maxToken,
   service: data.service,
   input: data.input,
-  requestId: "",
+  requestId: '',
 });
 
 export const bugFixMapper = (data: BugFixFormData): ApiRequestBugFix => ({
@@ -29,18 +29,18 @@ export const bugFixMapper = (data: BugFixFormData): ApiRequestBugFix => ({
   bug_description: data.bugDescription,
   service: data.service,
   version: data.version,
-  requestId: "",
+  requestId: '',
 });
 
 export const terraformDockerMapper = (
-  data: TerraformDockerFormData
+  data: TerraformDockerFormData,
 ): ApiRequestTerraformDocker => ({
   docker_image: data.dockerImage,
   docker_container: data.dockerContainer,
 });
 
 export const terraformEC2Mapper = (
-  data: TerraformEc2FormData
+  data: TerraformEc2FormData,
 ): ApiRequestTerraformEc2 => ({
   key_pair: data.keyPair,
   security_group: data.securityGroup,
@@ -49,33 +49,28 @@ export const terraformEC2Mapper = (
 });
 
 export const terraformS3Mapper = (
-  data: TerraformS3FormData
+  data: TerraformS3FormData,
 ): ApiRequestTerraformS3 => ({
   s3_bucket: data.s3Bucket,
   bucket_versioning: data.bucketVersioning,
 });
 
 export const terraformIAMMapper = (
-  data: TerraformIAMFormData
+  data: TerraformIAMFormData,
 ): ApiRequestTerraformIam => ({
   iam_user: data.iamUser,
   iam_group: data.iamGroup,
 });
 
 export const terraformArgocdMapper = (
-  data: TerraformArgocdFormData
+  data: TerraformArgocdFormData,
 ): ApiRequestTerraformArgocd => ({
   argocd_application: {
     sync_policy: {
       auto_prune: data.autoPrune,
       self_heal: data.selfHeal,
     },
-    sync_options: {
-      apply_out_of_sync_only: data.applyOutOfSyncOnly,
-      create_namespace: data.createNamespace,
-      fail_or_share_resource: data.failOrShareResource,
-    },
   },
-  argocd_cluster: data.argocdCluster,
   argocd_repository: data.argocdRepository,
+  application_depends_repository: data.applicationDependsRepository,
 });

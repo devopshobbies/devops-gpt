@@ -1,12 +1,12 @@
-import { Box } from "@chakra-ui/react";
-import ChatBubble from "./ChatBubble";
-import { Message } from "../../features/models";
-import { Endpoints, UserType } from "../../features/constants";
-import useGptStore from "../../utils/store";
-import { useEffect } from "react";
-import { v4 as uuid } from "uuid";
-import { useLocation } from "react-router-dom";
-import usePost from "../../hooks/usePost";
+import ChatBubble from './ChatBubble';
+import { Message } from '../../features/models';
+import { Endpoints, UserType } from '../../features/constants';
+import useGptStore from '../../utils/store';
+import { useEffect } from 'react';
+import { v4 as uuid } from 'uuid';
+import { useLocation } from 'react-router-dom';
+import usePost from '../../hooks/usePost';
+import { useRef } from 'react';
 
 interface Props {
   messageData: Message[];
@@ -28,7 +28,7 @@ const ChatBox = ({ messageData, endpoint, request, id }: Props) => {
   const { data, error, isLoading } = usePost<BasicApiResponse>(
     endpoint,
     request,
-    id
+    id,
   );
 
   useEffect(() => {
@@ -39,16 +39,17 @@ const ChatBox = ({ messageData, endpoint, request, id }: Props) => {
     return () => resetMessages();
   }, [location.pathname]);
 
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const element = containerRef.current as unknown as HTMLDivElement;
+    if (element) {
+      window.scrollTo({ top: element.scrollHeight, behavior: 'smooth' });
+    }
+  }, [data]);
+
   return (
-    <Box
-      w="100%"
-      shadow="2xl"
-      h="30rem"
-      rounded="2xl"
-      className="bg-transparent border border-stone-600 bg-stone-950"
-      p="1rem"
-      overflowY="auto"
-    >
+    <div ref={containerRef}>
       {messageData.map((message) => (
         <ChatBubble
           isLoading={isLoading}
@@ -58,7 +59,7 @@ const ChatBox = ({ messageData, endpoint, request, id }: Props) => {
         />
       ))}
       {error && <p className="text-red-700">{error.message}</p>}
-    </Box>
+    </div>
   );
 };
 

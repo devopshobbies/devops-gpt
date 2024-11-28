@@ -1,8 +1,8 @@
-import { Button, HStack } from "@chakra-ui/react";
-import { DefaultValues, FormProvider } from "react-hook-form";
-import useTerraFormHandler from "../../features/terraform/hooks";
-import CheckBox, { Checkboxprops } from "./CheckBox";
-import { Endpoints } from "../../features/constants";
+import { Button } from '@chakra-ui/react';
+import { DefaultValues, FormProvider } from 'react-hook-form';
+import useTerraFormHandler from '../../features/terraform/hooks';
+import CheckBox, { Checkboxprops } from './CheckBox';
+import { Endpoints } from '../../features/constants';
 
 interface PlatformProps<FormData, RequestData> {
   serviceName: string;
@@ -29,15 +29,15 @@ const PlatformBox = <FormData extends {}, RequestData extends {}>({
     isSuccess,
   } = useTerraFormHandler<FormData, RequestData>(defaultValues, endpoint);
   const handleFormSubmit = handleSubmit((formData) =>
-    onSubmit(mapperFunction(formData))
+    onSubmit(mapperFunction(formData)),
   );
 
   return (
     <div className="flex flex-col ">
       <FormProvider {...formMethods}>
         <form onSubmit={handleFormSubmit}>
-          <div className="flex flex-col justify-between w-full border items-center gap-y-5 border-orange-300 p-8">
-            <HStack lg={{ gap: 5 }} md={{ gap: 3 }}>
+          <div className="flex flex-wrap flex-col justify-between w-full border items-center gap-y-5 border-orange-300 p-8">
+            <div className="flex gap-8 flex-wrap">
               <p className="font-bold">{serviceName}: </p>
               {fieldProperties.map((field) => (
                 <CheckBox
@@ -46,16 +46,16 @@ const PlatformBox = <FormData extends {}, RequestData extends {}>({
                   label={field.label}
                 />
               ))}
-            </HStack>
+            </div>
             <Button
               type="submit"
-              disabled={status === "pending" && !data}
+              disabled={status === 'pending' && !data}
               bg="orange.600"
               color="gray.100"
               w="8rem"
               h="3rem"
             >
-              {status === "pending" ? (
+              {status === 'pending' ? (
                 <span className="loading loading-ring loading-lg "></span>
               ) : (
                 <p>Generate</p>

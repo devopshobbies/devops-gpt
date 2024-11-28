@@ -1,11 +1,11 @@
-import { Checkboxprops } from "../../components/internal-ui/CheckBox";
+import { Checkboxprops } from '../../components/internal-ui/CheckBox';
 import {
   terraformArgocdMapper,
   terraformDockerMapper,
   terraformEC2Mapper,
   terraformIAMMapper,
   terraformS3Mapper,
-} from "../../utils/mapperFunctions";
+} from '../../utils/mapperFunctions';
 import {
   terraformDockerDefaultValues,
   Endpoints,
@@ -18,122 +18,110 @@ import {
   TerraformIAMFields,
   TerraformArgocdFields,
   terraformArgocdDefaultValues,
-} from "../constants";
+} from '../constants';
 
 const dockerFieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformDockerFields.DOCKER_IMAGE,
-    label: "Docker Image",
+    label: 'Docker Image',
   },
   {
     fieldName: TerraformDockerFields.DOCKER_CONTAINER,
-    label: "Docker Container",
+    label: 'Docker Container',
   },
 ];
 
 const ec2FieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformEC2Fields.KEY_PAIR,
-    label: "Key pair",
+    label: 'Key pair',
   },
   {
     fieldName: TerraformEC2Fields.SECURITY_GROUP,
-    label: "Security group",
+    label: 'Security group',
   },
   {
     fieldName: TerraformEC2Fields.AWS_INSTANCE,
-    label: "AWS instance",
+    label: 'AWS instance',
   },
   {
     fieldName: TerraformEC2Fields.AMI_FROM_INSTANCE,
-    label: "AMI from instance",
+    label: 'AMI from instance',
   },
 ];
 
 const s3FieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformS3Fields.S3_BUCKET,
-    label: "S3 bucker",
+    label: 'S3 bucker',
   },
   {
     fieldName: TerraformS3Fields.BUCKET_VERSIONING,
-    label: "Bucker versioning",
+    label: 'Bucker versioning',
   },
 ];
 
 const iamFieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformIAMFields.IAM_USER,
-    label: "IAM user",
+    label: 'IAM user',
   },
   {
     fieldName: TerraformIAMFields.IAM_GROUP,
-    label: "IAM group",
+    label: 'IAM group',
   },
 ];
 
 const argocdFieldProperties: Checkboxprops[] = [
   {
     fieldName: TerraformArgocdFields.AUTO_PRUNE,
-    label: "Auto prune",
+    label: 'Auto prune',
   },
   {
     fieldName: TerraformArgocdFields.SELF_HEAL,
-    label: "Self heal",
-  },
-  {
-    fieldName: TerraformArgocdFields.APPLY_OUT_OF_SYNC_ONLY,
-    label: "Apply out of sync only",
-  },
-  {
-    fieldName: TerraformArgocdFields.CREATE_NAMESPACE,
-    label: "Create namespace",
-  },
-  {
-    fieldName: TerraformArgocdFields.FAIL_OR_SHARE_RESOURCE,
-    label: "Fail or share resource",
+    label: 'Self heal',
   },
   {
     fieldName: TerraformArgocdFields.ARGOCD_REPOSITORY,
-    label: "ARGOCD repository",
+    label: 'ARGOCD repository',
   },
   {
-    fieldName: TerraformArgocdFields.ARGOCD_CLUSTER,
-    label: "ARGOCD cluster",
+    fieldName: TerraformArgocdFields.APPLICATION_DEPENDS_REPOSITORY,
+    label: 'Application depends repository',
   },
 ];
 
 export const platformData = [
   {
-    serviceName: "ARGOCD",
+    serviceName: 'ARGOCD',
     defaultValues: terraformArgocdDefaultValues,
     endpoint: Endpoints.POST_IAC_ARGOCD,
     mapperFunction: terraformArgocdMapper,
     fieldProperties: argocdFieldProperties,
   },
   {
-    serviceName: "DOCKER",
+    serviceName: 'DOCKER',
     defaultValues: terraformDockerDefaultValues,
     endpoint: Endpoints.POST_IAC_T_DOCKER,
     mapperFunction: terraformDockerMapper,
     fieldProperties: dockerFieldProperties,
   },
   {
-    serviceName: "EC2",
+    serviceName: 'EC2',
     defaultValues: terraformEc2DefaultValues,
     endpoint: Endpoints.POST_IAC_T_EC2,
     mapperFunction: terraformEC2Mapper,
     fieldProperties: ec2FieldProperties,
   },
   {
-    serviceName: "S3",
+    serviceName: 'S3',
     defaultValues: terraformS3DefaultValues,
     endpoint: Endpoints.POST_IAC_T_S3,
     mapperFunction: terraformS3Mapper,
     fieldProperties: s3FieldProperties,
   },
   {
-    serviceName: "IAM",
+    serviceName: 'IAM',
     defaultValues: terraformIamDefaultValues,
     endpoint: Endpoints.POST_IAC_T_IAM,
     mapperFunction: terraformIAMMapper,

@@ -1,4 +1,4 @@
-import { UserType } from "./constants";
+import { UserType } from './constants';
 
 export interface Message {
   user: UserType;
@@ -85,11 +85,8 @@ export interface ApiRequestTerraformIam {
 export interface TerraformArgocdFormData {
   autoPrune: boolean;
   selfHeal: boolean;
-  applyOutOfSyncOnly: boolean;
-  createNamespace: boolean;
-  failOrShareResource: boolean;
   argocdRepository: boolean;
-  argocdCluster: boolean;
+  applicationDependsRepository: boolean;
 }
 
 export interface ApiRequestTerraformArgocd {
@@ -98,14 +95,9 @@ export interface ApiRequestTerraformArgocd {
       auto_prune: boolean;
       self_heal: boolean;
     };
-    sync_options: {
-      apply_out_of_sync_only: boolean;
-      create_namespace: boolean;
-      fail_or_share_resource: boolean;
-    };
   };
   argocd_repository: boolean;
-  argocd_cluster: boolean;
+  application_depends_repository: boolean;
 }
 
 export interface ApiResponseDownload {

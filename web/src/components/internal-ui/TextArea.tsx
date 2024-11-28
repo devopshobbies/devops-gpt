@@ -10,7 +10,7 @@ interface Props {
   style?: CSSProperties;
 }
 
-const Input = ({
+const TextArea = ({
   fieldName,
   label,
   placeholder,
@@ -24,24 +24,23 @@ const Input = ({
 
   const error = errors[fieldName];
   return (
-    <div>
+    <div className="w-full">
       <div className="label">
         <span className="label-text">{label}</span>
       </div>
-
-      <input
-        disabled={disabled}
-        className="border border-slate-300 outline-none focus-within:bg-slate-50 text-stone-600 rounded-md flex h-auto p-4"
+      <textarea
+        autoFocus
+        className={
+          'overflow-y-auto w-full border border-slate-300 outline-none focus-within:bg-slate-50 text-stone-600 rounded-md flex h-auto p-4'
+        }
         {...register(fieldName, validateForm(fieldName))}
         placeholder={placeholder}
         style={style}
+        disabled={disabled}
       />
-
-      {error && (
-        <p className="text-red-600 text-sm">{error?.message as string}</p>
-      )}
+      <p className="text-red-600 text-sm h-4">{error?.message as string}</p>
     </div>
   );
 };
 
-export default Input;
+export default TextArea;

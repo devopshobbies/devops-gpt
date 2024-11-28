@@ -33,9 +33,7 @@ const Navbar: FC = () => {
           {navbar.map((link) => (
             <NavLink
               to={link.url}
-              className={({ isActive }) =>
-                isActive ? 'text-orange-base]' : ''
-              }
+              className={({ isActive }) => (isActive ? 'text-orange-base' : '')}
             >
               {link.title}
             </NavLink>

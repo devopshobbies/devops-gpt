@@ -24,7 +24,7 @@ const menu = [
   },
 ];
 
-export const TerraformTemplate: FC = () => {
+const TerraformTemplate: FC = () => {
   return (
     <div className="flex items-center h-dvh">
       <div className="flex flex-col items-center justify-center w-full h-full border-r border-gray-500 divide-y divide-gray-500 max-w-96">
@@ -45,3 +45,5 @@ export const TerraformTemplate: FC = () => {
     </div>
   );
 };
+
+export default TerraformTemplate;

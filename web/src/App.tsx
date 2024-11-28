@@ -1,11 +1,7 @@
 import { Route, Routes, useLocation } from 'react-router';
 import MainLayout from '@/components/layouts/main-layout/main-layout';
-import { TerraformTemplate } from '@/pages/terraform-template/index/terraform-template';
-import Docker from '@/pages/terraform-template/Docker/docker';
-import EC2 from './pages/terraform-template/EC2/ec2';
-import S3 from './pages/terraform-template/S3/s3';
-import IAM from './pages/terraform-template/IAM/iam';
-import Argocd from './pages/terraform-template/ARGOCD/argocd';
+import TerraformTemplate from '@/pages/terraform-template/components/layout';
+import { Argocd, Docker, EC2, IAM, S3 } from './pages';
 
 function App() {
   const location = useLocation();

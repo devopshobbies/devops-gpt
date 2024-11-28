@@ -12,7 +12,7 @@ interface PlatformProps<FormData, RequestData> {
   mapperFunction: (data: FormData) => RequestData;
 }
 
-const PlatformBox = <FormData extends {}, RequestData extends {}>({
+const PlatformBox = <FormData extends object, RequestData extends object>({
   serviceName,
   defaultValues,
   endpoint,

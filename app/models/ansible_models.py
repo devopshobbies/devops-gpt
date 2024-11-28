@@ -22,7 +22,7 @@ class AnsibleInstallNginx(AnsibleBase):
 class AnsibleInstallDocker(AnsibleBase):
     os: str = 'ubuntu'
     hosts:List[str] = ['www.example.com']
-    version:str = 'latest'
+    
     
     @validator("os")
     def validator_os(cls, value):

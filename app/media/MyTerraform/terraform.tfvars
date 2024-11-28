@@ -1,4 +1,11 @@
 
+argocd_instance_info = {
+  server_addr = "ARGOCD_DOMAIN"
+  username    = "admin"
+  password    = "ARGOCD_ADMIN_PASS"
+  insecure    = true
+}
+
 repository_create = false
 argocd_repository_info = {
   repo     = "https://YOUR_REPO.git"

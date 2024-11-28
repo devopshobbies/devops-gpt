@@ -7,6 +7,7 @@ import {
   BugFix,
   Docker,
   EC2,
+  HelmTemplate,
   IAM,
   Installation,
   S3,
@@ -21,6 +22,7 @@ function App() {
           <Route element={<MainLayout />}>
             <Route index element={<Basic />} />
             <Route path="bug-fix" element={<BugFix />} />
+            <Route path="helm-template" element={<HelmTemplate />} />
             <Route path="terraform-template" element={<TerraformTemplate />}>
               <Route path="docker" element={<Docker />} />
               <Route path="ec2" element={<EC2 />} />

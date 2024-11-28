@@ -30,9 +30,9 @@ const Argocd: FC = () => {
 
   return (
     <div className="w-full max-w-96">
-      <div className="border border-gray-500 rounded-md">
+      <div className="rounded-md border border-gray-500">
         <div className="divide-y divide-gray-500">
-          <div className="flex items-center justify-between w-full px-3 py-3">
+          <div className="flex w-full items-center justify-between px-3 py-3">
             <p>Argo Application</p>
             <input
               type="checkbox"
@@ -52,7 +52,7 @@ const Argocd: FC = () => {
             )}
           >
             <div
-              className="flex items-center justify-between py-3 pl-10 pr-3 cursor-pointer"
+              className="flex cursor-pointer items-center justify-between py-3 pl-10 pr-3"
               onClick={() => handleDropdown('sync_policy')}
             >
               <p>Sync Policy</p>
@@ -94,7 +94,7 @@ const Argocd: FC = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-between w-full px-3 py-3">
+          <div className="flex w-full items-center justify-between px-3 py-3">
             <p>Argocd Repository</p>
             <input
               type="checkbox"
@@ -105,7 +105,7 @@ const Argocd: FC = () => {
               onChange={() => handleServices('argocd_repository')}
             />
           </div>
-          <div className="flex items-center justify-between w-full px-3 py-3">
+          <div className="flex w-full items-center justify-between px-3 py-3">
             <p>Application Depends Repository</p>
             <input
               type="checkbox"
@@ -118,7 +118,7 @@ const Argocd: FC = () => {
           </div>
         </div>
       </div>
-      <button className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70">
+      <button className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70">
         Submit
       </button>
     </div>

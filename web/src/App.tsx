@@ -1,7 +1,7 @@
 import { Route, Routes, useLocation } from 'react-router';
 import MainLayout from '@/components/layouts/main-layout/main-layout';
 import TerraformTemplate from '@/pages/terraform-template/components/layout';
-import { Argocd, Docker, EC2, IAM, S3 } from './pages';
+import { Argocd, Docker, EC2, IAM, Installation, S3 } from './pages';
 
 function App() {
   const location = useLocation();
@@ -17,6 +17,7 @@ function App() {
               <Route path="iam" element={<IAM />} />
               <Route path="argocd" element={<Argocd />} />
             </Route>
+            <Route path="installation" element={<Installation />} />
           </Route>
         </Routes>
       </div>

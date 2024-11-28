@@ -1,89 +1,111 @@
 import os
 
 project_name = "app/media/MyAnsible"
-
-# Define directory structure
 ansible_dir = project_name
 group_vars_dir = os.path.join(ansible_dir, "group_vars")
-hosts_file = os.path.join(ansible_dir, "hosts")
 host_vars_dir = os.path.join(ansible_dir, "host_vars")
-nginx_playbook_file = os.path.join(ansible_dir, "nginx_playbook.yml")
 roles_dir = os.path.join(ansible_dir, "roles")
-install_nginx_dir = os.path.join(roles_dir, "install_nginx")
-defaults_dir = os.path.join(install_nginx_dir, "defaults")
-handlers_dir = os.path.join(install_nginx_dir, "handlers")
-tasks_dir = os.path.join(install_nginx_dir, "tasks")
-templates_dir = os.path.join(install_nginx_dir, "templates")
-vars_dir = os.path.join(install_nginx_dir, "vars")
+install_docker_dir = os.path.join(roles_dir, "install_docker")
+tasks_dir = os.path.join(install_docker_dir, "tasks")
+vars_dir = os.path.join(install_docker_dir, "vars")
+files_dir = os.path.join(install_docker_dir, "files")
+handlers_dir = os.path.join(install_docker_dir, "handlers")
+templates_dir = os.path.join(install_docker_dir, "templates")
 
 # Create project directories
+os.makedirs(ansible_dir, exist_ok=True)
 os.makedirs(group_vars_dir, exist_ok=True)
 os.makedirs(host_vars_dir, exist_ok=True)
+os.makedirs(roles_dir, exist_ok=True)
+os.makedirs(install_docker_dir, exist_ok=True)
 os.makedirs(tasks_dir, exist_ok=True)
-os.makedirs(defaults_dir, exist_ok=True)
+os.makedirs(vars_dir, exist_ok=True)
+os.makedirs(files_dir, exist_ok=True)
 os.makedirs(handlers_dir, exist_ok=True)
 os.makedirs(templates_dir, exist_ok=True)
-os.makedirs(vars_dir, exist_ok=True)
-os.makedirs(roles_dir, exist_ok=True)
-os.makedirs(install_nginx_dir, exist_ok=True)
 
 # Create ansible.cfg
-with open(os.path.join(ansible_dir, "ansible.cfg"), "w") as ansible_config:
-    ansible_config.write("[defaults]\n")
-    ansible_config.write("host_key_checking=false\n")
+with open(os.path.join(ansible_dir, "ansible.cfg"), "w") as cfg_file:
+    cfg_file.write("[defaults]\n")
+    cfg_file.write("host_key_checking=false\n")
 
-# Create group_vars/nginx_nodes
-with open(os.path.join(group_vars_dir, "nginx_nodes"), "w") as nginx_nodes:
-    nginx_nodes.write("ansible_port: 22\n")
-    nginx_nodes.write("ansible_user: root\n")
+# Create group_vars/docker_nodes
+with open(os.path.join(group_vars_dir, "docker_nodes"), "w") as gv_file:
+    gv_file.write("ansible_port: 28\n")
+    gv_file.write("ansible_user: root\n")
 
-# Create hosts file
-with open(hosts_file, "w") as hosts:
-    hosts.write("[nginx_nodes]\n")
-    hosts.write("www.examppple.com\n")
+# Create hosts
+with open(os.path.join(ansible_dir, "hosts"), "w") as hosts_file:
+    hosts_file.write("[docker_nodes]\n")
+    hosts_file.write("www.example.com\n")
 
-# Create nginx_playbook.yml
-with open(nginx_playbook_file, "w") as playbook:
-    playbook.write("- hosts: all\n")
-    playbook.write("  roles:\n")
-    playbook.write("    - install_nginx\n")
+# Create docker_playbook.yml
+with open(os.path.join(ansible_dir, "docker_playbook.yml"), "w") as playbook_file:
+    playbook_file.write("- hosts: all\n")
+    playbook_file.write("  roles:\n")
+    playbook_file.write("    - install_docker\n")
 
-# Create install_nginx/tasks/main.yml
-with open(os.path.join(tasks_dir, "main.yml"), "w") as tasks:
-    tasks.write("---\n")
-    tasks.write("- name: Install CA certificates to ensure HTTPS connections work\n")
-    tasks.write("  apt:\n")
-    tasks.write("    name: ca-certificates\n")
-    tasks.write("    state: present\n\n")
-    
-    tasks.write("- name: Add Nginx signing key\n")
-    tasks.write("  apt_key:\n")
-    tasks.write("    url: \"{ nginx_repo_key_url }\"\n")
-    tasks.write("    state: present\n\n")
+# Create tasks/main.yml
+with open(os.path.join(tasks_dir, "main.yml"), "w") as tasks_file:
+    tasks_file.write("---\n")
+    tasks_file.write("- name: Install prerequisite packages\n")
+    tasks_file.write("  apt:\n")
+    tasks_file.write("    name: \"{{ item }}\"\n")
+    tasks_file.write("    state: present\n")
+    tasks_file.write("  loop: \"{{ prerequisite_packages }}\"\n")
+    tasks_file.write("- name: Create directory for Docker keyrings\n")
+    tasks_file.write("  file:\n")
+    tasks_file.write("    path: /etc/apt/keyrings\n")
+    tasks_file.write("    state: directory\n")
+    tasks_file.write("    mode: '0755'\n")
+    tasks_file.write("- name: Download Docker's official GPG key\n")
+    tasks_file.write("  get_url:\n")
+    tasks_file.write("    url: https://download.docker.com/linux/ubuntu/gpg\n")
+    tasks_file.write("    dest: /etc/apt/keyrings/docker.asc\n")
+    tasks_file.write("    mode: '0644'\n")
+    tasks_file.write("- name: Add Docker repository to apt sources\n")
+    tasks_file.write("  copy:\n")
+    tasks_file.write("    content: |\n")
+    tasks_file.write("      deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable\n")
+    tasks_file.write("    dest: /etc/apt/sources.list.d/docker.list\n")
+    tasks_file.write("- name: Update apt cache after adding Docker repo\n")
+    tasks_file.write("  apt:\n")
+    tasks_file.write("    update_cache: yes\n")
+    tasks_file.write("- name: Install Docker packages\n")
+    tasks_file.write("  apt:\n")
+    tasks_file.write("    name: \"{{ item }}\"\n")
+    tasks_file.write("    state: present\n")
+    tasks_file.write("  loop: \"{{ docker_packages }}\"\n")
+    tasks_file.write("- name: Ensure Docker and containerd services are started and enabled\n")
+    tasks_file.write("  service:\n")
+    tasks_file.write("    name: \"{{ item }}\"\n")
+    tasks_file.write("    state: started\n")
+    tasks_file.write("    enabled: yes\n")
+    tasks_file.write("  loop: \"{{ docker_services }}\"\n")
 
-    tasks.write("- name: Add Nginx repository\n")
-    tasks.write("  apt_repository:\n")
-    tasks.write("    repo: \"deb { nginx_repo_url } { ansible_distribution_release } nginx\"\n")
-    tasks.write("    state: present\n")
-    tasks.write("    filename: nginx\n\n")
-
-    tasks.write("- name: Update apt cache\n")
-    tasks.write("  apt:\n")
-    tasks.write("    update_cache: yes\n\n")
-
-    tasks.write("- name: Install specific version of Nginx\n")
-    tasks.write("  apt:\n")
-    tasks.write("    name: \"nginx={ nginx_version }~{ ansible_distribution_release }\"\n")
-    tasks.write("    state: present\n\n")
-
-    tasks.write("- name: Ensure Nginx service is running and enabled\n")
-    tasks.write("  service:\n")
-    tasks.write("    name: nginx\n")
-    tasks.write("    state: started\n")
-    tasks.write("    enabled: yes\n")
-
-# Create install_nginx/vars/main.yml
+# Create vars/main.yml
 with open(os.path.join(vars_dir, "main.yml"), "w") as vars_file:
-    vars_file.write("nginx_repo_key_url: \"https://nginx.org/keys/nginx_signing.key\"\n")
-    vars_file.write("nginx_repo_url: \"http://nginx.org/packages/mainline/ubuntu/\"\n")
-    vars_file.write("nginx_version: \"1.23.4-1\"\n")
+    vars_file.write("prerequisite_packages:\n")
+    vars_file.write("  - ca-certificates\n")
+    vars_file.write("  - curl\n\n")
+    vars_file.write("docker_services:\n")
+    vars_file.write("  - docker\n")
+    vars_file.write("  - containerd\n\n")
+    vars_file.write("docker_packages:\n")
+    vars_file.write("  - docker-ce\n")
+    vars_file.write("  - docker-ce-cli\n")
+    vars_file.write("  - containerd.io\n")
+    vars_file.write("  - docker-buildx-plugin\n")
+    vars_file.write("  - docker-compose-plugin\n")
+
+# Create empty host_vars directory
+os.makedirs(host_vars_dir, exist_ok=True)
+
+# Create empty files directory
+os.makedirs(files_dir, exist_ok=True)
+
+# Create empty handlers directory
+os.makedirs(handlers_dir, exist_ok=True)
+
+# Create empty templates directory
+os.makedirs(templates_dir, exist_ok=True)

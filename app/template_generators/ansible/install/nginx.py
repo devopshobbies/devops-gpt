@@ -29,12 +29,14 @@ def ansible_nginx_install_ubuntu(input):
                   └── install_nginx
                       ├── defaults
                       │   └── main.yml
+                      ├── files
+                      │   └── sample.sh
                       ├── handlers
                       │   └── main.yml
                       ├── tasks
                       │   └── main.yml
                       ├── templates
-                      │   └── main.yml
+                      │   └── sample.j2
                       └── vars
                           └── main.yml
               ```

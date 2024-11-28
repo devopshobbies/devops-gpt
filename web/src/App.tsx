@@ -1,7 +1,16 @@
 import { Route, Routes, useLocation } from 'react-router';
 import MainLayout from '@/components/layouts/main-layout/main-layout';
 import TerraformTemplate from '@/pages/terraform-template/components/layout';
-import { Argocd, Basic, Docker, EC2, IAM, Installation, S3 } from '@/pages';
+import {
+  Argocd,
+  Basic,
+  BugFix,
+  Docker,
+  EC2,
+  IAM,
+  Installation,
+  S3,
+} from '@/pages';
 
 function App() {
   const location = useLocation();
@@ -11,6 +20,7 @@ function App() {
         <Routes location={location}>
           <Route element={<MainLayout />}>
             <Route index element={<Basic />} />
+            <Route path="bug-fix" element={<BugFix />} />
             <Route path="terraform-template" element={<TerraformTemplate />}>
               <Route path="docker" element={<Docker />} />
               <Route path="ec2" element={<EC2 />} />

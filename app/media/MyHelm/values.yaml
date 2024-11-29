@@ -4,13 +4,10 @@ web:
   replicas: 1
   persistence:
     size: 1Gi
-    accessModes:
+    accessModes: 
       - ReadWriteOnce
+  stateless:
+    enabled: true
   env:
     - name: ENV1
       value: Hi
-  ingress:
-    enabled: false
-    host: www.example.com
-  stateless:
-    enabled: false

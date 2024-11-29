@@ -1,0 +1,27 @@
+systemMessage: "Welcome to Jenkins configured via JCasC"
+author:
+  name: "admin"
+  password: "password"
+allowSignup: true
+allowAnonymousRead: true
+cache_size: 1
+executors: 1
+required_plugins:
+  - "string"
+views:
+  - list:
+      name: "All"
+authorizationStrategy:
+  projectMatrix:
+    grantedPermissions:
+      - "Overall/Administer:admin"
+      - "Job/Read:developer"
+      - "Job/Build:developer"
+tools:
+  git:
+    installations:
+      - name: "Default"
+        home: "/usr/bin/git"
+security:
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false

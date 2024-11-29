@@ -9,4 +9,5 @@ export enum TerraformTemplateAPI {
 export enum API {
   Basic = '/IaC-basic',
   BugFix = '/IaC-bugfix',
+  Installation = '/IaC-install',
 }

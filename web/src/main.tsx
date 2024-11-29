@@ -14,6 +14,15 @@ createRoot(document.getElementById('root')!).render(
         <App />
       </QueryProvider>
     </BrowserRouter>
-    <Toaster />
+    <Toaster
+      position="bottom-right"
+      toastOptions={{
+        closeButton: true,
+        className: 'bg-orange-base text-white',
+        classNames: {
+          closeButton: 'text-black',
+        },
+      }}
+    />
   </StrictMode>,
 );

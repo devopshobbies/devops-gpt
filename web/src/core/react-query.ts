@@ -1,4 +1,10 @@
-import { AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse } from 'axios';
+import {
+  AxiosError,
+  AxiosHeaders,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/lib/axios';
 
@@ -8,15 +14,15 @@ async function request<R, B, E = unknown>(
   url: string,
   body?: B,
   headers?: AxiosHeaders,
+  config?: AxiosRequestConfig,
 ): Promise<AxiosResponse<R>> {
   try {
     return await axiosInstance({
       method,
       url,
       ...(method !== 'get' && { data: body }),
-      headers: {
-        ...headers,
-      },
+      headers,
+      ...config,
     });
   } catch (error) {
     throw error as AxiosError<E>;
@@ -28,11 +34,12 @@ function mutationHook(method: 'get' | 'post' | 'put' | 'patch') {
     url: string,
     key: string,
     headers?: AxiosHeaders,
+    configs?: AxiosRequestConfig,
   ) {
     return useMutation<AxiosResponse<R>, AxiosError<E>, B>({
       mutationKey: [key],
       mutationFn: (body: B) =>
-        request<R, B, E>(apiClient, method, url, body, headers),
+        request<R, B, E>(apiClient, method, url, body, headers, configs),
     });
   };
 }

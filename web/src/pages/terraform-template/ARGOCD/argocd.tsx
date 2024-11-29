@@ -1,8 +1,23 @@
 import { cn } from '@/lib/utils';
-import { FC, useState } from 'react';
+import { FC, FormEvent, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { TerraformTemplateAPI } from '@/enums/api.enums';
+import { usePost } from '@/core/react-query';
+import { ArgocdBody, ArgocdResponse } from './argocd.types';
+import { toast } from 'sonner';
+import { useDownload } from '@/hooks';
 
 const Argocd: FC = () => {
+  const { mutateAsync: argocdMutate, isPending: argocdPending } = usePost<
+    ArgocdResponse,
+    ArgocdBody
+  >(TerraformTemplateAPI.Argocd, 'argocd');
+  const { download, isPending: downloadPending } = useDownload({
+    folderName: 'MyTerraform',
+    source: 'argocd',
+    downloadFileName: 'Argocd',
+  });
+
   const [dropdown, setDropdown] = useState({
     argo_application: false,
     sync_policy: false,
@@ -28,8 +43,33 @@ const Argocd: FC = () => {
     }));
   };
 
+  const handleForm = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const argocdBody: ArgocdBody = {
+        argocd_application: dropdown.argo_application
+          ? {
+              sync_policy: {
+                auto_prune: services.auto_prune,
+                self_heal: services.self_heal,
+              },
+            }
+          : null,
+        argocd_repository: services.argocd_repository,
+        application_depends_repository: services.application_depends_repository,
+      };
+
+      await argocdMutate(argocdBody);
+      await download();
+    } catch (error) {
+      console.log(error);
+      toast.error('Something went wrong');
+    }
+  };
+
   return (
-    <div className="w-full max-w-96">
+    <form onSubmit={handleForm} className="w-full max-w-96">
       <div className="rounded-md border border-gray-500">
         <div className="divide-y divide-gray-500">
           <div className="flex w-full items-center justify-between px-3 py-3">
@@ -118,10 +158,18 @@ const Argocd: FC = () => {
           </div>
         </div>
       </div>
-      <button className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70">
-        Submit
+      <button
+        type="submit"
+        disabled={argocdPending || downloadPending}
+        className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+      >
+        {argocdPending
+          ? 'GPT Answer...'
+          : downloadPending
+            ? 'Generate Terraform...'
+            : 'Generate Terraform'}
       </button>
-    </div>
+    </form>
   );
 };
 

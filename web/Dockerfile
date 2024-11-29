@@ -2,7 +2,7 @@ FROM node:18-alpine AS builder
 ARG VITE_API_CLIENT_BASE_URL
 ENV VITE_API_CLIENT_BASE_URL=${VITE_API_CLIENT_BASE_URL}
 WORKDIR /app
-COPY package.json package-lock.yaml ./
+COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
 RUN npm run build

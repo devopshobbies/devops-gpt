@@ -11,10 +11,9 @@ import {
 } from './helm-template.types';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
-import Select, { SingleValue } from 'react-select';
+import Select from 'react-select';
 import { accessModesOptions, sizeOptions } from './data/select-options';
 import { selectStyle } from './styles/helm-template.style';
-import { OptionType } from '@/types/select.types';
 import { useDownload } from '@/hooks';
 
 const HelmTemplate: FC = () => {

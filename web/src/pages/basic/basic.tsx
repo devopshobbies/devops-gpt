@@ -76,11 +76,11 @@ const Basic: FC = () => {
               />
             </div>
             <div className="flex w-full flex-col">
-              <label htmlFor="min_token" className="mb-2">
+              <label htmlFor="max_token" className="mb-2">
                 Max Token
               </label>
               <input
-                id="min_token"
+                id="max_token"
                 type="number"
                 value={maxToken}
                 onChange={(e) => setMaxToken(e.target.value)}
@@ -88,11 +88,11 @@ const Basic: FC = () => {
               />
             </div>
             <div className="flex w-full flex-col">
-              <label htmlFor="min_token" className="mb-2">
+              <label htmlFor="service" className="mb-2">
                 Service
               </label>
               <input
-                id="min_token"
+                id="service"
                 type="text"
                 value={service}
                 onChange={(e) => setService(e.target.value)}

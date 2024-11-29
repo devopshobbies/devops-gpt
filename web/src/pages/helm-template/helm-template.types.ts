@@ -1,27 +1,6 @@
 export interface HelmTemplateBody {
   api_version: number;
-  pods: [
-    {
-      name: string;
-      image: string;
-      target_port: number;
-      replicas: number;
-      persistance: {
-        size: string;
-        accessModes: string;
-      };
-      environment: {
-        name: string;
-        value: string;
-      }[];
-
-      stateless: boolean;
-      ingress: {
-        enabled: boolean;
-        host: string;
-      };
-    },
-  ];
+  pods: Pod[];
 }
 
 export interface HelmTemplateResponse {
@@ -37,4 +16,25 @@ export interface helmTemplateValidationError {
       input: null;
     },
   ];
+}
+
+export interface Pod {
+  name: string;
+  image: string;
+  target_port: number | null;
+  replicas: number | null;
+  persistance: {
+    size: string;
+    accessModes: string;
+  };
+  environment: {
+    name: string;
+    value: string;
+  }[];
+
+  stateless: boolean;
+  ingress: {
+    enabled: boolean;
+    host: string;
+  };
 }

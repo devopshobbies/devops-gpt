@@ -8,6 +8,10 @@ import {
 } from './installation.types';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
+import Select, { Options, SingleValue } from 'react-select';
+import { osSelectOptions, toolSelectOptions } from './data/select-options';
+import { selectStyle } from './styles/select';
+import { OptionType } from '@/types/select.types';
 
 const Installation: FC = () => {
   const { mutateAsync, isPending } = usePost<
@@ -15,16 +19,16 @@ const Installation: FC = () => {
     InstallationBody
   >(API.Installation, 'installation');
 
-  const [os, setOs] = useState('');
-  const [tool, setTool] = useState('');
+  const [os, setOs] = useState<SingleValue<OptionType>>();
+  const [tool, setTool] = useState<SingleValue<OptionType>>();
 
   const handleInstall = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
       const installationBody: InstallationBody = {
-        os,
-        service: tool,
+        os: os?.value as string,
+        service: tool?.value as string,
       };
 
       const {
@@ -59,25 +63,27 @@ const Installation: FC = () => {
     >
       <div className="w-full max-w-96">
         <div className="divide-y divide-gray-500 rounded-md border border-gray-500">
-          <input
+          <Select
+            options={osSelectOptions}
+            placeholder="os"
             value={os}
-            onChange={(e) => setOs(e.target.value)}
-            placeholder="os (example: ubuntu)"
-            className="block w-full rounded-t-md p-2 outline-none"
+            onChange={(newValue) => setOs(newValue)}
+            styles={selectStyle('6px 6px 0 0')}
           />
-          <input
+          <Select
+            options={toolSelectOptions}
+            placeholder="tool"
             value={tool}
-            onChange={(e) => setTool(e.target.value)}
-            placeholder="tool (example: nginx)"
-            className="block w-full rounded-b-md p-2 outline-none"
+            onChange={(newValue) => setTool(newValue)}
+            styles={selectStyle('0 0 6px 6px')}
           />
         </div>
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || !os || !tool}
           className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
         >
-          {isPending ? 'Wait...' : 'Install'}
+          {isPending ? 'Wait...' : 'Generate'}
         </button>
       </div>
     </form>

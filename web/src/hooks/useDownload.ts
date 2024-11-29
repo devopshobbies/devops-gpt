@@ -1,28 +1,43 @@
-import { useCallback, useRef } from "react";
-import useGptStore from "../utils/store";
-import apiClient from "../utils/apiClient";
-import { nameGenerator } from "../utils/nameGenerator";
-import { DownloadFolders } from "../features/constants";
+import { useGet } from '@/core/react-query';
+import { useEffect } from 'react';
 
-const useDownload = (folderName: DownloadFolders) => {
-  const { isSuccess, endpoint } = useGptStore((s) => s.generatorQuery);
-  const downloadRef = useRef<HTMLAnchorElement>(null);
-  const downloadFile = useCallback(async () => {
-    if (!isSuccess) return;
-
-    try {
-      if (!downloadRef.current) return;
-
-      const url =
-        apiClient.defaults.baseURL +
-        `/download-folder${folderName}/${nameGenerator(endpoint)}`;
-
-      downloadRef.current.href = url;
-      downloadRef.current.click();
-    } catch (error) {
-      console.error("Error downloading file:", error);
-    }
-  }, [isSuccess, endpoint]);
-  return { downloadFile, isSuccess, endpoint, downloadRef };
+type UseDownloadProps = {
+  folderName: string;
+  source: string;
+  downloadFileName: string;
 };
+
+const useDownload = ({
+  folderName,
+  source,
+  downloadFileName,
+}: UseDownloadProps) => {
+  const { mutateAsync, isSuccess, data, isPending } = useGet<string, undefined>(
+    `/download-folder${folderName}/${source}`,
+    'download',
+    undefined,
+    { responseType: 'blob' },
+  );
+
+  useEffect(() => {
+    if (isSuccess) {
+      const blob = new Blob([data.data], {
+        type: data.headers['content-type'],
+      });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${downloadFileName}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }, [isSuccess, data]);
+
+  const download = async () => {
+    return await mutateAsync(undefined);
+  };
+
+  return { download, isSuccess, isPending };
+};
+
 export default useDownload;

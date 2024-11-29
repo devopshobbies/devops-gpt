@@ -2,11 +2,10 @@ FROM node:18-alpine AS builder
 ARG VITE_API_CLIENT_BASE_URL
 ENV VITE_API_CLIENT_BASE_URL=${VITE_API_CLIENT_BASE_URL}
 WORKDIR /app
-RUN npm install -g pnpm
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+COPY package.json package-lock.yaml ./
+RUN npm install
 COPY . .
-RUN pnpm run build
+RUN npm run build
 
 FROM nginx:stable-alpine AS production
 WORKDIR /usr/share/nginx/html

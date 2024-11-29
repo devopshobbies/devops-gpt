@@ -8,7 +8,7 @@ import {
 } from './installation.types';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
-import Select, { Options, SingleValue } from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import { osSelectOptions, toolSelectOptions } from './data/select-options';
 import { selectStyle } from './styles/select';
 import { OptionType } from '@/types/select.types';

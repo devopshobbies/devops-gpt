@@ -13,8 +13,8 @@ const S3: FC = () => {
   >(TerraformTemplateAPI.S3, 's3');
   const { download, isPending: downloadPending } = useDownload({
     folderName: 'MyTerraform',
-    source: 'iam',
-    downloadFileName: 'Iam',
+    source: 's3',
+    downloadFileName: 'S3',
   });
 
   const [services, setServices] = useState({
@@ -47,9 +47,9 @@ const S3: FC = () => {
 
   return (
     <form onSubmit={handleForm} className="w-full max-w-96">
-      <div className="rounded-md border border-gray-500">
+      <div className="border border-gray-500 rounded-md">
         <div className="divide-y divide-gray-500">
-          <div className="flex w-full items-center justify-between px-3 py-3">
+          <div className="flex items-center justify-between w-full px-3 py-3">
             <p>S3 Bucket</p>
             <input
               type="checkbox"
@@ -59,7 +59,7 @@ const S3: FC = () => {
               onChange={() => handleServices('s3_bucket')}
             />
           </div>
-          <div className="flex w-full items-center justify-between px-3 py-3">
+          <div className="flex items-center justify-between w-full px-3 py-3">
             <p>Bucket Versioning</p>
             <input
               type="checkbox"
@@ -75,7 +75,7 @@ const S3: FC = () => {
       <button
         type="submit"
         disabled={s3Pending || downloadPending}
-        className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+        className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
       >
         {s3Pending
           ? 'Generate Terraform...'

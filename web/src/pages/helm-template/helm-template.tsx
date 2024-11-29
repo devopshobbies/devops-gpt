@@ -120,7 +120,7 @@ const HelmTemplate: FC = () => {
   return (
     <div className="flex h-[calc(100%-56px)] w-full justify-center overflow-y-auto scrollbar-thin">
       <form onSubmit={handleForm} className="h-full w-full max-w-[768px]">
-        <div className="mb-4 flex w-full flex-col">
+        <div className="flex flex-col w-full mb-4">
           <label htmlFor="api_version" className="mb-1">
             Api Version
           </label>
@@ -129,11 +129,11 @@ const HelmTemplate: FC = () => {
             placeholder="2"
             value={version}
             onChange={(e) => setVersion(e.target.value)}
-            className="w-full rounded-md px-3 py-2 outline-none"
+            className="w-full px-3 py-2 rounded-md outline-none"
           />
         </div>
         <h1 className="mb-4 text-2xl font-bold">Pods</h1>
-        <div className="mb-4 flex flex-col">
+        <div className="flex flex-col mb-4">
           <label htmlFor="pods_name" className="mb-1">
             Name
           </label>
@@ -142,10 +142,10 @@ const HelmTemplate: FC = () => {
             placeholder="web"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-md px-3 py-2 outline-none"
+            className="w-full px-3 py-2 rounded-md outline-none"
           />
         </div>
-        <div className="mb-4 flex flex-col">
+        <div className="flex flex-col mb-4">
           <label htmlFor="pods_image" className="mb-1">
             Image
           </label>
@@ -154,10 +154,10 @@ const HelmTemplate: FC = () => {
             placeholder="nginx"
             value={image}
             onChange={(e) => setImage(e.target.value)}
-            className="w-full rounded-md px-3 py-2 outline-none"
+            className="w-full px-3 py-2 rounded-md outline-none"
           />
         </div>
-        <div className="mb-4 flex flex-col">
+        <div className="flex flex-col mb-4">
           <label htmlFor="pods_target_port" className="mb-1">
             Target Port
           </label>
@@ -166,10 +166,10 @@ const HelmTemplate: FC = () => {
             placeholder="80"
             value={targetPort}
             onChange={(e) => setTargetPort(e.target.value)}
-            className="w-full rounded-md px-3 py-2 outline-none"
+            className="w-full px-3 py-2 rounded-md outline-none"
           />
         </div>
-        <div className="mb-2 flex flex-col">
+        <div className="flex flex-col mb-2">
           <label htmlFor="pods_replicas" className="mb-1">
             Replicas
           </label>
@@ -178,11 +178,11 @@ const HelmTemplate: FC = () => {
             placeholder="1"
             value={replicas}
             onChange={(e) => setReplicas(e.target.value)}
-            className="w-full rounded-md px-3 py-2 outline-none"
+            className="w-full px-3 py-2 rounded-md outline-none"
           />
         </div>
         <h2 className="mb-2 text-lg font-bold">Persistence</h2>
-        <div className="mb-7 flex flex-col">
+        <div className="flex flex-col mb-7">
           <p className="mb-1">Size</p>
           <div className="flex items-center gap-3">
             <input
@@ -190,19 +190,19 @@ const HelmTemplate: FC = () => {
               type="number"
               value={sizeValue}
               onChange={(e) => setSizeValue(e.target.value)}
-              className="w-full gap-2 rounded-md px-3 py-2 outline-none"
+              className="w-full gap-2 px-3 py-2 rounded-md outline-none"
             />
             <Select
               placeholder="Select..."
               options={sizeOptions}
               value={sizeType}
               onChange={(e) => setSizeType(e)}
-              className="h-10 w-full"
+              className="w-full h-10"
               styles={selectStyle}
             />
           </div>
         </div>
-        <div className="mb-2 flex flex-col">
+        <div className="flex flex-col mb-2">
           <label className="mb-1">Access Modes</label>
           <Select
             placeholder="Select..."
@@ -212,11 +212,11 @@ const HelmTemplate: FC = () => {
             styles={selectStyle}
           />
         </div>
-        <div className="mb-2 mt-5 flex items-center">
+        <div className="flex items-center mt-5 mb-2">
           <h3 className="text-lg font-bold">Environments</h3>
           <button
             type="button"
-            className="btn btn-xs ml-4"
+            className="ml-4 btn btn-xs"
             onClick={handleAddEnvironment}
           >
             Add <Plus className="size-3" />
@@ -225,7 +225,7 @@ const HelmTemplate: FC = () => {
         <div className="grid grid-cols-2 gap-4">
           {environments.map((env, index) => (
             <div
-              className="flex items-center divide-x divide-gray-500 rounded-md border border-gray-500"
+              className="flex items-center border border-gray-500 divide-x divide-gray-500 rounded-md"
               key={index}
             >
               <input
@@ -234,7 +234,7 @@ const HelmTemplate: FC = () => {
                 onChange={(e) =>
                   handleEnvironmentChange(index, 'name', e.target.value)
                 }
-                className="h-12 w-full rounded-s-md px-2 outline-none"
+                className="w-full h-12 px-2 outline-none rounded-s-md"
               />
               <input
                 placeholder={env.valuePlaceholder}
@@ -257,7 +257,7 @@ const HelmTemplate: FC = () => {
             </div>
           ))}
         </div>
-        <div className="mb-2 mt-7 flex justify-between">
+        <div className="flex justify-between mb-2 mt-7">
           <label htmlFor="pods_stateless" className="mb-1">
             Stateless
           </label>
@@ -271,7 +271,7 @@ const HelmTemplate: FC = () => {
           />
         </div>
         <h4 className="mt-5 text-lg font-bold">Ingress</h4>
-        <div className="mb-2 mt-3 flex justify-between">
+        <div className="flex justify-between mt-3 mb-2">
           <label htmlFor="pods_ingress_enabled" className="mb-1">
             Enabled
           </label>
@@ -284,7 +284,7 @@ const HelmTemplate: FC = () => {
             onChange={() => setIngress(!ingress)}
           />
         </div>
-        <div className="mb-2 mt-3 flex flex-col">
+        <div className="flex flex-col mt-3 mb-2">
           <label htmlFor="pods_ingress_host" className="mb-1">
             Host
           </label>
@@ -293,13 +293,13 @@ const HelmTemplate: FC = () => {
             placeholder="www.example.com"
             value={ingressHost}
             onChange={(e) => setIngressHost(e.target.value)}
-            className="w-full rounded-md px-3 py-2 outline-none"
+            className="w-full px-3 py-2 rounded-md outline-none"
           />
         </div>
         <button
           type="submit"
           disabled={helmTemplatePending}
-          className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+          className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
         >
           {helmTemplatePending
             ? 'Generating...'

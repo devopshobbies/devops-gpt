@@ -164,9 +164,9 @@ const Argocd: FC = () => {
         className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
       >
         {argocdPending
-          ? 'GPT Answer...'
+          ? 'Generate Terraform...'
           : downloadPending
-            ? 'Generate Terraform...'
+            ? 'Downloading Template...'
             : 'Generate Terraform'}
       </button>
     </form>

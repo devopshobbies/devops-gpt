@@ -10,4 +10,5 @@ export enum API {
   Basic = '/IaC-basic',
   BugFix = '/IaC-bugfix',
   Installation = '/IaC-install',
+  HelmTemplate = '/Helm-template',
 }

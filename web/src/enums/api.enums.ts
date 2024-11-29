@@ -5,3 +5,7 @@ export enum TerraformTemplateAPI {
   EC2 = '/IaC-template/aws/ec2',
   Docker = '/IaC-template/docker',
 }
+
+export enum API {
+  Basic = '/IaC-basic',
+}

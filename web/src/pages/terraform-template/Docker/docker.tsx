@@ -78,9 +78,9 @@ const Docker: FC = () => {
         className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
       >
         {dockerPending
-          ? 'Generate Terraform...'
+          ? 'Wait...'
           : downloadPending
-            ? 'Downloading Template...'
+            ? 'Wait...'
             : 'Generate Terraform'}
       </button>
     </form>

@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 100%;
+  }
+
+  @font-face {
+    font-family: 'figtree';
+    src: url('/fonts/Figtree-VariableFont_wght.ttf');
+    font-weight: 100 900;
+    font-display: 'swap';
+    font-style: 'normal';
+  }
+
+  body {
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type='number'] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+    @apply dark:bg-background transition-all font-figtree text-foreground;
+  }
+}

@@ -14,12 +14,12 @@ def zip_folder(folder_path: str, output_zip_path: str):
                 # Add file to the zip file
                 zip_file.write(file_path, os.path.relpath(file_path, folder_path))
 
-def add_files_to_folder(files:list,folder:str = 'MyAnsible/roles'):
-    folder_path = f"app/media/{folder}"
-    os.makedirs(folder_path, exist_ok=True)
+def add_files_to_folder(files:list,folder:str):
+    
+    os.makedirs(folder, exist_ok=True)
 
     for filename in files:
-        os.path.join(folder_path, filename)
+        os.path.join(folder, filename)
 
 
 @app.get("/download-folder{folder_name}/{source}")

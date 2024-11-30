@@ -1,0 +1,14 @@
+prerequisite_packages:
+  - ca-certificates
+  - curl
+
+docker_services:
+  - docker
+  - containerd
+
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin

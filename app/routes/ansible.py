@@ -1,8 +1,8 @@
 from app.app_instance import app
 from app.gpt_services import gpt_service
 from app.services import (write_installation,edit_directory_generator,execute_pythonfile)
-
-from app.models import (AnsibleInstallNginx,AnsibleInstallDocker,Output)
+from app.routes.utils import add_files_to_folder
+from app.models import (AnsibleInstallNginx,AnsibleInstallDocker,Output,AnsibleInstallKuber)
 
 from app.models import (AnsibleInstallNginx,Output)
 
@@ -32,4 +32,25 @@ async def ansible_install_generation_docker(request:AnsibleInstallDocker) -> Out
         output = gpt_service(generated_prompt)
         edit_directory_generator("ansible_generator",output)
         execute_pythonfile("MyAnsible","ansible_generator")
+        return Output(output='output')
+    
+    
+@app.post("/ansible-install/kuber/")
+async def ansible_install_generation_kuber(request:AnsibleInstallKuber) -> Output:
+    
+        if os.environ.get("TEST"):
+            return Output(output='output')
+        generated_prompt = ansible_install_template(request,"kuber")
+
+        output = gpt_service(generated_prompt)
+        edit_directory_generator("ansible_generator",output)
+        execute_pythonfile("MyAnsible","ansible_generator")
+        add_files_to_folder(files = ['app/media/kuber_configs/resolv.conf.j2'] , folder='app/media/MyAnsible/roles/preinstall/templates/')
+        add_files_to_folder(files = ['app/media/kuber_configs/kubeadmcnf.yml.j2'] , folder='app/media/MyAnsible/roles/init_k8s/templates')
+        add_files_to_folder(files = ['app/media/kuber_configs/kubeadmcnf-join.yml.j2'] , folder='app/media/MyAnsible/roles/join_master/templates')
+        add_files_to_folder(files = ['app/media/kuber_configs/check_apiserveer.sh.j2',
+                                     'app/media/kuber_configs/haproxy.cfg.j2',
+                                     'app/media/kuber_configs/keepalived.conf.j2'
+                                     ] , folder='app/media/MyAnsible/roles/lb/templates')
+        
         return Output(output='output')

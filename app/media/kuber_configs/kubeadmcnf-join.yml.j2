@@ -1,0 +1,12 @@
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: JoinConfiguration
+nodeRegistration:
+  criSocket: {{ cri_socket }}
+  
+---
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta3
+kubernetesVersion: "{{ k8s_version }}"
+
+

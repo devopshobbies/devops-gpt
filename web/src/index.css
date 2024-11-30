@@ -27,6 +27,6 @@
       -moz-appearance: textfield;
       appearance: textfield;
     }
-    @apply bg-background font-figtree text-foreground;
+    @apply dark:bg-background transition-all font-figtree text-foreground;
   }
 }

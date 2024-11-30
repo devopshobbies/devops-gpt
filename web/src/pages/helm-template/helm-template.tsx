@@ -14,7 +14,7 @@ import { isAxiosError } from 'axios';
 import Select from 'react-select';
 import { accessModesOptions, sizeOptions } from './data/select-options';
 import { selectStyle } from './styles/helm-template.style';
-import { useDownload } from '@/hooks';
+import { useDownload, useStyle } from '@/hooks';
 
 const HelmTemplate: FC = () => {
   const { mutateAsync: helmTemplateMutate, isPending: helmTemplatePending } =
@@ -53,6 +53,7 @@ const HelmTemplate: FC = () => {
       },
     },
   ]);
+  const { darkMode } = useStyle();
 
   const handleAddEnvironment = (podIndex: number) => {
     const newPods = [...pods];
@@ -179,7 +180,7 @@ const HelmTemplate: FC = () => {
   };
 
   return (
-    <div className="flex h-[calc(100%-56px)] w-full justify-center overflow-y-auto p-4 scrollbar-thin">
+    <div className="text-black-1 flex h-[calc(100%-56px)] w-full justify-center overflow-y-auto p-4 scrollbar-thin dark:text-white">
       <form onSubmit={handleForm} className="h-full w-full max-w-[768px]">
         <div className="mb-4 flex w-full flex-col">
           <label htmlFor="api_version" className="mb-1">
@@ -190,7 +191,7 @@ const HelmTemplate: FC = () => {
             placeholder="2"
             value={apiVersion}
             onChange={(e) => setApiVersion(e.target.value)}
-            className="w-full rounded-md px-3 py-2 outline-none"
+            className="dark:bg-black-1 order w-full rounded-md border border-gray-200 px-3 py-2 outline-none dark:border-none"
           />
         </div>
         <div className="mb-4 flex items-center">
@@ -250,7 +251,7 @@ const HelmTemplate: FC = () => {
                     placeholder="web"
                     value={pod.name}
                     onChange={(e) => updatePod(index, ['name'], e.target.value)}
-                    className="w-full rounded-md px-3 py-2 outline-none"
+                    className="dark:bg-black-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none dark:border-none"
                   />
                 </div>
                 <div className="mb-4 flex flex-col">
@@ -264,7 +265,7 @@ const HelmTemplate: FC = () => {
                     onChange={(e) =>
                       updatePod(index, ['image'], e.target.value)
                     }
-                    className="w-full rounded-md px-3 py-2 outline-none"
+                    className="dark:bg-black-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none dark:border-none"
                   />
                 </div>
                 <div className="mb-4 flex flex-col">
@@ -278,7 +279,7 @@ const HelmTemplate: FC = () => {
                     onChange={(e) =>
                       updatePod(index, ['target_port'], e.target.value)
                     }
-                    className="w-full rounded-md px-3 py-2 outline-none"
+                    className="dark:bg-black-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none dark:border-none"
                   />
                 </div>
                 <div className="mb-2 flex flex-col">
@@ -292,7 +293,7 @@ const HelmTemplate: FC = () => {
                     onChange={(e) =>
                       updatePod(index, ['replicas'], e.target.value)
                     }
-                    className="w-full rounded-md px-3 py-2 outline-none"
+                    className="dark:bg-black-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none dark:border-none"
                   />
                 </div>
                 <p className="mb-2 mt-6 text-base font-bold">Persistence</p>
@@ -311,7 +312,7 @@ const HelmTemplate: FC = () => {
                           index,
                         )
                       }
-                      className="w-full gap-2 rounded-md px-3 py-2 outline-none"
+                      className="dark:bg-black-1 w-full gap-2 rounded-md border border-gray-200 px-3 py-2 outline-none dark:border-none"
                     />
                     <Select
                       placeholder="Select..."
@@ -326,7 +327,7 @@ const HelmTemplate: FC = () => {
                         )
                       }
                       className="h-10 w-full"
-                      styles={selectStyle}
+                      styles={selectStyle(darkMode)}
                     />
                   </div>
                 </div>
@@ -344,7 +345,7 @@ const HelmTemplate: FC = () => {
                         index,
                       )
                     }
-                    styles={selectStyle}
+                    styles={selectStyle(darkMode)}
                   />
                 </div>
                 <div className="mb-2 mt-6 flex items-center">
@@ -360,7 +361,7 @@ const HelmTemplate: FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                   {pod.environment.map((env, envIdx) => (
                     <div
-                      className="flex items-center divide-x divide-gray-500 rounded-md border border-gray-500"
+                      className="flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500"
                       key={index}
                     >
                       <input
@@ -387,9 +388,12 @@ const HelmTemplate: FC = () => {
                             e.target.value,
                           )
                         }
-                        className={cn('h-12 w-full px-2 outline-none', {
-                          'rounded-e-md': index === 0,
-                        })}
+                        className={cn(
+                          'dark:bg-black-1 h-12 w-full px-2 outline-none',
+                          {
+                            'rounded-e-md': index === 0,
+                          },
+                        )}
                       />
                       {envIdx > 0 && (
                         <button
@@ -450,7 +454,7 @@ const HelmTemplate: FC = () => {
                     onChange={(e) =>
                       updatePod(index, ['ingress', 'host'], e.target.value)
                     }
-                    className="w-full rounded-md px-3 py-2 outline-none"
+                    className="w-full rounded-md border border-gray-200 px-3 py-2 outline-none dark:border-none"
                   />
                 </div>
               </div>

@@ -13,9 +13,14 @@ export default {
         orange: {
           base: "#f86609"
         },
+        "black-1": "#121212"
       }
     }
   },
   plugins: [require("tailwind-scrollbar"), require('daisyui')],
+  daisyui: {
+    themes: ["light", "dark"],
+  },
+  darkMode: ['selector', '[data-theme="dark"]']
 }
 

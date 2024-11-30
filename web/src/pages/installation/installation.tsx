@@ -12,6 +12,7 @@ import Select, { SingleValue } from 'react-select';
 import { osSelectOptions, toolSelectOptions } from './data/select-options';
 import { selectStyle } from './styles/select';
 import { OptionType } from '@/types/select.types';
+import { useStyle } from '@/hooks';
 
 const Installation: FC = () => {
   const { mutateAsync, isPending } = usePost<
@@ -21,6 +22,7 @@ const Installation: FC = () => {
 
   const [os, setOs] = useState<SingleValue<OptionType>>();
   const [tool, setTool] = useState<SingleValue<OptionType>>();
+  const { darkMode } = useStyle();
 
   const handleInstall = async (e: FormEvent) => {
     e.preventDefault();
@@ -68,14 +70,14 @@ const Installation: FC = () => {
             placeholder="os"
             value={os}
             onChange={(newValue) => setOs(newValue)}
-            styles={selectStyle('6px 6px 0 0')}
+            styles={selectStyle('6px 6px 0 0', darkMode)}
           />
           <Select
             options={toolSelectOptions}
             placeholder="tool"
             value={tool}
             onChange={(newValue) => setTool(newValue)}
-            styles={selectStyle('0 0 6px 6px')}
+            styles={selectStyle('0 0 6px 6px', darkMode)}
           />
         </div>
         <button

@@ -26,14 +26,14 @@ const menu = [
 
 const TerraformTemplate: FC = () => {
   return (
-    <div className="flex h-dvh items-center">
+    <div className="flex h-[calc(100vh-56px)] items-center">
       <div className="flex h-full w-full max-w-96 flex-col items-center justify-center divide-y divide-gray-500 border-r border-gray-500">
         {menu.map((link) => (
           <NavLink
             key={link.url}
             to={link.url}
             className={({ isActive }) =>
-              `block w-full p-4 text-center outline-none transition-all ${isActive ? 'bg-orange-base' : ''}`
+              `block w-full p-4 text-center text-black outline-none transition-all dark:text-white ${isActive ? 'bg-orange-base text-white' : ''}`
             }
           >
             {link.title}

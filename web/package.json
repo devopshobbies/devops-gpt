@@ -26,7 +26,8 @@
     "react-spinners": "^0.14.1",
     "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

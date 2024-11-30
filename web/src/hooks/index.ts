@@ -1,3 +1,4 @@
 import useDownload from './useDownload';
+import useStyle from './useStyle';
 
-export { useDownload };
+export { useDownload, useStyle };

@@ -30,3 +30,20 @@ class AnsibleInstallDocker(AnsibleBase):
         if value not in valid_oss:
             raise ValueError(f"your selected OS must be in {valid_oss}")
         return value
+    
+    
+    
+class AnsibleInstallKuber(AnsibleBase):
+    os: str = 'ubuntu'
+    k8s_worker_nodes: List[str]
+    k8s_master_nodes: List[str]
+    lb_nodes: List[str]
+    
+    
+    @validator("os")
+    def validator_os(cls, value):
+        valid_oss = ['ubuntu']
+        if value not in valid_oss:
+            raise ValueError(f"your selected OS must be in {valid_oss}")
+        return value
+    

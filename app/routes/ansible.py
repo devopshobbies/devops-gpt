@@ -1,8 +1,8 @@
 from app.app_instance import app
 from app.gpt_services import gpt_service
 from app.services import (write_installation,edit_directory_generator,execute_pythonfile)
-
-from app.models import (AnsibleInstallNginx,AnsibleInstallDocker,Output)
+from app.routes.utils import add_files_to_folder
+from app.models import (AnsibleInstallNginx,AnsibleInstallDocker,Output,AnsibleInstallKuber)
 
 from app.models import (AnsibleInstallNginx,Output)
 
@@ -32,4 +32,18 @@ async def ansible_install_generation_docker(request:AnsibleInstallDocker) -> Out
         output = gpt_service(generated_prompt)
         edit_directory_generator("ansible_generator",output)
         execute_pythonfile("MyAnsible","ansible_generator")
+        return Output(output='output')
+    
+    
+@app.post("/ansible-install/kuber/")
+async def ansible_install_generation_kuber(request:AnsibleInstallKuber) -> Output:
+    
+        if os.environ.get("TEST"):
+            return Output(output='output')
+        generated_prompt = ansible_install_template(request,"kuber")
+
+        output = gpt_service(generated_prompt)
+        edit_directory_generator("ansible_generator",output)
+        execute_pythonfile("MyAnsible","ansible_generator")
+        add_files_to_folder(files = [] , folder='app/media/MyAnsible')
         return Output(output='output')

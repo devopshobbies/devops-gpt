@@ -1,0 +1,28 @@
+# HAProxy Statistics Report Page
+frontend stats-frontend
+  bind *:8080
+  mode http
+  stats enable
+  stats hide-version
+  stats uri /stats
+  stats realm Haproxy\ Statistics
+  stats auth admin:{{ haproxy_frontend_password }}  # Change 'admin:password' to your desired strong username and password
+
+# No backend is required for exporting stats in HAProxy.
+
+
+frontend kubernetes-frontend
+  bind *:6443
+  mode tcp
+  option tcplog
+  default_backend kubernetes-backend
+
+backend kubernetes-backend
+  option httpchk GET /healthz
+  http-check expect status 200
+  mode tcp
+  option ssl-hello-chk
+  balance roundrobin
+{% for host in groups['k8s_masters'] %}
+    server {{ host }} {{ hostvars[host]['private_ip'] }}:6443 check fall 3 rise 2
+{% endfor %}

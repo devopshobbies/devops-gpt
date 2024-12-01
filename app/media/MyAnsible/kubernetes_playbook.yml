@@ -1,0 +1,6 @@
+- hosts: all
+  roles:
+    - role: preinstall
+  gather_facts: yes
+  any_errors_fatal: true
+  tags: [preinstall]

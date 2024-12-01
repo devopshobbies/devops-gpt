@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException,Response
 from fastapi.responses import FileResponse
 import os
 import zipfile
+import shutil
 
 
 def zip_folder(folder_path: str, output_zip_path: str):
@@ -21,6 +22,8 @@ def add_files_to_folder(files:list,folder:str):
 
     for filename in files:
         os.path.join(folder, filename)
+        destination_file = os.path.join(folder, os.path.basename(filename))
+        shutil.copy(filename, destination_file)
 
 
 @app.get("/download-folder{folder_name}/{source}")

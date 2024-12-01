@@ -1,0 +1,26 @@
+vrrp_script check_apiserver {
+  script "/etc/keepalived/check_apiserver.sh"
+  interval 3 # check api server every 3 seconds
+  timeout 10 # timeout second if api server doesn't answered
+  fall 5 # failed time
+  rise 2 # success 2 times
+  weight -2 # if failed is done it reduce 2 of the weight
+}
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface {{ interface_name }} # set your interface
+    virtual_router_id 1
+    priority 100
+    advert_int 5
+    authentication {
+        auth_type PASS
+        auth_pass mysecret
+    }
+    virtual_ipaddress {
+        {{ virtual_ip }}
+    }
+    track_script {
+        check_apiserver
+    }
+}

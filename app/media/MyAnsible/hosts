@@ -1,2 +1,17 @@
-[docker_nodes]
-www.example.com
+[all]
+string private_ip=x.x.x.x
+string private_ip=x.x.x.x
+string private_ip=x.x.x.x
+
+[k8s]
+string
+string
+
+[k8s_masters]
+string
+
+[k8s_workers]
+string
+
+[lb]
+string

@@ -15,11 +15,14 @@ class EnvironmentVariable(BaseModel):
 class Volume(BaseModel):
     local_dir: str = './nginx/nginx.conf'
     container_dir:str = '/etc/nginx/nginx.conf'
-    
+
+class Build(BaseModel):
+    context:str
+    dockerfile:str
 class Service(BaseModel):
     image:str = 'nginx'
     container_name:str = 'web_server'
-    build: str = False
+    build: Build | None = None
     version:str = 'latest'
     volumes:List[Volume]
     depends_on:List[str]

@@ -18,6 +18,8 @@ class Volume(BaseModel):
     
 class Service(BaseModel):
     image:str = 'nginx'
+    container_name:str = 'web_server'
+    build: str = False
     version:str = 'latest'
     volumes:List[Volume]
     depends_on:List[str]

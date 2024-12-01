@@ -14,6 +14,7 @@ def zip_folder(folder_path: str, output_zip_path: str):
                 # Add file to the zip file
                 zip_file.write(file_path, os.path.relpath(file_path, folder_path))
 
+
 def add_files_to_folder(files:list,folder:str):
     
     os.makedirs(folder, exist_ok=True)

@@ -1,30 +1,22 @@
-// components/form/FormWrapper.tsx
 import * as Form from '@radix-ui/react-form';
-import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import { FormConfig } from '../../types/form.types';
 
-interface FormWrapperProps<T extends z.ZodType> extends FormConfig<T> {
+interface FormWrapperProps<T extends z.ZodType>
+  extends Omit<FormConfig<T>, 'mode'> {
   children: React.ReactNode;
   onSubmit: (data: z.infer<T>) => void;
+  methods: UseFormReturn<z.infer<T>>;
 }
 
 export const FormWrapper = <T extends z.ZodType>({
   children,
   onSubmit,
-  schema,
-  defaultValues,
-  mode = 'onChange',
+  methods,
 }: FormWrapperProps<T>) => {
-  const methods = useForm({
-    defaultValues,
-    resolver: schema ? zodResolver(schema) : undefined,
-    mode,
-  });
-
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...methods} >
       <Form.Root
         onSubmit={methods.handleSubmit(onSubmit)}
         className="text-black dark:text-white"

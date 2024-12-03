@@ -76,7 +76,7 @@ const podSchema = zod.object({
 });
 
 export const helmTemplateSchema = zod.object({
-  api_version: zod.number().min(1, 'API version is required'),
+  api_version: zod.string().min(1, 'API version is required'),
   pods: zod.array(podSchema).min(1, 'At least one pod is required'),
 });
 export type HelmTemplateSchema = zod.infer<typeof helmTemplateSchema>;

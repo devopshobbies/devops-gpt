@@ -325,7 +325,7 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
               name={`pods.${podIndex}.environment.${envIdx}.name`}
               label=""
               placeholder="Env"
-              className="h-12 divide-gray-200 rounded-md rounded-s-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500"
+              className="h-12 w-full divide-gray-200 rounded-md rounded-e-md rounded-s-md border border-gray-200 px-2 outline-none dark:divide-gray-500 dark:border-gray-500 dark:bg-black-1"
             />
             <FormInput
               id={`env_value_${envIdx}`}
@@ -333,7 +333,7 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
               label=""
               placeholder="Hi"
               className={cn(
-                'h-12 w-full divide-gray-200 rounded-md border border-gray-200 px-2 outline-none dark:divide-gray-500 dark:border-gray-500 dark:bg-black-1',
+                'h-12 w-full divide-gray-200 rounded-md rounded-e-md border border-gray-200 px-2 outline-none dark:divide-gray-500 dark:border-gray-500 dark:bg-black-1',
                 {
                   'rounded-e-md': envIdx === 0,
                 },

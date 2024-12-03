@@ -319,25 +319,25 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
       </div>
       <div className="grid grid-cols-2 gap-4">
         {fields.map((field, envIdx) => (
-          <div className="flex" key={field.id}>
+          <div
+            className="flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500"
+            key={field.id}
+          >
             <FormInput
               id={`env_name_${envIdx}`}
               name={`pods.${podIndex}.environment.${envIdx}.name`}
               label=""
               placeholder="Env"
-              className="h-12 w-full divide-gray-200 rounded-md rounded-e-md rounded-s-md border border-gray-200 px-2 outline-none dark:divide-gray-500 dark:border-gray-500 dark:bg-black-1"
+              className="h-12 w-full rounded-s-md px-2 outline-none"
             />
             <FormInput
               id={`env_value_${envIdx}`}
               name={`pods.${podIndex}.environment.${envIdx}.value`}
               label=""
               placeholder="Hi"
-              className={cn(
-                'h-12 w-full divide-gray-200 rounded-md rounded-e-md border border-gray-200 px-2 outline-none dark:divide-gray-500 dark:border-gray-500 dark:bg-black-1',
-                {
-                  'rounded-e-md': envIdx === 0,
-                },
-              )}
+              className={cn('h-12 w-full rounded-s-md px-2 outline-none', {
+                'rounded-e-md': envIdx === 0,
+              })}
             />
             {envIdx > 0 && (
               <button

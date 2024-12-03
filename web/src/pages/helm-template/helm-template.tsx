@@ -61,10 +61,7 @@ const HelmTemplate: FC = () => {
     defaultValues,
   });
 
-  const { control, getFieldState, watch } = methods;
-
-  console.log(getFieldState('pods'));
-  console.log(watch());
+  const { control } = methods;
 
   const {
     fields: pods,

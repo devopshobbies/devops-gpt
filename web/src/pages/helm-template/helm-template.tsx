@@ -36,7 +36,7 @@ const HelmTemplate: FC = () => {
   });
 
   const defaultValues = {
-    api_version: "1",
+    api_version: '',
     pods: [
       {
         name: '',
@@ -174,7 +174,7 @@ const HelmTemplate: FC = () => {
                   className={cn(
                     'h-full max-h-0 overflow-hidden px-1 transition-all duration-500',
                     {
-                      'max-h-[1000px]': openPod === index,
+                      'max-h-[1500px]': openPod === index,
                     },
                   )}
                 >
@@ -320,7 +320,7 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
       <div className="grid grid-cols-2 gap-4">
         {fields.map((field, envIdx) => (
           <div
-            className="flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0 mb-4"
+            className="mb-4 flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0"
             key={field.id}
           >
             <FormInput

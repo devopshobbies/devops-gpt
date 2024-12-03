@@ -59,7 +59,7 @@ const persistanceSchema = zod.object({
 
 const ingressSchema = zod.object({
   enabled: zod.boolean(),
-  host: zod.string(),
+  host: zod.string().min(1, 'Host is required'),
 });
 
 const podSchema = zod.object({

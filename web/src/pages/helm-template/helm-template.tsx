@@ -320,7 +320,7 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
       <div className="grid grid-cols-2 gap-4">
         {fields.map((field, envIdx) => (
           <div
-            className="flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0"
+            className="flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0 mb-4"
             key={field.id}
           >
             <FormInput

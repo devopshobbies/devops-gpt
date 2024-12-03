@@ -34,14 +34,16 @@ export const FormSelect = ({
 
   return (
     <Form.Field className="form-field" name={name}>
-      <div className="mb-2 flex items-baseline justify-between">
-        <Form.Label className="form-label">{label} :</Form.Label>
-        {errorMessage && (
-          <Form.Message className="form-message text-red-500">
-            {errorMessage}
-          </Form.Message>
-        )}
-      </div>
+      {label && (
+        <div className="mb-2 flex items-baseline justify-between">
+          <Form.Label className="form-label">{label} :</Form.Label>
+          {errorMessage && (
+            <Form.Message className="form-message text-red-500">
+              {errorMessage}
+            </Form.Message>
+          )}
+        </div>
+      )}
       <Form.Control asChild>
         <Controller
           name={name}

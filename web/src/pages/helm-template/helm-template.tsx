@@ -43,7 +43,12 @@ const HelmTemplate: FC = () => {
         target_port: null,
         replicas: null,
         persistance: {},
-        environment: [],
+        environment: [
+          {
+            name: '',
+            value: '',
+          },
+        ],
         stateless: false,
         ingress: {},
       },
@@ -101,8 +106,8 @@ const HelmTemplate: FC = () => {
 
   return (
     <div className="flex h-[calc(100%-56px)] w-full justify-center overflow-y-auto p-4 text-black-1 scrollbar-thin dark:text-white">
-      <FormWrapper methods={methods} onSubmit={handleSubmit}>
-        <div className="h-full w-full max-w-[768px]">
+      <div className="h-full w-full max-w-[768px]">
+        <FormWrapper methods={methods} onSubmit={handleSubmit}>
           <div className="mb-4 flex w-full flex-col">
             <FormInput
               label="Api Version"
@@ -197,7 +202,7 @@ const HelmTemplate: FC = () => {
                   <p className="mb-2 mt-6 text-base font-bold">Persistence</p>
                   <div className="mb-2 flex flex-col">
                     <p className="mb-1">Size</p>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 [&>div]:flex-1">
                       <FormInput
                         name={`pods.${index}.persistance.size`}
                         label=""
@@ -213,6 +218,7 @@ const HelmTemplate: FC = () => {
                     </div>
                   </div>
                   <div className="mb-2 flex flex-col">
+                    <label className="mb-1">Access Modes</label>
                     <FormSelect
                       name={`pods.${index}.persistance.accessModes`}
                       options={accessModesOptions}
@@ -220,23 +226,27 @@ const HelmTemplate: FC = () => {
                       placeholder="Select..."
                     />
                   </div>
-                  <div className="mb-2 mt-6 flex items-center">
-                    <p className="text-base font-bold">Environments</p>
-                  </div>
+
                   <PodEnvironmentFields podIndex={index} />
                   <div className="mb-2 mt-7 flex justify-between">
+                    <label htmlFor="pods_stateless" className="mb-1">
+                      Stateless
+                    </label>
                     <FormCheckbox
                       id="pods_stateless"
                       name={`pods.${index}.stateless`}
-                      label="Stateless"
+                      label=""
                     />
                   </div>
                   <p className="mb-2 mt-6 text-base font-bold">Ingress</p>
                   <div className="mb-2 mt-3 flex justify-between">
+                    <label htmlFor="pods_stateless" className="mb-1">
+                      Enabled
+                    </label>
                     <FormCheckbox
                       id="pods_ingress_enabled"
                       name={`pods.${index}.ingress.enabled`}
-                      label="Enabled"
+                      label=""
                     />
                   </div>
                   <div className="mb-2 mt-3 flex flex-col">
@@ -262,8 +272,8 @@ const HelmTemplate: FC = () => {
                 ? 'Downloading...'
                 : 'Generate'}
           </button>
-        </div>
-      </FormWrapper>
+        </FormWrapper>
+      </div>
     </div>
   );
 };
@@ -284,8 +294,10 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
   });
 
   return (
-    <>
+    <div className="mb-2 mt-6">
       <div className="mb-2 flex items-center">
+        <p className="text-base font-bold">Environments</p>
+
         <button
           type="button"
           onClick={() => append({ name: '', value: '' })}
@@ -312,8 +324,8 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
               name={`pods.${podIndex}.environment.${envIdx}.value`}
               label=""
               placeholder="Hi"
-              className={cn('h-12', {
-                'rounded-e-md': podIndex === 0,
+              className={cn('h-12 w-full px-2 outline-none dark:bg-black-1', {
+                'rounded-e-md': envIdx === 0,
               })}
             />
             {envIdx > 0 && (
@@ -327,6 +339,6 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };

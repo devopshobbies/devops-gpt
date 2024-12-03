@@ -1,6 +1,5 @@
 def ansible_kuber_install(input):
    
-
     kubernetes_ansible_port = input.ansible_port
     kubernetes_ansible_user = input.ansible_user
     k8s_master_nodes = input.k8s_master_nodes
@@ -36,6 +35,10 @@ def ansible_kuber_install(input):
     groups_k8s_masters_in_task = "{{ groups['k8s_masters'][0] }}"
     calico_operator_url_in_task = "{{ calico_operator_url }}"
     calico_crd_url_in_task = "{{ calico_crd_url }}"
+    join_command_stdout_lines_in_task = "{{ join_command.stdout_lines[0] }}"
+    kubeadm_cert_key_stdout_lines_in_task = "{{ kubeadm_cert_key.stdout_lines[2] }}"
+    hostvars_k8s_masters_control_plane_certkey_in_task = "{{ hostvars[groups['k8s_masters'][0]].control_plane_certkey }}"
+    cri_socket_in_task = "{{ cri_socket }}"
 
 
 
@@ -97,6 +100,20 @@ def ansible_kuber_install(input):
                       ├── templates
                       │   └── kubeadmcnf.yml.j2
                       └── vars
+                      |    └── main.yml
+                      join_master
+                      ├── defaults
+                      │   └── main.yml
+                      ├── files
+                      │   └── sample.sh
+                      ├── handlers
+                      │   └── main.yml
+                      ├── tasks
+                      │   └── join_master.yml
+                      │   └── main.yml
+                      ├── templates
+                      │   └── kubeadmcnf-join.yml.j2
+                      └── vars
                           └── main.yml
               ```
             - The content of ansible.cfg must be as follows:
@@ -109,6 +126,7 @@ def ansible_kuber_install(input):
               # General
               install_ansible_modules: "true"
               disable_transparent_huge_pages: "true"
+
               setup_interface: "false"
 
               # Network Calico see here for more details https://github.com/projectcalico/calico/releases
@@ -176,6 +194,15 @@ def ansible_kuber_install(input):
                 gather_facts: yes
                 any_errors_fatal: true
                 tags: [init_k8s]
+
+              - hosts: k8s_masters
+                roles:
+                  - role: preinstall
+                  - role: k8s
+                  - role: join_master
+                gather_facts: yes
+                any_errors_fatal: true
+                tags: [join_master]
               ```
             - There is a directory called "roles" which a sub-directory called "preinstall" (roles/preinstall):
               "preinstall" has multiple sub-directories, so let's dive deeper into each its sub-directories:
@@ -602,6 +629,123 @@ def ansible_kuber_install(input):
 
                    - name: Initialize Calico CNI
                      include_tasks: cni.yml
+                   ```
+            - There is a directory called "roles" which a sub-directory called "join_master" (roles/join_master):
+              "join_master" has multiple sub-directories, so let's dive deeper into each its sub-directories:
+                 - (join_master/tasks): This path has two files called "join_master.yml" and "main.yml".
+
+                   1. Create "join_master/tasks/join_master.yml" and it must be as follows:"
+                   ```
+                   - name: Init cluster | Check if kubeadm has already run
+                     stat:
+                       path: "/var/lib/kubelet/config.yaml"
+                     register: kubeadm_already_run
+
+                   - block:
+                       - name: Generate join command
+                         command: kubeadm token create --print-join-command
+                         register: join_command
+
+                       - name: Print join command
+                         debug:
+                           msg: "{join_command_stdout_lines_in_task}"
+
+                       - name: Copy join command to local file
+                         become: false
+                         local_action: copy content="{join_command_stdout_lines_in_task} $@" dest="roles/join_master/files/join-command"
+
+                       - name: copy kubeadmcnf.yaml
+                         template:
+                           src: kubeadmcnf-join.yml.j2
+                           dest: /root/kubeadm-config.yaml
+
+                     when:
+                       - inventory_hostname == groups['k8s_masters'][0]
+                     delegate_to: "{groups_k8s_masters_in_task}"
+
+                   - block:
+                       - name: Copy the join command to server location
+                         copy:
+                           src: roles/join_master/files/join-command
+                           dest: /root/join-command.sh
+                           mode: "0777"
+
+                     when:
+                       - inventory_hostname != groups['k8s_masters'][0]
+                       - inventory_hostname in groups['k8s_masters']
+                       - not kubeadm_already_run.stat.exists
+
+                   - block:
+                       - name: get certificate key
+                         shell: kubeadm init phase upload-certs --upload-certs --config=/root/kubeadm-config.yaml
+                         register: kubeadm_cert_key
+
+                       - name: Print certificate key
+                         debug:
+                           msg: "{kubeadm_cert_key_stdout_lines_in_task}"
+
+                       - name: register the cert key
+                         set_fact:
+                           control_plane_certkey: "{kubeadm_cert_key_stdout_lines_in_task}"
+
+                     when:
+                       - inventory_hostname  in groups['k8s_masters'][0]
+                     delegate_to: "{groups_k8s_masters_in_task}"
+                     run_once: false
+                     delegate_facts: true
+
+                   - name: Join | Join control-plane to cluster
+                     command: "sh /root/join-command.sh --control-plane --certificate-key={hostvars_k8s_masters_control_plane_certkey_in_task}  --cri-socket={cri_socket_in_task}"
+                     when:
+                       - inventory_hostname != groups['k8s_masters'][0]
+                       - inventory_hostname in groups['k8s_masters']
+                       - not kubeadm_already_run.stat.exists
+
+                   - block:
+                       - name: Create kubectl directory
+                         file:
+                           path: /root/.kube
+                           state: directory
+
+                       - name: Configure kubectl
+                         copy:
+                           src: /etc/kubernetes/admin.conf
+                           dest: /root/.kube/config
+                           remote_src: yes
+
+                       - name: Fetch kubeconfig
+                         fetch:
+                           src: /etc/kubernetes/admin.conf
+                           dest: kubeconfig/
+                           flat: yes
+                     when:
+                       - inventory_hostname != groups['k8s_masters'][0]
+                       - inventory_hostname in groups['k8s_masters']
+                       - not kubeadm_already_run.stat.exists
+
+                   - name: remove apiserver_url to point to the masters temporary
+                     lineinfile:
+                       dest: /etc/hosts
+                       line: "{hostvars_groups_k8s_masters_private_ip_in_task} {apiserver_url_in_task}"
+                       state: absent
+
+
+                   - name: Add apiserver_url to point to the masters"
+                     lineinfile:
+                       dest: /etc/hosts
+                       line: "{private_ip_in_task} {apiserver_url_in_task}"
+                       state: present
+                     when:
+                       - inventory_hostname in groups['k8s_masters']
+                   ```
+                   2. Create join_master/tasks/main.yml and it must be as follows:"
+                   ```
+                   ---
+                   # tasks file for join_master
+
+                   - name: Join master(s) node to cluster
+                     include_tasks: join_master.yml
+
                    ```
                     finally just give me a python code without any note that can generate a project folder with the
                     given schema without ```python entry. and we dont need any base directory in the python code.

@@ -12,6 +12,7 @@ services:
       - foo=bar
     networks:
       - app_network
+
   monitoring_server:
     image: grafana:latest
     volumes:
@@ -24,6 +25,7 @@ services:
       - foo=bar
     networks:
       - app_network
+      
 networks:
   app_network:
     driver: bridge

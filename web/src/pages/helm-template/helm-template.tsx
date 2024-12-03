@@ -36,7 +36,7 @@ const HelmTemplate: FC = () => {
   });
 
   const defaultValues = {
-    api_version: 1,
+    api_version: "1",
     pods: [
       {
         name: '',

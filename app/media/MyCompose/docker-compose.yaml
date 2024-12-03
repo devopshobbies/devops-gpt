@@ -1,4 +1,29 @@
+version: '3'
 services:
   web_server:
     image: nginx:latest
-    build:
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - string
+    ports:
+      - '80:80'
+    environment:
+      - foo=bar
+    networks:
+      - app_network
+  monitoring_server:
+    image: grafana:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - string
+    ports:
+      - '82:80'
+    environment:
+      - foo=bar
+    networks:
+      - app_network
+networks:
+  app_network:
+    driver: bridge

@@ -17,11 +17,6 @@ export const FormInput = ({ name, label, error, ...props }: FormFieldProps) => {
       {label && (
         <div className="mb-2 flex items-baseline justify-between">
           <Form.Label className="form-label">{label} :</Form.Label>
-          {errorMessage && (
-            <Form.Message className="form-message text-sm text-red-500">
-              {errorMessage}
-            </Form.Message>
-          )}
         </div>
       )}
       <Form.Control asChild>
@@ -31,6 +26,11 @@ export const FormInput = ({ name, label, error, ...props }: FormFieldProps) => {
           {...props}
         />
       </Form.Control>
+      {errorMessage && (
+        <Form.Message className="form-message ml-auto text-sm text-red-500">
+          {errorMessage}
+        </Form.Message>
+      )}
     </Form.Field>
   );
 };

@@ -23,8 +23,8 @@ export interface helmTemplateValidationError {
 export interface Pod {
   name: string;
   image: string;
-  target_port: number | null;
-  replicas: number | null;
+  target_port: string | null;
+  replicas: string | null;
   persistance: {
     size: string;
     accessModes: string;
@@ -46,21 +46,27 @@ const environmentSchema = zod.object({
   value: zod.string().min(1, 'Value is required'),
 });
 
+const labelValueSchema = zod.object({
+  label: zod.string(),
+  value: zod.string(),
+});
+
 const persistanceSchema = zod.object({
+  mode: labelValueSchema,
   size: zod.string().min(1, 'Size is required'),
-  accessModes: zod.string().min(1, 'Access mode is required'),
+  accessModes: labelValueSchema,
 });
 
 const ingressSchema = zod.object({
   enabled: zod.boolean(),
-  host: zod.string().url('Must be a valid URL'),
+  host: zod.string(),
 });
 
 const podSchema = zod.object({
   name: zod.string().min(1, 'Name is required'),
   image: zod.string().min(1, 'Image is required'),
-  target_port: zod.number().nullable(),
-  replicas: zod.number().nullable(),
+  target_port: zod.string().nullable(),
+  replicas: zod.string().nullable(),
   persistance: persistanceSchema,
   environment: zod
     .array(environmentSchema)
@@ -73,3 +79,4 @@ export const helmTemplateSchema = zod.object({
   api_version: zod.number().min(1, 'API version is required'),
   pods: zod.array(podSchema).min(1, 'At least one pod is required'),
 });
+export type HelmTemplateSchema = zod.infer<typeof helmTemplateSchema>;

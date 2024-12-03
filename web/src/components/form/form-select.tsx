@@ -3,6 +3,9 @@ import * as Form from '@radix-ui/react-form';
 import { Controller, useFormContext } from 'react-hook-form';
 import { FormFieldProps } from '../../types/form.types';
 import Select from 'react-select';
+import { getNestedValue } from '@/lib/helper';
+import { selectStyle } from '@/pages/helm-template/styles/helm-template.style';
+import { useStyle } from '@/hooks';
 
 interface OptionType {
   value: string;
@@ -29,7 +32,9 @@ export const FormSelect = ({
     formState: { errors },
   } = useFormContext();
 
-  const fieldError = errors[name];
+  const { darkMode } = useStyle();
+
+  const fieldError = getNestedValue(errors, name);
   const errorMessage = fieldError?.message as string;
 
   return (
@@ -37,11 +42,6 @@ export const FormSelect = ({
       {label && (
         <div className="mb-2 flex items-baseline justify-between">
           <Form.Label className="form-label">{label} :</Form.Label>
-          {errorMessage && (
-            <Form.Message className="form-message text-red-500">
-              {errorMessage}
-            </Form.Message>
-          )}
         </div>
       )}
       <Form.Control asChild>
@@ -55,10 +55,16 @@ export const FormSelect = ({
               placeholder={placeholder}
               className="w-full"
               {...props}
+              styles={selectStyle(darkMode)}
             />
           )}
         />
       </Form.Control>
+      {errorMessage && (
+        <Form.Message className="form-message mt-1 text-red-500">
+          {errorMessage}
+        </Form.Message>
+      )}
     </Form.Field>
   );
 };

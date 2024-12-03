@@ -6,6 +6,7 @@ import { API } from '@/enums/api.enums';
 import {
   HelmTemplateBody,
   HelmTemplateResponse,
+  HelmTemplateSchema,
   helmTemplateSchema,
   helmTemplateValidationError,
 } from './helm-template.types';
@@ -60,7 +61,10 @@ const HelmTemplate: FC = () => {
     defaultValues,
   });
 
-  const { control } = methods;
+  const { control, getFieldState, watch } = methods;
+
+  console.log(getFieldState('pods'));
+  console.log(watch());
 
   const {
     fields: pods,
@@ -81,13 +85,23 @@ const HelmTemplate: FC = () => {
     remove(index);
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: HelmTemplateSchema) => {
     try {
-      console.log(data);
+      const body_data = data.pods.map((data) => {
+        const { mode, accessModes, size } = data.persistance;
+
+        return {
+          ...data,
+          persistance: {
+            size: `${size}${mode.value}`,
+            accessModes: accessModes.value,
+          },
+        };
+      });
 
       const body: HelmTemplateBody = {
-        api_version: parseInt(data.apiVersion),
-        pods: data.pods,
+        api_version: data.api_version,
+        pods: body_data,
       };
 
       await helmTemplateMutate(body);
@@ -202,7 +216,7 @@ const HelmTemplate: FC = () => {
                   <p className="mb-2 mt-6 text-base font-bold">Persistence</p>
                   <div className="mb-2 flex flex-col">
                     <p className="mb-1">Size</p>
-                    <div className="flex items-center gap-3 [&>div]:flex-1">
+                    <div className="flex gap-3 [&>div]:flex-1">
                       <FormInput
                         name={`pods.${index}.persistance.size`}
                         label=""
@@ -210,7 +224,7 @@ const HelmTemplate: FC = () => {
                       />
 
                       <FormSelect
-                        name={`pods.${index}.persistance.size`}
+                        name={`pods.${index}.persistance.mode`}
                         label=""
                         placeholder="Select..."
                         options={sizeOptions}
@@ -252,7 +266,7 @@ const HelmTemplate: FC = () => {
                   <div className="mb-2 mt-3 flex flex-col">
                     <FormInput
                       id="pods_ingress_host"
-                      name="ingress.host"
+                      name={`pods.${index}.ingress.host`}
                       label="Host"
                       placeholder="www.example.com"
                     />
@@ -308,25 +322,25 @@ export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
       </div>
       <div className="grid grid-cols-2 gap-4">
         {fields.map((field, envIdx) => (
-          <div
-            className="flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500"
-            key={field.id}
-          >
+          <div className="flex" key={field.id}>
             <FormInput
               id={`env_name_${envIdx}`}
               name={`pods.${podIndex}.environment.${envIdx}.name`}
               label=""
               placeholder="Env"
-              className="h-12 rounded-s-md"
+              className="h-12 divide-gray-200 rounded-md rounded-s-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500"
             />
             <FormInput
               id={`env_value_${envIdx}`}
               name={`pods.${podIndex}.environment.${envIdx}.value`}
               label=""
               placeholder="Hi"
-              className={cn('h-12 w-full px-2 outline-none dark:bg-black-1', {
-                'rounded-e-md': envIdx === 0,
-              })}
+              className={cn(
+                'h-12 w-full divide-gray-200 rounded-md border border-gray-200 px-2 outline-none dark:divide-gray-500 dark:border-gray-500 dark:bg-black-1',
+                {
+                  'rounded-e-md': envIdx === 0,
+                },
+              )}
             />
             {envIdx > 0 && (
               <button

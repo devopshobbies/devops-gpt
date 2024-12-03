@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel, validator, ValidationError
+from pydantic import BaseModel, validator, ValidationError, computed_field
 
 class Port(BaseModel):
     machine_port:int = 80
@@ -12,9 +12,19 @@ class EnvironmentVariable(BaseModel):
     name:str = 'foo'
     value:str = "bar"
     
+    @computed_field
+    @property
+    def env_full(self) -> int:
+        return f"{self.name}:{self.value}"
+    
 class Volume(BaseModel):
     local_dir: str = './nginx/nginx.conf'
     container_dir:str = '/etc/nginx/nginx.conf'
+    
+    @computed_field
+    @property
+    def volume(self) -> int:
+        return f"{self.local_dir}:{self.container_dir}"
 
 class Build(BaseModel):
     context:str
@@ -29,6 +39,17 @@ class Service(BaseModel):
     ports:List[Port]
     networks:List[Network]
     environments:List[EnvironmentVariable]
+    
+    @computed_field
+    @property
+    def image_full(self) -> int:
+        return f"{self.image}:{self.version}"
+    
+    @computed_field
+    @property
+    def volumes_full(self) -> int:
+        return [i.volume for i in self.volumes]
+    
     
       
 class DockerCompose(BaseModel):

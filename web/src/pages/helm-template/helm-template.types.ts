@@ -66,7 +66,7 @@ const podSchema = zod.object({
   name: zod.string().min(1, 'Name is required'),
   image: zod.string().min(1, 'Image is required'),
   target_port: zod.string().nullable(),
-  replicas: zod.string().nullable(),
+  replicas: zod.string().min(1 ,"Replicas is required"),
   persistance: persistanceSchema,
   environment: zod
     .array(environmentSchema)

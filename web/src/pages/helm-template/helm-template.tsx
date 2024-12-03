@@ -42,7 +42,7 @@ const HelmTemplate: FC = () => {
         name: '',
         image: '',
         target_port: null,
-        replicas: null,
+        replicas: "",
         persistance: {},
         environment: [
           {

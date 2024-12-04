@@ -17,13 +17,17 @@ import { FormWrapper } from '@/components/form/form-wrapper';
 import { FormInput } from '@/components/form/form-input';
 import HostsField from './components/hosts-fields';
 import { FormSelect } from '@/components/form/form-select';
-import { OSOptions } from './data/select-options';
+import { OSOptions, versionOptions } from './data/select-options';
 
 const DockerAnsible: FC = () => {
   const defaultValues = {
     ansible_user: '',
     os: { label: 'Ubuntu', value: 'ubuntu' },
     hosts: [{ value: '' }],
+    version: {
+      label: 'Latest',
+      value: 'latest',
+    },
   };
 
   const methods = useForm<DockerAnsible>({
@@ -49,6 +53,7 @@ const DockerAnsible: FC = () => {
         ...data,
         hosts: data.hosts.map((host) => host.value),
         os: data.os.value,
+        version: data.version.value,
       };
 
       await dockerAnsibleMutate(body);
@@ -94,7 +99,17 @@ const DockerAnsible: FC = () => {
             options={OSOptions}
           />
         </div>
-        <HostsField />
+        <div className="mb-4">
+          <HostsField />
+        </div>
+        <div className="mb-4">
+          <FormSelect
+            name={`version`}
+            label="Version"
+            placeholder="Select..."
+            options={versionOptions}
+          />
+        </div>
         <button
           type="submit"
           disabled={dockerAnsiblePending}

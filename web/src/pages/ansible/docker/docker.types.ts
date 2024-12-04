@@ -9,6 +9,7 @@ export interface DockerAnsibleBody {
   ansible_port: number;
   os: string;
   hosts: string[];
+  version: string;
 }
 
 export interface dockerTemplateValidationError {
@@ -38,6 +39,10 @@ export const dockerAnsibleSchema = zod.object({
       }),
     )
     .min(1),
+  version: zod.object({
+    label: zod.string(),
+    value: zod.string(),
+  }),
 });
 
 export type DockerAnsible = zod.infer<typeof dockerAnsibleSchema>;

@@ -16,11 +16,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormWrapper } from '@/components/form/form-wrapper';
 import { FormInput } from '@/components/form/form-input';
 import HostsField from './components/hosts-fields';
+import { FormSelect } from '@/components/form/form-select';
+import { OSOptions } from './data/select-options';
 
 const DockerAnsible: FC = () => {
   const defaultValues = {
     ansible_user: '',
-    os: '',
+    os: { label: 'Ubuntu', value: 'ubuntu' },
     hosts: [{ value: '' }],
   };
 
@@ -36,7 +38,7 @@ const DockerAnsible: FC = () => {
     );
 
   const { download, isPending: downloadPending } = useDownload({
-    downloadFileName: '',
+    downloadFileName: 'DockerAnsible',
     source: 'docker',
     folderName: 'MyAnsible',
   });
@@ -46,6 +48,7 @@ const DockerAnsible: FC = () => {
       const body = {
         ...data,
         hosts: data.hosts.map((host) => host.value),
+        os: data.os.value,
       };
 
       await dockerAnsibleMutate(body);
@@ -61,6 +64,7 @@ const DockerAnsible: FC = () => {
       }
     }
   };
+
   return (
     <div className="w-full max-w-96 text-black dark:text-white">
       <FormWrapper methods={methods} onSubmit={handleSubmit}>
@@ -83,11 +87,11 @@ const DockerAnsible: FC = () => {
           />
         </div>
         <div className="mb-4">
-          <FormInput
-            id="ansible_user"
+          <FormSelect
             name={`os`}
             label="OS"
-            placeholder="ubuntu"
+            placeholder="Select..."
+            options={OSOptions}
           />
         </div>
         <HostsField />

@@ -29,7 +29,7 @@ export const FormInput = ({
       name={name}
     >
       {label && (
-        <div className="mb-1 flex items-baseline justify-between">
+        <div className="flex items-baseline justify-between mb-1">
           <Form.Label className="form-label">{label}</Form.Label>
         </div>
       )}
@@ -37,7 +37,8 @@ export const FormInput = ({
         <input
           type={inputType}
           className={cn(
-            'w-full rounded-md border border-gray-500 px-3 py-2 outline-none',
+            'w-full rounded-md border border-gray-500 px-3 py-2 outline-none transition-all focus:border-orange-base',
+            props.className,
             {
               'border-red-500 dark:border': errorMessage,
             },
@@ -48,7 +49,7 @@ export const FormInput = ({
       </Form.Control>
       {errorMessage && (
         <div className="absolute left-0 top-full">
-          <Form.Message className="form-message ml-auto text-sm text-red-500">
+          <Form.Message className="ml-auto text-sm text-red-500 form-message">
             {errorMessage}
           </Form.Message>
         </div>

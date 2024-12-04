@@ -5,7 +5,7 @@ export interface DockerAnsibleResponse {
 }
 
 export interface DockerAnsibleBody {
-  ansible_user?: string;
+  ansible_user: string;
   ansible_port: number;
   os: string;
   hosts: string[];
@@ -23,9 +23,14 @@ export interface dockerTemplateValidationError {
 }
 
 export const dockerAnsibleSchema = zod.object({
-  ansible_user: zod.string().optional(),
-  ansible_port: zod.number({}),
-  os: zod.string().min(1, 'OS is required!'),
+  ansible_user: zod.string().min(1, 'User is required!'),
+  ansible_port: zod
+    .number({ invalid_type_error: 'Port is required!' })
+    .min(1, 'Port is required!'),
+  os: zod.object({
+    label: zod.string(),
+    value: zod.string(),
+  }),
   hosts: zod
     .array(
       zod.object({

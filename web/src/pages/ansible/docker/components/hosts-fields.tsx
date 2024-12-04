@@ -27,12 +27,11 @@ const HostsField: FC = () => {
               name={`hosts.${hostIdx}.value`}
               label=""
               placeholder="www.example.com"
-              className="w-full h-12 px-2 rounded-md outline-none"
             />
             {hostIdx > 0 && (
               <button
                 onClick={() => remove(hostIdx)}
-                className="absolute right-3 top-4"
+                className="absolute right-3 top-3"
               >
                 <Trash2 className="size-4" />
               </button>

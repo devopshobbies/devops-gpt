@@ -4,9 +4,9 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { FormFieldProps } from '../../types/form.types';
 import Select from 'react-select';
 import { getNestedValue } from '@/lib/helper';
-import { selectStyle } from '@/pages/helm-template/styles/helm-template.style';
 import { useStyle } from '@/hooks';
 import { cn } from '@/lib/utils';
+import { selectStyle } from '@/styles/select.styles';
 
 interface OptionType {
   value: string;
@@ -46,8 +46,8 @@ export const FormSelect = ({
       name={name}
     >
       {label && (
-        <div className="mb-2 flex items-baseline justify-between">
-          <Form.Label className="form-label">{label} :</Form.Label>
+        <div className="mb-1 flex items-baseline justify-between">
+          <Form.Label className="form-label">{label}</Form.Label>
         </div>
       )}
       <Form.Control asChild>
@@ -61,7 +61,7 @@ export const FormSelect = ({
               placeholder={placeholder}
               className="w-full"
               {...props}
-              styles={selectStyle(darkMode)}
+              styles={selectStyle(darkMode, !!errorMessage)}
             />
           )}
         />

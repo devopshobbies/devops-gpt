@@ -8,6 +8,9 @@ export type FormFieldProps = {
   label: string;
   error?: string;
   placeholder?: string;
+  isNumber?: boolean;
+  inputType?: typeof HTMLInputElement.prototype.type;
+  inputClass?: string;
 } & ComponentPropsWithoutRef<typeof Form.Field>;
 
 export type FormConfig<T extends z.ZodType> = {

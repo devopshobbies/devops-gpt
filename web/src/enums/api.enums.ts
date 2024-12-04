@@ -12,3 +12,9 @@ export enum API {
   Installation = '/IaC-install',
   HelmTemplate = '/Helm-template',
 }
+
+export enum AnsibleTemplateAPI {
+  Docker = '/ansible-install/docker',
+  Nginx = '/ansible-install/nginx',
+  Kubernetes = '/ansible-install/kuber',
+}

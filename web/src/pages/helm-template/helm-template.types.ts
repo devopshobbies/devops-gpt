@@ -23,8 +23,6 @@ export interface helmTemplateValidationError {
 export interface Pod {
   name: string;
   image: string;
-  target_port: string | null;
-  replicas: string | null;
   persistance: {
     size: string;
     accessModes: string;
@@ -65,8 +63,12 @@ const ingressSchema = zod.object({
 const podSchema = zod.object({
   name: zod.string().min(1, 'Name is required'),
   image: zod.string().min(1, 'Image is required'),
-  target_port: zod.string().nullable(),
-  replicas: zod.string().min(1 ,"Replicas is required"),
+  target_port: zod
+    .number({ invalid_type_error: 'Target Port is required!' })
+    .min(1, 'Target Port is required!'),
+  replicas: zod
+    .number({ invalid_type_error: 'Replicas is required!' })
+    .min(1, 'Replicas is required'),
   persistance: persistanceSchema,
   environment: zod
     .array(environmentSchema)
@@ -76,7 +78,9 @@ const podSchema = zod.object({
 });
 
 export const helmTemplateSchema = zod.object({
-  api_version: zod.string().min(1, 'API version is required'),
+  api_version: zod
+    .number({ invalid_type_error: 'API version is required!' })
+    .min(1, 'API version is required'),
   pods: zod.array(podSchema).min(1, 'At least one pod is required'),
 });
-export type HelmTemplateSchema = zod.infer<typeof helmTemplateSchema>;
+export type THelmTemplate = zod.infer<typeof helmTemplateSchema>;

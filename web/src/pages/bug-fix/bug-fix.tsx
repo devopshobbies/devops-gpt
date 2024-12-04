@@ -65,7 +65,7 @@ const BugFix: FC = () => {
 
   return (
     <div className="flex h-[calc(100vh-56px)] w-full items-center justify-center text-black dark:text-white">
-      <div className="w-full max-w-[768px]">
+      <div className="w-full max-w-[1024px]">
         <div className="w-full rounded-md p-2">
           <div className="flex h-full w-full items-center justify-center gap-3">
             <div className="flex w-full flex-col">
@@ -77,7 +77,7 @@ const BugFix: FC = () => {
                 type="number"
                 value={minToken}
                 onChange={(e) => setMinToken(e.target.value)}
-                className="dark:bg-black-1 w-full rounded-md bg-gray-200 p-3 outline-none"
+                className="w-full rounded-md bg-gray-200 p-3 outline-none dark:bg-black-1"
               />
             </div>
             <div className="flex w-full flex-col">
@@ -89,7 +89,7 @@ const BugFix: FC = () => {
                 type="number"
                 value={maxToken}
                 onChange={(e) => setMaxToken(e.target.value)}
-                className="dark:bg-black-1 w-full rounded-md bg-gray-200 p-3 outline-none"
+                className="w-full rounded-md bg-gray-200 p-3 outline-none dark:bg-black-1"
               />
             </div>
             <div className="flex w-full flex-col">
@@ -101,7 +101,7 @@ const BugFix: FC = () => {
                 type="text"
                 value={service}
                 onChange={(e) => setService(e.target.value)}
-                className="dark:bg-black-1 w-full rounded-md bg-gray-200 p-3 outline-none"
+                className="w-full rounded-md bg-gray-200 p-3 outline-none dark:bg-black-1"
               />
             </div>
             <div className="flex w-full flex-col">
@@ -113,14 +113,14 @@ const BugFix: FC = () => {
                 type="text"
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
-                className="dark:bg-black-1 w-full rounded-md bg-gray-200 p-3 outline-none"
+                className="w-full rounded-md bg-gray-200 p-3 outline-none dark:bg-black-1"
               />
             </div>
           </div>
           <div className="mt-4">
             <div
               ref={messagesRef}
-              className="h-96 w-full overflow-y-auto rounded-md bg-slate-900 p-3 scrollbar-thin scrollbar-track-transparent scrollbar-corner-transparent"
+              className="h-[550px] w-full overflow-y-auto rounded-md bg-slate-900 p-3 scrollbar-thin scrollbar-track-transparent scrollbar-corner-transparent"
             >
               {messages.map((message) =>
                 message.role === 'user' ? (
@@ -148,7 +148,7 @@ const BugFix: FC = () => {
               value={bugDescription}
               onChange={(e) => setBugDescription(e.target.value)}
               rows={2}
-              className="dark:bg-black-1 w-full resize-none rounded-md bg-gray-200 p-4 pr-16 outline-none"
+              className="w-full resize-none rounded-md bg-gray-200 p-4 pr-16 outline-none dark:bg-black-1"
             />
             <button
               disabled={!bugDescription}

@@ -4,7 +4,15 @@ import { FormFieldProps } from '../../types/form.types';
 import { getNestedValue } from '@/lib/helper';
 import { cn } from '@/lib/utils';
 
-export const FormInput = ({ name, label, error, ...props }: FormFieldProps) => {
+export const FormInput = ({
+  name,
+  label,
+  error,
+  isNumber,
+  inputType,
+  inputClass,
+  ...props
+}: FormFieldProps) => {
   const {
     register,
     formState: { errors },
@@ -21,20 +29,27 @@ export const FormInput = ({ name, label, error, ...props }: FormFieldProps) => {
       name={name}
     >
       {label && (
-        <div className="mb-2 flex items-baseline justify-between">
-          <Form.Label className="form-label">{label} :</Form.Label>
+        <div className="flex items-baseline justify-between mb-1">
+          <Form.Label className="form-label">{label}</Form.Label>
         </div>
       )}
       <Form.Control asChild>
         <input
-          className="w-full rounded-md border border-gray-200 px-3 py-2 outline-none dark:border-none"
-          {...register(name)}
+          type={inputType}
+          className={cn(
+            'w-full rounded-md border border-gray-500 px-3 py-2 outline-none transition-all focus:border-orange-base',
+            props.className,
+            {
+              'border-red-500 dark:border': errorMessage,
+            },
+          )}
+          {...register(name, { ...(isNumber && { valueAsNumber: true }) })}
           {...props}
         />
       </Form.Control>
       {errorMessage && (
         <div className="absolute left-0 top-full">
-          <Form.Message className="form-message ml-auto text-sm text-red-500">
+          <Form.Message className="ml-auto text-sm text-red-500 form-message">
             {errorMessage}
           </Form.Message>
         </div>

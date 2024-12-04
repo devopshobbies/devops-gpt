@@ -51,7 +51,10 @@ export const kuberAnsibleSchema = zod.object({
       value: zod.string().min(1, 'Required!'),
     }),
   ),
-  version: zod.string().min(1, 'Version is required!'),
+  version: zod.object({
+    label: zod.string().min(1, 'Required!'),
+    value: zod.string().min(1, 'Required!'),
+  }),
 });
 
 export type KuberAnsible = zod.infer<typeof kuberAnsibleSchema>;

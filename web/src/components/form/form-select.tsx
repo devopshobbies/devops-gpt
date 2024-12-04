@@ -46,7 +46,7 @@ export const FormSelect = ({
       name={name}
     >
       {label && (
-        <div className="flex items-baseline justify-between mb-1">
+        <div className="mb-1 flex items-baseline justify-between">
           <Form.Label className="form-label">{label}</Form.Label>
         </div>
       )}
@@ -61,14 +61,14 @@ export const FormSelect = ({
               placeholder={placeholder}
               className="w-full"
               {...props}
-              styles={selectStyle(darkMode)}
+              styles={selectStyle(darkMode, !!errorMessage)}
             />
           )}
         />
       </Form.Control>
       {errorMessage && (
         <div className="absolute left-0 top-full">
-          <Form.Message className="ml-auto text-sm text-red-500 form-message">
+          <Form.Message className="form-message ml-auto text-sm text-red-500">
             {errorMessage}
           </Form.Message>
         </div>

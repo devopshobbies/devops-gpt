@@ -13,7 +13,7 @@ import { FormInput } from '@/components/form/form-input';
 import { FormSelect } from '@/components/form/form-select';
 import { usePost } from '@/core/react-query';
 import { AnsibleTemplateAPI } from '@/enums/api.enums';
-import { OSOptions } from './data/select-options';
+import { OSOptions, versionOptions } from './data/select-options';
 import { useDownload } from '@/hooks';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
@@ -40,7 +40,6 @@ const KubernetesAnsible: FC = () => {
     k8s_worker_nodes: [{ value: '' }],
     k8s_master_nodes: [{ value: '' }],
     lb_nodes: [{ value: '' }],
-    version: '',
   };
 
   const methods = useForm<KuberAnsible>({
@@ -56,6 +55,7 @@ const KubernetesAnsible: FC = () => {
         k8s_master_nodes: data.k8s_master_nodes.map((master) => master.value),
         lb_nodes: data.lb_nodes.map((lb) => lb.value),
         os: data.os.value,
+        version: data.version.value,
       };
 
       await kuberAnsibleMutate(body);
@@ -73,7 +73,7 @@ const KubernetesAnsible: FC = () => {
   };
 
   return (
-    <div className="w-full text-black max-w-96 dark:text-white">
+    <div className="w-full max-w-96 text-black dark:text-white">
       <FormWrapper methods={methods} onSubmit={handleSubmit}>
         <div className="mb-4">
           <FormInput
@@ -111,17 +111,17 @@ const KubernetesAnsible: FC = () => {
           <LBNodes />
         </div>
         <div className="mb-4">
-          <FormInput
-            id="version"
+          <FormSelect
             name={`version`}
             label="Version"
-            placeholder="3.11"
+            placeholder="Select..."
+            options={versionOptions}
           />
         </div>
         <button
           type="submit"
           disabled={kuberAnsiblePending}
-          className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+          className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
         >
           {kuberAnsiblePending
             ? 'Generating...'

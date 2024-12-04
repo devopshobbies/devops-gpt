@@ -32,7 +32,7 @@ class AnsibleInstallDocker(AnsibleBase):
         return value
     
     
-    
+   
 class AnsibleInstallKuber(AnsibleBase):
     os: str = 'ubuntu'
     k8s_worker_nodes: List[str]

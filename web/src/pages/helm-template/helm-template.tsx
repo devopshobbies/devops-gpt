@@ -21,7 +21,7 @@ import { FormInput } from '@/components/form/form-input';
 import { FormCheckbox } from '@/components/form/form-checkbox';
 import { FormSelect } from '@/components/form/form-select';
 import PodEnvironmentFields from './components/pod-environment-fields';
-import type { HelmTemplate } from './helm-template.types';
+import type { THelmTemplate } from './helm-template.types';
 
 const HelmTemplate: FC = () => {
   const { mutateAsync: helmTemplateMutate, isPending: helmTemplatePending } =
@@ -82,7 +82,7 @@ const HelmTemplate: FC = () => {
     remove(index);
   };
 
-  const handleSubmit = async (data: HelmTemplate) => {
+  const handleSubmit = async (data: THelmTemplate) => {
     try {
       const body_data = data.pods.map((data) => {
         const { mode, accessModes, size } = data.persistance;

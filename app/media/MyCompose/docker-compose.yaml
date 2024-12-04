@@ -44,7 +44,7 @@ services:
     environment:
       additionalProp1: string
       additionalProp2: string
-      additionalProp3: string
+      additionalProp3: shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
     image: string
     networks:
     - string

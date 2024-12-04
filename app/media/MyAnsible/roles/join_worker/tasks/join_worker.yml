@@ -1,0 +1,38 @@
+- name: Init cluster | Check if kubeadm has already run
+  stat:
+    path: "/var/lib/kubelet/config.yaml"
+  register: kubeadm_already_run
+
+- block:
+    - name: Generate join command
+      command: kubeadm token create --print-join-command
+      register: join_command
+
+    - name: Print join command
+      debug:
+        msg: "{{ join_command.stdout_lines[0] }}"
+
+    - name: Copy join command to local file
+      become: false
+      local_action: copy content="{{ join_command.stdout_lines[0] }} $@" dest="roles/join_worker/files/join-command"
+
+  when:
+    - inventory_hostname not in groups['k8s_masters'][0]
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
+
+- block:
+    - name: Copy the join command to server location
+      copy:
+        src: roles/join_worker/files/join-command
+        dest: /root/join-command.sh
+        mode: "0777"
+
+  when:
+    - inventory_hostname not in groups['k8s_masters']
+    - not kubeadm_already_run.stat.exists
+
+- name: Join | Join worker nodes to the cluster
+  command: sh /root/join-command.sh
+  when:
+    - inventory_hostname not in groups['k8s_masters']
+    - not kubeadm_already_run.stat.exists

@@ -31,14 +31,15 @@ class Build(BaseModel):
     dockerfile:str
 class Service(BaseModel):
     image:str = 'nginx'
+    name:str = 'web_server'
     container_name:str = 'web_server'
     build: Build | None = None
     version:str = 'latest'
-    volumes:List[Volume]
-    depends_on:List[str]
+    volumes:List[Volume] | None = None
+    depends_on:List[str] | None = None
     ports:List[Port]
-    networks:List[Network]
-    environments:List[EnvironmentVariable]
+    networks:List[Network] | None = None
+    environments:List[EnvironmentVariable] | None = None
     
     @computed_field
     @property

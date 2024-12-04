@@ -14,6 +14,7 @@
     - name: Init cluster | Initiate cluster on node groups['kube_master'][0]
       shell: kubeadm init --config=/root/kubeadmcnf.yaml
       register: kubeadm_init
+      # Retry is because upload config sometimes fails
       until: kubeadm_init is succeeded or "field is immutable" in kubeadm_init.stderr
       notify: Restart kubelet
 
@@ -49,12 +50,14 @@
   command: reboot
   async: 1
   poll: 0
+  # ignore_errors: yes
   delegate_to: "{{ groups['k8s_masters'][0] }}"
 
 - name: Sleep for 300 seconds to Master1 up and running
   wait_for:
     timeout: 300
   delegate_to: localhost
+  # when: use_iran == "true"
 
 - name: Example Task After Reboot
   debug:

@@ -30,6 +30,7 @@
 
 - name: Install necessary tools
   apt:
+    state: latest
     update_cache: true
     name:
       - vim
@@ -75,7 +76,6 @@
       - nfs-common
       - tzdata
       - tree
-    state: latest
 
 - name: Fix broken packages
   apt:

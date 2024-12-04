@@ -1,13 +1,13 @@
 def docker_compose_generator(input):
     compose_network = input.network.name
     compose_services = input.services
-    services = [i.container_name for i in compose_services]
-    images = [{i.container_name:i.image_full} for i in compose_services]
-    volumes = [{i.container_name:i.volumes_full} for i in compose_services]
-    depends_on = [{i.container_name:i.depends_on} for i in compose_services]
-    ports = [{i.container_name:i.ports} for i in compose_services]
-    env = [{i.container_name:i.environments} for i in compose_services]
-    networks = [{i.container_name:i.networks} for i in compose_services]
+    services = [i.name for i in compose_services]
+    images = [{i.name:i.image_full} for i in compose_services]
+    volumes = [{i.name:i.volumes_full} for i in compose_services]
+    depends_on = [{i.name:i.depends_on} for i in compose_services]
+    ports = [{i.name:i.ports} for i in compose_services]
+    env = [{i.name:i.environments} for i in compose_services]
+    networks = [{i.name:i.networks} for i in compose_services]
    
     
     prompt = f"""

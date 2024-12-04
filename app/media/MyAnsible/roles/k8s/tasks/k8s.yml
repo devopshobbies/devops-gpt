@@ -5,7 +5,7 @@
 - name: Disable SWAP in fstab since kubernetes can't work with swap enabled
   replace:
     path: /etc/fstab
-    regexp: '^([^#].*?\sswap\ssw\s+.*)$'
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
     replace: '# \1'
 
 - name: Check if ufw is installed
@@ -128,3 +128,68 @@
   systemd:
     name: containerd
     enabled: yes
+
+- name: Delete the existing Kubernetes APT keyring file if it exists
+  file:
+    path: '{{ kubernetes_gpg_keyring_path }}'
+    state: absent
+
+- name: Download Kubernetes GPG key
+  shell: |
+    curl -fsSL '{{ kubernetes_gpg_key_url }}' | gpg --dearmor -o '{{ kubernetes_gpg_keyring_path }}'
+
+- name: Add Kubernetes repo
+  apt_repository:
+    repo: "deb [signed-by={{ kubernetes_gpg_keyring_path }}] {{ kubernetes_apt_repo }} /"
+    state: present
+    filename: kubernetes.list
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install Kubernetes packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - kubeadm=1.31.2-1.1
+    - kubelet=1.31.2-1.1
+    - kubectl=1.31.2-1.1
+
+- name: Hold Kubernetes packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubeadm
+    - kubelet
+    - kubectl
+    - containerd.io
+
+- name: Configure node ip
+  lineinfile:
+    path: /etc/default/kubelet
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ private_ip }}
+    create: yes
+    state: present
+  notify: Restart kubelet
+
+- name: Add hosts to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ hostvars[item].private_ip }} {{ item }} {{ item }}.{{ domain }}"
+    state: present
+    create: no
+  loop: "{{ groups['all'] }}"
+  when: hostvars[item].private_ip is defined
+
+- name: Add apiserver_url to point to the masters temporary
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ hostvars[groups['k8s_masters'][0]].private_ip }} {{ apiserver_url }}"
+    state: present
+
+- name: Pull Kubernetes images | If you got error check your dns and sanction
+  command:
+    cmd: kubeadm config images pull

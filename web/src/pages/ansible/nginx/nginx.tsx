@@ -16,7 +16,7 @@ import { FormWrapper } from '@/components/form/form-wrapper';
 import { FormInput } from '@/components/form/form-input';
 import { FormSelect } from '@/components/form/form-select';
 import HostsField from './components/hosts-field';
-import { OSOptions } from './data/select-options';
+import { OSOptions, VersionOptions } from './data/select-options';
 import type { NginxAnsible } from './nginx.types';
 
 const NginxAnsible: FC = () => {
@@ -24,7 +24,10 @@ const NginxAnsible: FC = () => {
     ansible_user: '',
     os: { label: 'Ubuntu', value: 'ubuntu' },
     hosts: [{ value: '' }],
-    version: '',
+    version: {
+      label: 'Latest',
+      value: 'latest',
+    },
   };
 
   const methods = useForm<NginxAnsible>({
@@ -50,6 +53,7 @@ const NginxAnsible: FC = () => {
         ...data,
         hosts: data.hosts.map((host) => host.value),
         os: data.os.value,
+        version: data.version.value,
       };
 
       await nginxAnsibleMutate(body);
@@ -67,7 +71,7 @@ const NginxAnsible: FC = () => {
   };
 
   return (
-    <div className="w-full text-black max-w-96 dark:text-white">
+    <div className="w-full max-w-96 text-black dark:text-white">
       <FormWrapper methods={methods} onSubmit={handleSubmit}>
         <div className="mb-4">
           <FormInput
@@ -99,17 +103,17 @@ const NginxAnsible: FC = () => {
           <HostsField />
         </div>
         <div className="mb-4">
-          <FormInput
-            id="version"
+          <FormSelect
             name={`version`}
             label="Version"
-            placeholder="3.11"
+            placeholder="Select..."
+            options={VersionOptions}
           />
         </div>
         <button
           type="submit"
           disabled={nginxAnsiblePending}
-          className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+          className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
         >
           {nginxAnsiblePending
             ? 'Generating...'

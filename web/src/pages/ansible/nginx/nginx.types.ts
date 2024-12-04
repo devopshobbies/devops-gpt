@@ -39,7 +39,10 @@ export const nginxAnsibleSchema = zod.object({
       }),
     )
     .min(1),
-  version: zod.string().min(1, 'Version is required!'),
+  version: zod.object({
+    label: zod.string(),
+    value: zod.string(),
+  }),
 });
 
 export type NginxAnsible = zod.infer<typeof nginxAnsibleSchema>;

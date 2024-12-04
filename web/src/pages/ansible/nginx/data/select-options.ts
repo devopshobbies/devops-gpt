@@ -4,3 +4,10 @@ export const OSOptions = [
     label: 'Ubuntu',
   },
 ];
+
+export const VersionOptions = [
+  {
+    value: 'latest',
+    label: 'Latest',
+  },
+];

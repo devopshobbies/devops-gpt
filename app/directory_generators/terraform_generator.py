@@ -1,93 +1,111 @@
 import os
 project_name = "app/media/MyTerraform"
 modules_dir = os.path.join(project_name, "modules")
-argocd_dir = os.path.join(modules_dir, "argocd")
+efs_dir = os.path.join(modules_dir, "efs")
 
 # Create project directories
-os.makedirs(argocd_dir, exist_ok=True)
+os.makedirs(efs_dir, exist_ok=True)
 
 # Create main.tf
 with open(os.path.join(project_name, "main.tf"), "w") as main_file:
     main_file.write('''
-provider "argocd" {
-  server_addr = var.argocd_instance_info["server_addr"]
-  username    = var.argocd_instance_info["username"]
-  password    = var.argocd_instance_info["password"]
-  insecure    = var.argocd_instance_info["insecure"]
+provider "aws" {
+  region = "us-east-1"
 }
 
-module "argocd" {
-  source = "./modules/argocd"
-  
-  repository_create      = var.repository_create
-  argocd_repository_info  = var.argocd_repository_info
-  application_create      = var.application_create
-  argocd_application      = var.argocd_application
-  argocd_sync_options     = var.argocd_sync_options
+module "efs" {
+  source = "./modules/efs"
+
+  security_group_name            = var.security_group_name
+  security_group_ingress_rules   = var.security_group_ingress_rules
+  security_group_egress_rule     = var.security_group_egress_rule
+  file_system_create              = var.file_system_create
+  efs                             = var.efs
+  mount_target_create             = var.mount_target_create
+  backup_policy_create            = var.backup_policy_create
 }
 ''')
 
 # Create variables.tf
-with open(os.path.join(project_name, "variables.tf"), "w") as vars_file:
-    vars_file.write('''
-variable "argocd_instance_info" {
+with open(os.path.join(project_name, "variables.tf"), "w") as variables_file:
+    variables_file.write('''
+variable "security_group_name" {
+  type = string
+}
+
+variable "security_group_ingress_rules" {
+  type = map(object({
+    description = string
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+}
+
+variable "security_group_egress_rule" {
   type = object({
-    server_addr = string
-    username    = string
-    password    = string
-    insecure    = bool
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
   })
 }
 
-variable "repository_create" {
+variable "file_system_create" {
   type = bool
 }
 
-variable "argocd_repository_info" {
-  type = map(string)
+variable "efs" {
+  type = object({
+    creation_token   = string
+    encrypted        = bool
+    performance_mode = string
+    throughput_mode  = string
+    backup_policy    = string
+  })
 }
 
-variable "application_create" {
+variable "mount_target_create" {
   type = bool
 }
 
-variable "argocd_application" {
-  type = map(string)
-}
-
-variable "argocd_sync_options" {
-  type = list(string)
+variable "backup_policy_create" {
+  type = bool
 }
 ''')
 
 # Create terraform.tfvars
 with open(os.path.join(project_name, "terraform.tfvars"), "w") as tfvars_file:
     tfvars_file.write('''
-argocd_instance_info = {
-  server_addr = "ARGOCD_DOMAIN"
-  username    = "admin"
-  password    = "ARGOCD_ADMIN_PASS"
-  insecure    = true
+security_group_name = "efs_rule"
+security_group_ingress_rules = {
+  efs_rule = {
+    description = "EFS Ingress"
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+security_group_egress_rule = {
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
-repository_create = false
-argocd_repository_info = {
-  repo     = "https://YOUR_REPO.git"
-  username = "USERNAME"
-  password = "CHANGE_ME_WITH_TOKEN"
+file_system_create = true
+efs = {
+  creation_token   = "terraform"
+  encrypted        = true
+  performance_mode = "generalPurpose"
+  throughput_mode  = "elastic"
+  backup_policy    = "ENABLED"
 }
 
-application_create = true
-argocd_application = {
-  name                   = "APPLICATION_NAME"
-  destination_server     = "https://kubernetes.default.svc"
-  destination_namespace  = "DESTINATION_NAMESPACE"
-  source_repo_url       = "https://YOUR_REPO.git"
-  source_path           = "SOURCE_PATH"
-  source_target_revision = "SOURCE_TARGET_REVISION"
-}
-
-argocd_sync_options = ["CreateNamespace=true", "ApplyOutOfSyncOnly=true", "FailOnSharedResource=true"]
+mount_target_create = true
+backup_policy_create = true
 ''')
 
 # Create versions.tf
@@ -97,114 +115,193 @@ terraform {
   required_version = ">= 1.0"
 
   required_providers {
-    argocd = {
-      source  = "oboukili/argocd"
-      version = ">= 6.0.2"
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.20"
     }
   }
 }
 ''')
 
 # Create module main.tf
-with open(os.path.join(argocd_dir, "main.tf"), "w") as module_main_file:
-    module_main_file.write('''
-resource "argocd_repository" "repository" {
-  count    = var.repository_create ? 1 : 0
-  repo     = var.argocd_repository_info["repo"]
-  username = var.argocd_repository_info["username"]
-  password = var.argocd_repository_info["password"]
+with open(os.path.join(efs_dir, "main.tf"), "w") as efs_main_file:
+    efs_main_file.write('''
+locals {
+  default_efs_lifecycle_policies = {
+    transition_to_ia                    = "AFTER_14_DAYS",
+    transition_to_primary_storage_class = "AFTER_1_ACCESS",
+  }
 }
 
-resource "argocd_application" "application" {
-  count = var.application_create ? 1 : 0
-  depends_on = [argocd_repository.repository]
+data "aws_availability_zones" "available_zones" {
+  state = "available"
+}
 
-  metadata {
-    name      = var.argocd_application["name"]
-    namespace = "argocd"
-    labels = {
-      using_sync_policy_options = "true"
+data "aws_vpc" "default_vpc" {
+  default = true
+}
+
+data "aws_subnets" "subnets_ids" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default_vpc.id]
+  }
+}
+
+resource "aws_security_group" "security_group" {
+  count = var.file_system_create && var.mount_target_create ? 1 : 0
+  name  = var.security_group_name
+  description = "Security group for EFS mount targets"
+  vpc_id = data.aws_vpc.default_vpc.id
+
+  dynamic "ingress" {
+    for_each = var.security_group_ingress_rules
+    content {
+      description = ingress.value["description"]
+      from_port   = ingress.value["from_port"]
+      to_port     = ingress.value["to_port"]
+      protocol    = ingress.value["protocol"]
+      cidr_blocks = ingress.value["cidr_blocks"]
     }
   }
 
-  spec {
-    destination {
-      server    = var.argocd_application["destination_server"]
-      namespace = var.argocd_application["destination_namespace"]
-    }
-    source {
-      repo_url        = var.argocd_application["source_repo_url"]
-      path            = var.argocd_application["source_path"]
-      target_revision = var.argocd_application["source_target_revision"]
-    }
-    sync_policy {
-      automated {
-        prune     = false
-        self_heal = false
-      }
-      sync_options = var.argocd_sync_options
-    }
+  egress {
+    from_port   = var.security_group_egress_rule["from_port"]
+    to_port     = var.security_group_egress_rule["to_port"]
+    protocol    = var.security_group_egress_rule["protocol"]
+    cidr_blocks = var.security_group_egress_rule["cidr_blocks"]
+  }
+}
+
+resource "aws_efs_file_system" "filesystem" {
+  count = var.file_system_create ? 1 : 0
+  creation_token = var.efs["creation_token"]
+  encrypted      = var.efs["encrypted"]
+  performance_mode = var.efs["performance_mode"]
+  throughput_mode  = var.efs["throughput_mode"]
+
+  lifecycle_policy {
+    transition_to_ia = lookup(local.default_efs_lifecycle_policies, "transition_to_ia", null)
+  }
+
+  lifecycle_policy {
+    transition_to_primary_storage_class = lookup(local.default_efs_lifecycle_policies, "transition_to_primary_storage_class", null)
+  }
+
+  tags = {
+    Name = "terraform-efs"
+  }
+}
+
+resource "aws_efs_mount_target" "mount_target" {
+  count = var.file_system_create && var.mount_target_create ? length(data.aws_availability_zones.available_zones.names) : 0
+  file_system_id = aws_efs_file_system.filesystem[0].id
+  subnet_id = data.aws_subnets.subnets_ids.ids[count.index]
+  security_groups = [aws_security_group.security_group[0].id]
+}
+
+resource "aws_efs_backup_policy" "backup_policy" {
+  count = var.file_system_create && var.backup_policy_create ? 1 : 0
+  file_system_id = aws_efs_file_system.filesystem[0].id
+
+  backup_policy {
+    status = var.efs["backup_policy"]
   }
 }
 ''')
 
 # Create module variables.tf
-with open(os.path.join(argocd_dir, "variables.tf"), "w") as module_vars_file:
-    module_vars_file.write('''
-variable "repository_create" {
+with open(os.path.join(efs_dir, "variables.tf"), "w") as efs_variables_file:
+    efs_variables_file.write('''
+variable "security_group_name" {
+  type = string
+}
+
+variable "security_group_ingress_rules" {
+  type = map(object({
+    description = string
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+}
+
+variable "security_group_egress_rule" {
+  type = object({
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  })
+}
+
+variable "file_system_create" {
   type = bool
 }
 
-variable "argocd_repository_info" {
-  type = map(string)
+variable "efs" {
+  type = object({
+    creation_token   = string
+    encrypted        = bool
+    performance_mode = string
+    throughput_mode  = string
+    backup_policy    = string
+  })
 }
 
-variable "application_create" {
+variable "mount_target_create" {
   type = bool
 }
 
-variable "argocd_application" {
-  type = map(string)
-}
-
-variable "argocd_sync_options" {
-  type = list(string)
+variable "backup_policy_create" {
+  type = bool
 }
 ''')
 
 # Create module terraform.tfvars
-with open(os.path.join(argocd_dir, "terraform.tfvars"), "w") as module_tfvars_file:
-    module_tfvars_file.write('''
-repository_create = false
-argocd_repository_info = {
-  repo     = "https://YOUR_REPO.git"
-  username = "USERNAME"
-  password = "CHANGE_ME_WITH_TOKEN"
+with open(os.path.join(efs_dir, "terraform.tfvars"), "w") as efs_tfvars_file:
+    efs_tfvars_file.write('''
+security_group_name = "efs_rule"
+security_group_ingress_rules = {
+  efs_rule = {
+    description = "EFS Ingress"
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+security_group_egress_rule = {
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
-application_create = true
-argocd_application = {
-  name                   = "APPLICATION_NAME"
-  destination_server     = "https://kubernetes.default.svc"
-  destination_namespace  = "DESTINATION_NAMESPACE"
-  source_repo_url       = "https://YOUR_REPO.git"
-  source_path           = "SOURCE_PATH"
-  source_target_revision = "SOURCE_TARGET_REVISION"
+file_system_create = true
+efs = {
+  creation_token   = "terraform"
+  encrypted        = true
+  performance_mode = "generalPurpose"
+  throughput_mode  = "elastic"
+  backup_policy    = "ENABLED"
 }
 
-argocd_sync_options = ["CreateNamespace=true", "ApplyOutOfSyncOnly=true", "FailOnSharedResource=true"]
+mount_target_create = true
+backup_policy_create = true
 ''')
 
 # Create module versions.tf
-with open(os.path.join(argocd_dir, "versions.tf"), "w") as module_versions_file:
-    module_versions_file.write('''
+with open(os.path.join(efs_dir, "versions.tf"), "w") as efs_versions_file:
+    efs_versions_file.write('''
 terraform {
   required_version = ">= 1.0"
 
   required_providers {
-    argocd = {
-      source  = "oboukili/argocd"
-      version = ">= 6.0.2"
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.20"
     }
   }
 }

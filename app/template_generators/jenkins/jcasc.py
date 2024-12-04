@@ -1,54 +1,79 @@
 def jcasc_template_generator(input) -> str:
     
-    allowsSignup = 'true' if input.allowsSignup else 'false'
-    allowAnonymousRead = 'true' if input.allowAnonymousRead else 'false'
-    cache_size = input.cache_size
+    DSL_Job_Name = 'false' if input.allowsSignup else 'true'
+    useScriptSecurity = 'true' if input.useScriptSecurity else 'false'
+    scmCheckoutRetryCount = input.scmCheckoutRetryCount
     executators = input.executators
-    required_plugins = input.required_plugins
 
 
     prompt = f"""
         Generate a Python code, to generate a JCasc file (project name is app/media/MyJcasc)
         and install plugins based on the provided list, ensuring a modular, flexible structure to enable users
         to configure all essential settings at the first load. Only provide JCasc code, no explanations or
-        markdown formatting. The file should be created based on these values
-        - allowSignup = {allowsSignup}
-        - allowAnonymousRead = {allowAnonymousRead}
-        - cache_size = {cache_size}
-        - executators = {executators}
-        - required_plugins = {required_plugins}
-
+        markdown formatting.
+        
         Also the file should contain ONLY these sections with following order and do not add emptylines:
-        1- systemMessage
-        2- create a local admin user and password, default username is admin and default password is password
-        3- allowSignup
-        4- allowAnonymousRead
-        5- cache_size
-        6- executators
-        7- required_plugins
-        8- views
-        9- authorizationStrategy: 
-            - ```
-            projectMatrix:
-                grantedPermissions:
-                    - "Overall/Administer:admin"
-                    - "Job/Read:developer"
-                    - "Job/Build:developer"
+        - jenkins:
+            - numExecutors= {executators}
+            - scmCheckoutRetryCount= {scmCheckoutRetryCount}
+            - mode : NORMAL
+            - markupFormatter:
             ```
-        10- tools:
-            - ```
-                git:
-                installations:
-                    - name: "Default"
-                    home: "/usr/bin/git"
+                rawHtml:
+                disableSyntaxHighlighting: false
             ```
-        11- security:
-            - ```
-                globalJobDslSecurityConfiguration:
-                    useScriptSecurity: false
+            - primaryView:
+            ```
+                all:
+                name: "all"
+            ```
+            -   crumbIssuer:
+                    standard:
+                    excludeClientIPFromCrumb: true
+        - credentials:
+            ```
+            system:
+                domainCredentials:
+                - credentials:
+                    - string:
+                        scope: GLOBAL
+                        id: "gitlab-token"
+                        secret: "SECRET KEY"
+                        description: "GitLab personal access token"
+            ```
+        - unclassified:
+            ```
+            location:
+                url: "http://localhost:8080/"
+            ```
+        - security:
+          ```
+            globalJobDslSecurityConfiguration:
+                useScriptSecurity: {useScriptSecurity}
+          ```
+        - jobs:
+           ``` - script: >
+                pipelineJob('{DSL_Job_Name}') {{
+                    quietPeriod(0)
+                    properties {{
+                    disableConcurrentBuilds()
+                    }}
+                    logRotator {{
+                    numToKeep(10)
+                    }}
+                    triggers {{
+                    cron("H/15 * * * *")
+                    }}
+                    definition {{
+                    cps {{
+                        script('createJobs()')
+                    }}
+                    }}
+                }}
             ```
         finally the python code should run without any note that can generate a project folder with the given
-        schema without ```python entry. the final JCasc template must work very well without any error!
+        schema without 
+        python entry. the final JCasc template must work very well without any error!
 
         import os
         project_name = "app/media/MyJcasc"

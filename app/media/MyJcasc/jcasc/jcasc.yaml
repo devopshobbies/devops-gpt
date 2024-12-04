@@ -1,0 +1,47 @@
+jenkins:
+  numExecutors: 1
+  scmCheckoutRetryCount: 2
+  mode: NORMAL
+  markupFormatter:
+    rawHtml:
+      disableSyntaxHighlighting: false
+  primaryView:
+    all:
+      name: "all"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: true
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - string:
+              scope: GLOBAL
+              id: "gitlab-token"
+              secret: "SECRET KEY"
+              description: "GitLab personal access token"
+unclassified:
+  location:
+    url: "http://localhost:8080/"
+security:
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false
+jobs:
+  - script: >
+      pipelineJob('DSL Job') {
+          quietPeriod(0)
+          properties {
+              disableConcurrentBuilds()
+          }
+          logRotator {
+              numToKeep(10)
+          }
+          triggers {
+              cron("H/15 * * * *")
+          }
+          definition {
+              cps {
+                  script('createJobs()')
+              }
+          }
+      }

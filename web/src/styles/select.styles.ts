@@ -2,6 +2,7 @@ import { GroupBase, StylesConfig } from 'react-select';
 
 export const selectStyle = (
   isDark?: boolean,
+  error?: boolean,
 ):
   | StylesConfig<
       {
@@ -18,7 +19,7 @@ export const selectStyle = (
   return {
     control: (styles) => ({
       ...styles,
-      border: '1px solid #6b7280',
+      border: error ? '1px solid #ef4444' : '1px solid #6b7280',
       borderRadius: '6px',
       background: isDark ? '#121212' : '#fff',
       color: isDark ? '#fff' : '#121212',

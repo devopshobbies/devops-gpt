@@ -31,7 +31,15 @@ const PodEnvironmentFields: FC<PodEnvironmentFieldsProps> = ({ podIndex }) => {
       <div className="grid grid-cols-2 gap-4">
         {fields.map((field, envIdx) => (
           <div
-            className="mb-4 flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0"
+            className={cn(
+              'mb-4 flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0',
+              {
+                'divide-red-500 border-red-500 dark:divide-red-500 dark:border-red-500':
+                  control.getFieldState(
+                    `pods.${podIndex}.environment.${envIdx}.name`,
+                  ).invalid,
+              },
+            )}
             key={field.id}
           >
             <FormInput

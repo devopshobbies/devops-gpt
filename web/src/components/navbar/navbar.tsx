@@ -23,6 +23,10 @@ const navbar = [
     url: '/helm-template',
     title: 'Helm Template',
   },
+  {
+    url: '/ansible-template',
+    title: 'Ansible Template',
+  },
 ];
 
 const Navbar: FC = () => {

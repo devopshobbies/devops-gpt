@@ -12,12 +12,12 @@ const navbar = [
     title: 'Bug Fix',
   },
   {
-    url: '/terraform-template',
-    title: 'Terraform Template',
-  },
-  {
     url: '/installation',
     title: 'Installation',
+  },
+  {
+    url: '/terraform-template',
+    title: 'Terraform Template',
   },
   {
     url: '/helm-template',

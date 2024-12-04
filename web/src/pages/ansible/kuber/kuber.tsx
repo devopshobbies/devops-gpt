@@ -19,7 +19,6 @@ import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
 import K8SMasterNodes from './components/k8s-master-nodes';
 import K8SWorkerNodes from './components/k8s-worker-nodes';
-import LBNodes from './components/lb-nodes';
 
 const KubernetesAnsible: FC = () => {
   const { mutateAsync: kuberAnsibleMutate, isPending: kuberAnsiblePending } =
@@ -39,7 +38,6 @@ const KubernetesAnsible: FC = () => {
     os: { label: 'Ubuntu', value: 'ubuntu' },
     k8s_worker_nodes: [{ value: '' }],
     k8s_master_nodes: [{ value: '' }],
-    lb_nodes: [{ value: '' }],
   };
 
   const methods = useForm<KuberAnsible>({
@@ -53,7 +51,6 @@ const KubernetesAnsible: FC = () => {
         ...data,
         k8s_worker_nodes: data.k8s_worker_nodes.map((worker) => worker.value),
         k8s_master_nodes: data.k8s_master_nodes.map((master) => master.value),
-        lb_nodes: data.lb_nodes.map((lb) => lb.value),
         os: data.os.value,
         version: data.version.value,
       };
@@ -106,9 +103,6 @@ const KubernetesAnsible: FC = () => {
         </div>
         <div className="mb-4">
           <K8SWorkerNodes />
-        </div>
-        <div className="mb-4">
-          <LBNodes />
         </div>
         <div className="mb-4">
           <FormSelect

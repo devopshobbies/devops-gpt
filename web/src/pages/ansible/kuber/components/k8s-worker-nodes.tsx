@@ -13,9 +13,9 @@ const K8SWorkerNodes: FC = () => {
 
   return (
     <div>
-      <div className="flex items-center mb-2">
+      <div className="mb-2 flex items-center">
         <p className="text-lg font-bold">K8s Worker Nodes</p>
-        <button type="button" onClick={append} className="ml-4 btn btn-xs">
+        <button type="button" onClick={append} className="btn btn-xs ml-4">
           Add <Plus className="size-3" />
         </button>
       </div>
@@ -25,6 +25,7 @@ const K8SWorkerNodes: FC = () => {
             <FormInput
               id={`k8s_worker_nodes.${nodeIdx}`}
               name={`k8s_worker_nodes.${nodeIdx}.value`}
+              placeholder="www.example.com"
               label=""
             />
             {nodeIdx > 0 && (

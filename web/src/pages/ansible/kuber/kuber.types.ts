@@ -10,7 +10,6 @@ export interface KuberAnsibleBody {
   os: string;
   k8s_worker_nodes: string[];
   k8s_master_nodes: string[];
-  lb_nodes: string[];
   version: string;
 }
 
@@ -37,18 +36,13 @@ export const kuberAnsibleSchema = zod.object({
   k8s_worker_nodes: zod
     .array(
       zod.object({
-        value: zod.string().min(1, 'Required!'),
+        value: zod.string().min(1, 'Required!').default('www.example.com'),
       }),
     )
     .min(1),
   k8s_master_nodes: zod.array(
     zod.object({
-      value: zod.string().min(1, 'Required!'),
-    }),
-  ),
-  lb_nodes: zod.array(
-    zod.object({
-      value: zod.string().min(1, 'Required!'),
+      value: zod.string().min(1, 'Required!').default('www.example.com'),
     }),
   ),
   version: zod.object({

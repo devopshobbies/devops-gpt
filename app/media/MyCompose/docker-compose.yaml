@@ -1,23 +1,14 @@
 version: '3'
 services:
-  web1:
-    image: nginx:latest
-    container_name: web_server
-    environment:
-      foo: bar
-    ports:
-    - 80:80
-    networks:
-    - app_network
-  web2:
+  web:
     build:
       context: .
       dockerfile: DockerFile
     image: nginx:latest
     container_name: web_server
-    command: string
+    command: command...
     volumes:
-    - string
+    - ./foo:bar
     environment:
       foo: bar
     ports:
@@ -25,26 +16,28 @@ services:
     networks:
     - app_network
     args:
-      additionalProp1: string
-      additionalProp2: string
-      additionalProp3: string
+      foo: bar
     depends_on:
-    - string
-  web3:
+    - service 0
+  web2:
     build:
       context: .
       dockerfile: DockerFile
     image: nginx:latest
     container_name: web_server
-    command: string
+    command: command...
     volumes:
-    - string
+    - ./foo:bar
     environment:
       foo: bar
     ports:
     - 80:80
     networks:
     - app_network
+    args:
+      foo: bar
+    depends_on:
+    - service 0
 networks:
-  app:
+  app_network:
     driver: bridge

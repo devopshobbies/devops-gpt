@@ -6,16 +6,16 @@ class Build(BaseModel):
     dockerfile: str = "DockerFile"
 
 class Service(BaseModel):
-    build: Optional[Build] = None
+    build: Optional[Build] = Build()
     image: Optional[str] = "nginx:latest"
     container_name: Optional[str] = "web_server"
-    command: Optional[str] = None
-    volumes: Optional[List[str]] = None
+    command: Optional[str] = "command..."
+    volumes: Optional[List[str]] = ["./foo:bar"]
     environment: Optional[Dict[str, str]] = {"foo":"bar"}
     ports: Optional[List[str]] = ["80:80"]
     networks: Optional[List[str]] = ["app_network"]
-    args: Optional[Dict[str, str]] = None
-    depends_on: Optional[List[str]] = None
+    args: Optional[Dict[str, str]] = {"foo":"bar"}
+    depends_on: Optional[List[str]] = ['service 0']
 
     @model_validator(mode="after")
     def validator(self):
@@ -28,6 +28,6 @@ class Network(BaseModel):
 
 class DockerCompose(BaseModel):
     version: str = "3"
-    services: Dict[str, Service]
-    networks: Optional[Dict[str, Network]]
+    services: Dict[str, Service] = {"web":Service(), "web2":Service()}
+    networks: Optional[Dict[str, Network]] = {"app_network": {"driver":"bridge"}}
 

@@ -106,7 +106,7 @@ const DockerCompose: FC = () => {
 
   const handleSubmit = async (data: TDockerCompose) => {
     try {
-      const refactoredData = data.services.map(
+      const refactoredService = data.services.map(
         ({ build: { enabled, ...buildRest }, ...service }) => ({
           ...service,
           environment: convertKVtoObject(service.environment),
@@ -117,7 +117,30 @@ const DockerCompose: FC = () => {
         }),
       );
 
-      console.log(convertServicesToObject(refactoredData));
+      const refactoredNetwork = data.networks.app_network.reduce(
+        (acc, network) => {
+          if (!data.networks.custom) {
+            acc[network.network_name] = {
+              driver: network.driver?.value,
+            };
+          } else {
+            acc[network.network_name] = {
+              name: network.name,
+              external: network.external,
+            };
+          }
+          return acc;
+        },
+        {},
+      );
+
+      const requestBody = {
+        version: data.version,
+        services: convertServicesToObject(refactoredService),
+        networks: refactoredNetwork,
+      };
+
+      console.log(requestBody);
 
       // dockerComposeMutate(data)
     } catch (error) {

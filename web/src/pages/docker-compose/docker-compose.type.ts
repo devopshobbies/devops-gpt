@@ -1,4 +1,4 @@
-import { z as zod } from 'zod';
+import { custom, z as zod } from 'zod';
 
 export interface DockerComposeBody {
   version: string;
@@ -72,17 +72,27 @@ const labelValueSchema = zod.object({
   value: zod.enum(['bridge', 'host', 'none', 'overlay']),
 });
 
-export const NetworkSchema = zod.object({
-  default: zod.boolean(),
-  app_network: zod.array(
-    zod.object({
-      network_name: zod.string(),
-      external: zod.boolean().optional(),
-      driver: labelValueSchema,
-      name: zod.string(),
-    }),
-  ),
-});
+const NetworkSchema = zod.union([
+  zod.object({
+    custom: zod.literal(false),
+    app_network: zod.array(
+      zod.object({
+        network_name: zod.string(),
+        driver: labelValueSchema,
+      }),
+    ),
+  }),
+  zod.object({
+    custom: zod.literal(true),
+    app_network: zod.array(
+      zod.object({
+        network_name: zod.string(),
+        external: zod.boolean().optional(),
+        name: zod.string(),
+      }),
+    ),
+  }),
+]);
 
 export const DockerComposeSchema = zod.object({
   version: zod.string(),

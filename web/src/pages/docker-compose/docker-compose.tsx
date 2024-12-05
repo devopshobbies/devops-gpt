@@ -11,7 +11,6 @@ import {
   DockerComposeValidationError,
   INetworkConfig,
   TDockerCompose,
-  TNetworkDockerCompose,
 } from './docker-compose.type';
 import { cn } from '@/lib/utils';
 import ServiceNetworkFields from './components/service-network-fields';

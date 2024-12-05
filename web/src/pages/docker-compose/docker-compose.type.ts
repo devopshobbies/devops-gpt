@@ -10,7 +10,7 @@ interface IBuildConfig {
 
 interface IServiceConfig {
   [key: string]: {
-    build: IBuildConfig;
+    build?: IBuildConfig;
     image: string;
     environment: {
       [key: string]: string;

@@ -1,6 +1,29 @@
 import { z as zod } from 'zod';
 
-export interface DockerComposeBody {}
+export interface DockerComposeBody {
+  version: string;
+  services: {
+    [key: string]: {
+      build: {
+        args: {
+          [key: string]: string;
+        };
+        context: string;
+        dockerfile: string;
+      };
+      command: string;
+      container_name: string;
+      depends_on: string[];
+      environment: {
+        [key: string]: string;
+      };
+      image: string;
+      networks: string[];
+      ports: string[];
+      volumes: string[];
+    };
+  };
+}
 
 export interface DockerComposeResponse {
   output: string;
@@ -17,7 +40,7 @@ export interface DockerComposeValidationError {
   ];
 }
 
-const KVchema = zod.array(
+const KV_Schema = zod.array(
   zod.object({
     key: zod.string(),
     value: zod.string(),
@@ -26,7 +49,7 @@ const KVchema = zod.array(
 
 export const BuildSchema = zod.object({
   enabled: zod.boolean(),
-  args: KVchema,
+  args: KV_Schema,
   context: zod.string(),
   dockerfile: zod.string(),
 });
@@ -35,7 +58,7 @@ export const ServiceSchema = zod.object({
   name: zod.string(),
   build: BuildSchema,
   image: zod.string(),
-  environment: KVchema,
+  environment: KV_Schema,
   container_name: zod.string(),
   ports: zod.array(zod.string()),
   command: zod.string().optional(),

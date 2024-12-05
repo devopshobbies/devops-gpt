@@ -31,7 +31,7 @@ export const ServiceVolumesFields: FC<ServiceVolumesFieldsProps> = ({
           Add <Plus className="size-3" />
         </button>
       </div>
-      <div className="flex space-y-4">
+      <div className="flex space-x-4">
         {fields.map((field, idx) => (
           <div
             className={cn(

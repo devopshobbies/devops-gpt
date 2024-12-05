@@ -1,10 +1,9 @@
-import { FC, useState } from 'react';
-import { ChevronDown, Plus, Trash2 } from 'lucide-react';
+import { FC } from 'react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { FormInput } from '@/components/form/form-input';
 import { FormCheckbox } from '@/components/form/form-checkbox';
 import { FormSelect } from '@/components/form/form-select';
-import { cn } from '@/lib/utils';
 
 const defaultNetworkDrivers = ['bridge', 'host', 'none', 'overlay'] as const;
 

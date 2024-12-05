@@ -1,3 +1,5 @@
+import { IServiceConfig } from '@/pages/docker-compose/docker-compose.type';
+
 export const getNestedValue = (obj: any, path: string) => {
   return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 };
@@ -21,13 +23,10 @@ interface Service {
 
 export const convertServicesToObject = (
   services: Service[],
-): Record<string, Omit<Service, 'name'>> => {
-  return services.reduce(
-    (acc, service) => {
-      const { name, ...serviceWithoutName } = service;
-      acc[name] = serviceWithoutName;
-      return acc;
-    },
-    {} as Record<string, Omit<Service, 'name'>>,
-  );
+): IServiceConfig => {
+  return services.reduce((acc, service) => {
+    const { name, ...serviceWithoutName } = service;
+    acc[name] = serviceWithoutName as IServiceConfig[string];
+    return acc;
+  }, {} as IServiceConfig);
 };

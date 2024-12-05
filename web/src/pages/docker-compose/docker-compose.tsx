@@ -130,13 +130,16 @@ const DockerCompose: FC = () => {
       const refactoredNetwork = data.networks.app_network.reduce(
         (acc: INetworkConfig, network) => {
           if (!data.networks.custom) {
-            acc[network.network_name] = {
-              driver: network.driver?.value,
-            };
-          } else {
+            if ('driver' in network) {
+              acc[network.network_name] = {
+                driver: network.driver?.value,
+              };
+            }
+          }
+          if ('name' in network && 'external' in network) {
             acc[network.network_name] = {
               name: network.name,
-              external: network.external,
+              external: !!network.external,
             };
           }
           return acc;

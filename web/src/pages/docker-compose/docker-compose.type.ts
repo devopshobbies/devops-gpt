@@ -8,7 +8,7 @@ interface IBuildConfig {
   dockerfile: string;
 }
 
-interface IServiceConfig {
+export interface IServiceConfig {
   [key: string]: {
     build?: IBuildConfig;
     image: string;
@@ -121,3 +121,20 @@ export const DockerComposeSchema = zod.object({
 });
 
 export type TDockerCompose = zod.infer<typeof DockerComposeSchema>;
+
+
+type AppNetwork = {
+  network_name: string;
+  driver: {
+    label: string;
+    value: "bridge" | "host" | "none" | "overlay";
+  };
+};
+
+type NetworkConfig = {
+  name: string;
+  network_name: string;
+  external?: boolean;
+};
+
+export type CombinedNetworkType = AppNetwork | NetworkConfig;

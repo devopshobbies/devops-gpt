@@ -22,6 +22,7 @@ import { isAxiosError } from 'axios';
 import { usePost } from '@/core/react-query';
 import { API } from '@/enums/api.enums';
 import ServiceEnvironmentFields from './components/service-environment-fields';
+import { convertKVtoObject, convertServicesToObject } from '@/lib/helper';
 
 const DockerCompose: FC = () => {
   const [openService, setOpenService] = useState<number | null>(0);
@@ -97,7 +98,18 @@ const DockerCompose: FC = () => {
 
   const handleSubmit = async (data: TDockerCompose) => {
     try {
-      console.log(data);
+      const refactoredData = data.services.map(
+        ({ build: { enabled, ...buildRest }, ...service }) => ({
+          ...service,
+          environment: convertKVtoObject(service.environment),
+          build: {
+            ...buildRest,
+            args: convertKVtoObject(buildRest.args),
+          },
+        }),
+      );
+
+      console.log(convertServicesToObject(refactoredData));
 
       // dockerComposeMutate(data)
     } catch (error) {
@@ -198,10 +210,10 @@ const DockerCompose: FC = () => {
                     />
                   </div>
                   <ServiceBuildFields serviceIndex={index} />
+                  <ServicePortsFields serviceIndex={index} />
+                  <ServiceVolumesFields serviceIndex={index} />
                   <ServiceNetworkFields serviceIndex={index} />
                   <ServiceDependsOnFields serviceIndex={index} />
-                  <ServiceVolumesFields serviceIndex={index} />
-                  <ServicePortsFields serviceIndex={index} />
                   <ServiceEnvironmentFields serviceIndex={index} />
                 </div>
               </div>

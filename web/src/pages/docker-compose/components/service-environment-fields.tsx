@@ -8,7 +8,9 @@ type ServiceEnvironmentFieldsProps = {
   serviceIndex: number;
 };
 
-const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({ serviceIndex }) => {
+const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({
+  serviceIndex,
+}) => {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -44,7 +46,7 @@ const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({ serviceIn
           >
             <FormInput
               id={`env_name_${envIdx}`}
-              name={`services.${serviceIndex}.environment.${envIdx}.name`}
+              name={`services.${serviceIndex}.environment.${envIdx}.key`}
               label=""
               placeholder="Env"
               className="h-12 w-full rounded-s-md px-2 outline-none"
@@ -58,14 +60,13 @@ const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({ serviceIn
                 'rounded-e-md': envIdx === 0,
               })}
             />
-            {envIdx > 0 && (
-              <button
-                onClick={() => remove(envIdx)}
-                className="btn btn-error rounded-e-md rounded-s-none"
-              >
-                <Trash2 />
-              </button>
-            )}
+
+            <button
+              onClick={() => remove(envIdx)}
+              className="btn btn-error rounded-e-md rounded-s-none"
+            >
+              <Trash2 />
+            </button>
           </div>
         ))}
       </div>

@@ -25,6 +25,7 @@ const KVchema = zod.array(
 );
 
 export const BuildSchema = zod.object({
+  enabled: zod.boolean(),
   args: KVchema,
   context: zod.string(),
   dockerfile: zod.string(),
@@ -48,4 +49,4 @@ export const DockerComposeSchema = zod.object({
   services: zod.array(ServiceSchema),
 });
 
-export type TDockerCompose = zod.infer<typeof ServiceSchema>;
+export type TDockerCompose = zod.infer<typeof DockerComposeSchema>;

@@ -58,7 +58,7 @@ export const ServiceBuildFields: FC<ServiceBuildFieldsProps> = ({
             </div>
 
             {fields.map((field, idx) => (
-              <div className="flex items-center">
+              <div className="flex items-center" key={field.id}>
                 <div
                   className={cn(
                     'flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500',

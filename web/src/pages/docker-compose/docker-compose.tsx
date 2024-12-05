@@ -141,7 +141,7 @@ const DockerCompose: FC = () => {
         {},
       );
 
-      const requestBody = {
+      const requestBody: DockerComposeBody = {
         version: data.version,
         services: convertServicesToObject(refactoredService),
         networks: refactoredNetwork,
@@ -149,8 +149,8 @@ const DockerCompose: FC = () => {
 
       console.log(requestBody);
 
-      // await dockerComposeMutate(data)
-      // await download()
+      await dockerComposeMutate(data);
+      await download();
     } catch (error) {
       console.log(error);
       if (isAxiosError<DockerComposeValidationError>(error)) {
@@ -247,7 +247,7 @@ const DockerCompose: FC = () => {
                     <FormInput
                       id="container_name"
                       name={`services.${index}.container_name`}
-                      label="ContainerName"
+                      label="Container Name"
                       placeholder="container_name"
                     />
                   </div>

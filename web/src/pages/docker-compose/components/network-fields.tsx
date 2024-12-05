@@ -22,6 +22,24 @@ const NetworkFields: FC = () => {
     remove(index);
   };
 
+  const handleAppendNetwork = () => {
+    const networkData = customNetwork
+      ? {
+          network_name: '',
+          external: false,
+          name: '',
+        }
+      : {
+          network_name: '',
+          driver: {
+            label: 'bridge',
+            value: 'bridge',
+          },
+        };
+
+    append(networkData);
+  };
+
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
@@ -29,7 +47,7 @@ const NetworkFields: FC = () => {
           <p className="text-2xl font-bold">Networks</p>
           <button
             type="button"
-            onClick={() => append({ network_name: '', driver: 'bridge' })}
+            onClick={handleAppendNetwork}
             className="btn btn-xs ml-4"
           >
             Add <Plus className="size-3" />

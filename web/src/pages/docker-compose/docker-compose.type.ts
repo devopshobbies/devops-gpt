@@ -42,16 +42,24 @@ export interface DockerComposeValidationError {
 
 const KV_Schema = zod.array(
   zod.object({
-    key: zod.string(),
-    value: zod.string(),
+    key: zod
+      .string()
+      .min(1, { message: 'Key must be at least 1 character long' }),
+    value: zod
+      .string()
+      .min(1, { message: 'Value must be at least 1 character long' }),
   }),
 );
 
 export const BuildSchema = zod.object({
   enabled: zod.boolean(),
   args: KV_Schema,
-  context: zod.string(),
-  dockerfile: zod.string(),
+  context: zod
+    .string()
+    .min(1, { message: 'Context must be at least 1 character long' }),
+  dockerfile: zod
+    .string()
+    .min(1, { message: 'Dockerfile must be at least 1 character long' }),
 });
 
 export const ServiceSchema = zod.object({

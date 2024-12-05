@@ -1,10 +1,10 @@
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional,Union
 from pydantic import BaseModel, model_validator
 
 class Build(BaseModel):
     context: str = "."
     dockerfile: str = "DockerFile"
-
+    args: Optional[Dict[str, str]] = {"foo":"bar"}
 class Service(BaseModel):
     build: Optional[Build] = Build()
     image: Optional[str] = "nginx:latest"
@@ -14,7 +14,7 @@ class Service(BaseModel):
     environment: Optional[Dict[str, str]] = {"foo":"bar"}
     ports: Optional[List[str]] = ["80:80"]
     networks: Optional[List[str]] = ["app_network"]
-    args: Optional[Dict[str, str]] = {"foo":"bar"}
+    
     depends_on: Optional[List[str]] = ['service 0']
 
     @model_validator(mode="after")
@@ -26,8 +26,11 @@ class Service(BaseModel):
 class Network(BaseModel):
     driver: str = "bridge"
 
+class PreCreatedNetwork(BaseModel):
+    name:str = "net1"
+    external:bool = True
 class DockerCompose(BaseModel):
     version: str = "3"
     services: Dict[str, Service] = {"web":Service(), "web2":Service()}
-    networks: Optional[Dict[str, Network]] = {"app_network": {"driver":"bridge"}}
-
+    networks: Union[Optional[Dict[str, PreCreatedNetwork]],Optional[Dict[str, Network]]] = {"app_network": {"driver":"bridge"}}
+   

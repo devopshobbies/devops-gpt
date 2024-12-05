@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: DockerFile
+      args:
+        foo: bar
     image: nginx:latest
     container_name: web_server
     command: command...
@@ -15,14 +17,14 @@ services:
     - 80:80
     networks:
     - app_network
-    args:
-      foo: bar
     depends_on:
     - service 0
   web2:
     build:
       context: .
       dockerfile: DockerFile
+      args:
+        foo: bar
     image: nginx:latest
     container_name: web_server
     command: command...
@@ -34,8 +36,6 @@ services:
     - 80:80
     networks:
     - app_network
-    args:
-      foo: bar
     depends_on:
     - service 0
 networks:

@@ -1,5 +1,24 @@
 import { z } from 'zod';
 
+export interface DockerComposeBody {
+
+}
+
+export interface DockerComposeResponse {
+  output: string;
+}
+
+export interface DockerComposeValidationError {
+  detail: [
+    {
+      type: string;
+      loc: string[];
+      msg: string;
+      input: null;
+    },
+  ];
+}
+
 const BuildArgsSchema = z.record(z.string(), z.string());
 
 export const BuildSchema = z.object({

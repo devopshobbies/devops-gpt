@@ -4,16 +4,30 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormWrapper } from '@/components/form/form-wrapper';
 import { FormInput } from '@/components/form/form-input';
-import { DockerComposeSchema } from './docker-compose.type';
+import {
+  DockerComposeBody,
+  DockerComposeResponse,
+  DockerComposeSchema,
+} from './docker-compose.type';
 import { cn } from '@/lib/utils';
 import ServiceNetworkFields from './components/service-network-fields';
 import ServiceDependsOnFields from './components/service-depends-on-fields';
 import { ServiceVolumesFields } from './components/service-volumes-fields';
 import ServicePortsFields from './components/service-ports-fields';
 import { ServiceBuildFields } from './components/service-build-fields';
+import { toast } from 'sonner';
+import { isAxiosError } from 'axios';
+import { usePost } from '@/core/react-query';
+import { API } from '@/enums/api.enums';
 
 const DockerCompose: FC = () => {
   const [openService, setOpenService] = useState<number | null>(0);
+
+  const { mutateAsync: dockerComposeMutate, isPending: dockerComposePending } =
+    usePost<DockerComposeResponse, DockerComposeBody>(
+      API.DockerCompose,
+      'docker-compose',
+    );
 
   const defaultValues = {
     version: '3',
@@ -24,7 +38,7 @@ const DockerCompose: FC = () => {
           enabled: false,
           context: '.',
           dockerfile: 'Dockerfile',
-          args: []
+          args: [],
         },
         command: 'command...',
         container_name: 'web_server',
@@ -82,8 +96,21 @@ const DockerCompose: FC = () => {
     remove(index);
   };
 
-  const handleSubmit = async (data: DockerComposeSchema) => {
-    console.log(data);
+  const handleSubmit = async (data: THelmTemplate) => {
+    try {
+      console.log(data);
+
+      // dockerComposeMutate(data)
+    } catch (error) {
+      console.log(error);
+      if (isAxiosError<helmTemplateValidationError>(error)) {
+        toast.error(
+          `${error.response?.data.detail[0].loc[error.response?.data.detail[0].loc.length - 1]} ${error.response?.data.detail[0].msg}`,
+        );
+      } else {
+        toast.error('Something went wrong');
+      }
+    }
   };
 
   return (
@@ -180,6 +207,13 @@ const DockerCompose: FC = () => {
               </div>
             ))}
           </div>
+          <button
+            type="submit"
+            disabled={dockerComposePending}
+            className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+          >
+            {dockerComposePending ? 'Generating...' : 'Generate'}
+          </button>
         </FormWrapper>
       </div>
     </div>

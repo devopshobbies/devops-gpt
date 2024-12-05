@@ -1,78 +1,50 @@
-networks:
-  additionalProp1:
-    driver: string
-  additionalProp2:
-    driver: string
-  additionalProp3:
-    driver: string
+version: '3'
 services:
-  additionalProp1:
+  web1:
+    image: nginx:latest
+    container_name: web_server
+    environment:
+      foo: bar
+    ports:
+    - 80:80
+    networks:
+    - app_network
+  web2:
+    build:
+      context: .
+      dockerfile: DockerFile
+    image: nginx:latest
+    container_name: web_server
+    command: string
+    volumes:
+    - string
+    environment:
+      foo: bar
+    ports:
+    - 80:80
+    networks:
+    - app_network
     args:
       additionalProp1: string
       additionalProp2: string
       additionalProp3: string
-    build:
-      context: string
-      dockerfile: string
-    command: string
-    container_name: string
     depends_on:
     - string
-    environment:
-      additionalProp1: string
-      additionalProp2: string
-      additionalProp3: string
-    image: string
-    networks:
-    - string
-    ports:
-    - string
-    volumes:
-    - string
-  additionalProp2:
-    args:
-      additionalProp1: string
-      additionalProp2: string
-      additionalProp3: string
+  web3:
     build:
-      context: string
-      dockerfile: string
+      context: .
+      dockerfile: DockerFile
+    image: nginx:latest
+    container_name: web_server
     command: string
-    container_name: string
-    depends_on:
-    - string
-    environment:
-      additionalProp1: string
-      additionalProp2: string
-      additionalProp3: shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-    image: string
-    networks:
-    - string
-    ports:
-    - string
     volumes:
     - string
-  additionalProp3:
-    args:
-      additionalProp1: string
-      additionalProp2: string
-      additionalProp3: string
-    build:
-      context: string
-      dockerfile: string
-    command: string
-    container_name: string
-    depends_on:
-    - string
     environment:
-      additionalProp1: string
-      additionalProp2: string
-      additionalProp3: string
-    image: string
-    networks:
-    - string
+      foo: bar
     ports:
-    - string
-    volumes:
-    - string
-version: string
+    - 80:80
+    networks:
+    - app_network
+networks:
+  app:
+    driver: bridge

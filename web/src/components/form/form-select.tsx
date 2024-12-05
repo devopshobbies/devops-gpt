@@ -38,6 +38,8 @@ export const FormSelect = ({
   const fieldError = getNestedValue(errors, name);
   const errorMessage = fieldError?.message as string;
 
+  const { watch } = useFormContext();
+
   return (
     <Form.Field
       className={cn('form-field relative', {

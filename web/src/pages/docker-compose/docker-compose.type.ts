@@ -67,9 +67,27 @@ export const ServiceSchema = zod.object({
   depends_on: zod.array(zod.string()),
 });
 
+const labelValueSchema = zod.object({
+  label: zod.string(),
+  value: zod.enum(['bridge', 'host', 'none', 'overlay']),
+});
+
+export const NetworkSchema = zod.object({
+  default: zod.boolean(),
+  app_network: zod.array(
+    zod.object({
+      network_name: zod.string(),
+      external: zod.boolean().optional(),
+      driver: labelValueSchema,
+      name: zod.string(),
+    }),
+  ),
+});
+
 export const DockerComposeSchema = zod.object({
   version: zod.string(),
   services: zod.array(ServiceSchema),
+  networks: NetworkSchema,
 });
 
 export type TDockerCompose = zod.infer<typeof DockerComposeSchema>;

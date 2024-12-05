@@ -23,6 +23,7 @@ import { usePost } from '@/core/react-query';
 import { API } from '@/enums/api.enums';
 import ServiceEnvironmentFields from './components/service-environment-fields';
 import { convertKVtoObject, convertServicesToObject } from '@/lib/helper';
+import NetworkFields from './components/network-fields';
 
 const DockerCompose: FC = () => {
   const [openService, setOpenService] = useState<number | null>(0);
@@ -39,7 +40,6 @@ const DockerCompose: FC = () => {
       {
         name: '',
         build: {
-          enabled: false,
           context: '',
           dockerfile: '',
           args: [],
@@ -54,6 +54,15 @@ const DockerCompose: FC = () => {
         depends_on: [''],
       },
     ],
+    networks: {
+      custom: false,
+      app_network: [
+        {
+          network_name: '',
+          driver: { value: 'bridge', label: 'bridge' },
+        },
+      ],
+    },
   };
 
   const methods = useForm({
@@ -75,7 +84,6 @@ const DockerCompose: FC = () => {
   const handleAddService = () => {
     append({
       build: {
-        enabled: false,
         args: [],
         context: '',
         dockerfile: '',
@@ -130,6 +138,9 @@ const DockerCompose: FC = () => {
         <FormWrapper methods={methods} onSubmit={handleSubmit}>
           <div className="mb-4 flex w-full flex-col">
             <FormInput label="Version" name="version" placeholder="3" />
+          </div>
+          <div className="mb-4 flex w-full flex-col">
+            <NetworkFields />
           </div>
 
           <div className="mb-4 flex items-center">

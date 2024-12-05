@@ -24,6 +24,7 @@ import { API } from '@/enums/api.enums';
 import ServiceEnvironmentFields from './components/service-environment-fields';
 import { convertKVtoObject, convertServicesToObject } from '@/lib/helper';
 import NetworkFields from './components/network-fields';
+import { useDownload } from '@/hooks';
 
 const DockerCompose: FC = () => {
   const [openService, setOpenService] = useState<number | null>(0);
@@ -33,6 +34,12 @@ const DockerCompose: FC = () => {
       API.DockerCompose,
       'docker-compose',
     );
+
+  const { download, isPending: downloadPending } = useDownload({
+    downloadFileName: 'DockerCompose',
+    source: 'docker',
+    folderName: 'MyCompose',
+  });
 
   const defaultValues = {
     version: '',
@@ -142,7 +149,8 @@ const DockerCompose: FC = () => {
 
       console.log(requestBody);
 
-      // dockerComposeMutate(data)
+      // await dockerComposeMutate(data)
+      // await download()
     } catch (error) {
       console.log(error);
       if (isAxiosError<DockerComposeValidationError>(error)) {
@@ -258,7 +266,11 @@ const DockerCompose: FC = () => {
             disabled={dockerComposePending}
             className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
           >
-            {dockerComposePending ? 'Generating...' : 'Generate'}
+            {dockerComposePending
+              ? 'Generating...'
+              : downloadPending
+                ? 'Downloading...'
+                : 'Generate'}
           </button>
         </FormWrapper>
       </div>

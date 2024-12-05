@@ -6,7 +6,6 @@ import { API } from '@/enums/api.enums';
 import {
   HelmTemplateBody,
   HelmTemplateResponse,
-  HelmTemplateSchema,
   helmTemplateSchema,
   helmTemplateValidationError,
 } from './helm-template.types';
@@ -14,13 +13,15 @@ import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { accessModesOptions, sizeOptions } from './data/select-options';
 import { useDownload } from '@/hooks';
-import { useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 
 import { FormWrapper } from '@/components/form/form-wrapper';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '@/components/form/form-input';
 import { FormCheckbox } from '@/components/form/form-checkbox';
 import { FormSelect } from '@/components/form/form-select';
+import PodEnvironmentFields from './components/pod-environment-fields';
+import type { THelmTemplate } from './helm-template.types';
 
 const HelmTemplate: FC = () => {
   const { mutateAsync: helmTemplateMutate, isPending: helmTemplatePending } =
@@ -36,13 +37,12 @@ const HelmTemplate: FC = () => {
   });
 
   const defaultValues = {
-    api_version: 1,
+    api_version: '',
     pods: [
       {
         name: '',
         image: '',
-        target_port: null,
-        replicas: null,
+        replicas: '',
         persistance: {},
         environment: [
           {
@@ -82,7 +82,7 @@ const HelmTemplate: FC = () => {
     remove(index);
   };
 
-  const handleSubmit = async (data: HelmTemplateSchema) => {
+  const handleSubmit = async (data: THelmTemplate) => {
     try {
       const body_data = data.pods.map((data) => {
         const { mode, accessModes, size } = data.persistance;
@@ -125,6 +125,8 @@ const HelmTemplate: FC = () => {
               id="api_version"
               name="api_version"
               placeholder="2"
+              inputType="number"
+              isNumber={true}
             />
           </div>
           <div className="mb-4 flex items-center">
@@ -174,7 +176,7 @@ const HelmTemplate: FC = () => {
                   className={cn(
                     'h-full max-h-0 overflow-hidden px-1 transition-all duration-500',
                     {
-                      'max-h-[1000px]': openPod === index,
+                      'max-h-[1500px]': openPod === index,
                     },
                   )}
                 >
@@ -200,6 +202,8 @@ const HelmTemplate: FC = () => {
                       name={`pods.${index}.target_port`}
                       label="Target Port"
                       placeholder="80"
+                      inputType="number"
+                      isNumber={true}
                     />
                   </div>
                   <div className="mb-2 flex flex-col">
@@ -208,6 +212,8 @@ const HelmTemplate: FC = () => {
                       name={`pods.${index}.replicas`}
                       label="Replicas"
                       placeholder="1"
+                      inputType="number"
+                      isNumber={true}
                     />
                   </div>
                   <p className="mb-2 mt-6 text-base font-bold">Persistence</p>
@@ -219,7 +225,6 @@ const HelmTemplate: FC = () => {
                         label=""
                         placeholder="Value"
                       />
-
                       <FormSelect
                         name={`pods.${index}.persistance.mode`}
                         label=""
@@ -290,66 +295,3 @@ const HelmTemplate: FC = () => {
 };
 
 export default HelmTemplate;
-
-interface PodEnvironmentFieldsProps {
-  podIndex: number;
-}
-
-export const PodEnvironmentFields: React.FC<PodEnvironmentFieldsProps> = ({
-  podIndex,
-}) => {
-  const { control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `pods.${podIndex}.environment`,
-  });
-
-  return (
-    <div className="mb-2 mt-6">
-      <div className="mb-2 flex items-center">
-        <p className="text-base font-bold">Environments</p>
-
-        <button
-          type="button"
-          onClick={() => append({ name: '', value: '' })}
-          className="btn btn-xs ml-4"
-        >
-          Add <Plus className="size-3" />
-        </button>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        {fields.map((field, envIdx) => (
-          <div className="flex" key={field.id}>
-            <FormInput
-              id={`env_name_${envIdx}`}
-              name={`pods.${podIndex}.environment.${envIdx}.name`}
-              label=""
-              placeholder="Env"
-              className="h-12 w-full divide-gray-200 rounded-md rounded-e-md rounded-s-md border border-gray-200 px-2 outline-none dark:divide-gray-500 dark:border-gray-500 dark:bg-black-1"
-            />
-            <FormInput
-              id={`env_value_${envIdx}`}
-              name={`pods.${podIndex}.environment.${envIdx}.value`}
-              label=""
-              placeholder="Hi"
-              className={cn(
-                'h-12 w-full divide-gray-200 rounded-md rounded-e-md border border-gray-200 px-2 outline-none dark:divide-gray-500 dark:border-gray-500 dark:bg-black-1',
-                {
-                  'rounded-e-md': envIdx === 0,
-                },
-              )}
-            />
-            {envIdx > 0 && (
-              <button
-                onClick={() => remove(envIdx)}
-                className="btn btn-error rounded-e-md rounded-s-none"
-              >
-                <Trash2 />
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};

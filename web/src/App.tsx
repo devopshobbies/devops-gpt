@@ -12,7 +12,10 @@ import {
   Installation,
   S3,
 } from '@/pages';
-import DockerCompose from './pages/docker-compose/docker-compose';
+import { AnsibleLayout } from './pages/ansible/components/layout';
+import DockerAnsible from './pages/ansible/docker/docker';
+import NginxAnsible from './pages/ansible/nginx/nginx';
+import KubernetesAnsible from './pages/ansible/kuber/kuber';
 
 function App() {
   const location = useLocation();
@@ -31,6 +34,11 @@ function App() {
               <Route path="s3" element={<S3 />} />
               <Route path="iam" element={<IAM />} />
               <Route path="argocd" element={<Argocd />} />
+            </Route>
+            <Route path="ansible-template" element={<AnsibleLayout />}>
+              <Route path="docker" element={<DockerAnsible />} />
+              <Route path="nginx" element={<NginxAnsible />} />
+              <Route path="kuber" element={<KubernetesAnsible />} />
             </Route>
             <Route path="installation" element={<Installation />} />
           </Route>

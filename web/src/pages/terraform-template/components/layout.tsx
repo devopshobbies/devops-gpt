@@ -20,7 +20,7 @@ const menu = [
   },
   {
     url: 'argocd',
-    title: 'ARGOCD Service',
+    title: 'ArgoCD Service',
   },
 ];
 

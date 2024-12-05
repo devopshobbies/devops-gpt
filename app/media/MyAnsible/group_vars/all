@@ -1,6 +1,7 @@
 # General
 install_ansible_modules: "true"
 disable_transparent_huge_pages: "true"
+
 setup_interface: "false"
 
 # Network Calico see here for more details https://github.com/projectcalico/calico/releases
@@ -28,15 +29,9 @@ k8s_version: "1.31.2" # see here https://kubernetes.io/releases/patch-releases/ 
 # CRI
 cri_socket: unix:///var/run/containerd/containerd.sock
 
-# VRRP and HAProxy
-interface_name: "enp0s8"
-virtual_ip: "192.168.178.100"
-haproxy_frontend_password: "password"
-
 # Ansible Connection
-
 ansible_user: root
 ansible_port: 22
 ansible_python_interpreter: "/usr/bin/python3"
-domain="devopsgpt.com"
-apiserver_url="devopsgpt.com"
+domain: "devopsgpt.com"
+apiserver_url: "devopsgpt.com"

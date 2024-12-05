@@ -48,9 +48,6 @@ async def ansible_install_generation_kuber(request:AnsibleInstallKuber) -> Outpu
         add_files_to_folder(files = ['app/media/kuber_configs/resolv.conf.j2'] , folder='app/media/MyAnsible/roles/preinstall/templates/')
         add_files_to_folder(files = ['app/media/kuber_configs/kubeadmcnf.yml.j2'] , folder='app/media/MyAnsible/roles/init_k8s/templates/')
         add_files_to_folder(files = ['app/media/kuber_configs/kubeadmcnf-join.yml.j2'] , folder='app/media/MyAnsible/roles/join_master/templates/')
-        add_files_to_folder(files = ['app/media/kuber_configs/check_apiserveer.sh.j2',
-                                     'app/media/kuber_configs/haproxy.cfg.j2',
-                                     'app/media/kuber_configs/keepalived.conf.j2'
-                                     ] , folder='app/media/MyAnsible/roles/lb/templates/')
+       
         
         return Output(output='output')

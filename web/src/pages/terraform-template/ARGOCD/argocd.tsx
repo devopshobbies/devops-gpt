@@ -138,7 +138,7 @@ const Argocd: FC = () => {
             </div>
           </div>
           <div className="flex w-full items-center justify-between px-3 py-3">
-            <p>Argocd Repository</p>
+            <p>ArgoCD Repository</p>
             <input
               type="checkbox"
               className={cn('toggle border-gray-500 bg-gray-500', {

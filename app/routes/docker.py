@@ -10,10 +10,7 @@ async def docker_compose_template(request:DockerCompose) -> Output:
     
         if os.environ.get("TEST"):
             return Output(output='output')
-        generated_prompt = docker_compose_generator(request)
+        docker_compose_generator(request)
 
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("compose_generator",output)
-        execute_pythonfile("MyCompose","compose_generator")
         return Output(output='output')
     

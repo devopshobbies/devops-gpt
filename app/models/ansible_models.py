@@ -32,12 +32,11 @@ class AnsibleInstallDocker(AnsibleBase):
         return value
     
     
-    
+   
 class AnsibleInstallKuber(AnsibleBase):
     os: str = 'ubuntu'
     k8s_worker_nodes: List[str]
     k8s_master_nodes: List[str]
-    lb_nodes: List[str]
     version:str = "1.31"
     
     

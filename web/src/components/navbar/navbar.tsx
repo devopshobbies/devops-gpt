@@ -12,12 +12,12 @@ const navbar = [
     title: 'Bug Fix',
   },
   {
-    url: '/terraform-template',
-    title: 'Terraform Template',
-  },
-  {
     url: '/installation',
     title: 'Installation',
+  },
+  {
+    url: '/terraform-template',
+    title: 'Terraform Template',
   },
   {
     url: '/helm-template',
@@ -26,6 +26,10 @@ const navbar = [
   {
     url: '/docker-compose',
     title: 'Docker Compose',
+  },
+  {
+    url: '/ansible-template',
+    title: 'Ansible Template',
   },
 ];
 

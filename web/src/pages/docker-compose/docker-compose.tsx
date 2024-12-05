@@ -150,8 +150,6 @@ const DockerCompose: FC = () => {
         networks: refactoredNetwork,
       };
 
-      console.log(requestBody);
-
       await dockerComposeMutate(requestBody);
       await download();
     } catch (error) {

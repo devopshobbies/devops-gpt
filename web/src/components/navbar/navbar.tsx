@@ -23,6 +23,10 @@ const navbar = [
     url: '/helm-template',
     title: 'Helm Template',
   },
+  {
+    url: '/docker-compose',
+    title: 'Docker Compose',
+  },
 ];
 
 const Navbar: FC = () => {

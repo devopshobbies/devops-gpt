@@ -1,0 +1,5 @@
+---
+# tasks file for join_worker
+
+- name: Join worker(s) node to cluster
+  include_tasks: join_worker.yml

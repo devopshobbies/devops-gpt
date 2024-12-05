@@ -1,37 +1,36 @@
-from typing import List, Optional
-from pydantic import BaseModel, validator, ValidationError
-
-class Port(BaseModel):
-    machine_port:int = 80
-    container_port:int = 80
-    
-class Network(BaseModel):
-    name:str = 'app_network'
-
-class EnvironmentVariable(BaseModel):
-    name:str = 'foo'
-    value:str = "bar"
-    
-class Volume(BaseModel):
-    local_dir: str = './nginx/nginx.conf'
-    container_dir:str = '/etc/nginx/nginx.conf'
+from typing import Dict, List, Optional,Union
+from pydantic import BaseModel, model_validator
 
 class Build(BaseModel):
-    context:str
-    dockerfile:str
+    context: str = "."
+    dockerfile: str = "DockerFile"
+    args: Optional[Dict[str, str]] = {"foo":"bar"}
 class Service(BaseModel):
-    image:str = 'nginx'
-    container_name:str = 'web_server'
-    build: Build | None = None
-    version:str = 'latest'
-    volumes:List[Volume]
-    depends_on:List[str]
-    ports:List[Port]
-    networks:List[Network]
-    environments:List[EnvironmentVariable]
+    build: Optional[Build] = Build()
+    image: Optional[str] = "nginx:latest"
+    container_name: Optional[str] = "web_server"
+    command: Optional[str] = "command..."
+    volumes: Optional[List[str]] = ["./foo:bar"]
+    environment: Optional[Dict[str, str]] = {"foo":"bar"}
+    ports: Optional[List[str]] = ["80:80"]
+    networks: Optional[List[str]] = ["app_network"]
     
-      
+    depends_on: Optional[List[str]] = ['service 0']
+
+    @model_validator(mode="after")
+    def validator(self):
+        if self.build == None and self.image == None:
+            raise ValueError(f"one of the build or image sections must be present!")
+        return self
+    
+class Network(BaseModel):
+    driver: str = "bridge"
+
+class PreCreatedNetwork(BaseModel):
+    name:str = "net1"
+    external:bool = True
 class DockerCompose(BaseModel):
-    services: List[Service]
-    network:Network
-    
+    version: str = "3"
+    services: Dict[str, Service] = {"web":Service(), "web2":Service()}
+    networks: Union[Optional[Dict[str, PreCreatedNetwork]],Optional[Dict[str, Network]]] = {"app_network": {"driver":"bridge"}}
+   

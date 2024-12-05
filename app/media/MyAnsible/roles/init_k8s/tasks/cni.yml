@@ -1,0 +1,20 @@
+- block:
+    - name: Check if Calico CRDs exist
+      command: kubectl get crd felixconfigurations.crd.projectcalico.org
+      register: calico_crd_check
+      ignore_errors: true
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
+
+- block:
+    - name: Apply CNI plugin (Calico)
+      command: kubectl create -f {{ calico_operator_url }}
+      retries: 3
+      delay: 3
+
+    - name: Apply CNI plugin (Calico)
+      command: kubectl create -f {{ calico_crd_url }}
+      retries: 3
+      delay: 3
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
+  when: calico_crd_check.rc != 0
+  run_once: true

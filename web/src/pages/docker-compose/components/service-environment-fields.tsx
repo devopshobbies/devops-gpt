@@ -4,15 +4,15 @@ import { FormInput } from '@/components/form/form-input';
 import { cn } from '@/lib/utils';
 import { FC } from 'react';
 
-type PodEnvironmentFieldsProps = {
-  podIndex: number;
+type ServiceEnvironmentFieldsProps = {
+  serviceIndex: number;
 };
 
-const PodEnvironmentFields: FC<PodEnvironmentFieldsProps> = ({ podIndex }) => {
+const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({ serviceIndex }) => {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `services.${podIndex}.environment`,
+    name: `services.${serviceIndex}.environment`,
   });
 
   return (
@@ -36,7 +36,7 @@ const PodEnvironmentFields: FC<PodEnvironmentFieldsProps> = ({ podIndex }) => {
               {
                 'divide-red-500 border-red-500 dark:divide-red-500 dark:border-red-500':
                   control.getFieldState(
-                    `services.${podIndex}.environment.${envIdx}.name`,
+                    `services.${serviceIndex}.environment.${envIdx}.name`,
                   ).invalid,
               },
             )}
@@ -44,14 +44,14 @@ const PodEnvironmentFields: FC<PodEnvironmentFieldsProps> = ({ podIndex }) => {
           >
             <FormInput
               id={`env_name_${envIdx}`}
-              name={`services.${podIndex}.environment.${envIdx}.name`}
+              name={`services.${serviceIndex}.environment.${envIdx}.name`}
               label=""
               placeholder="Env"
               className="h-12 w-full rounded-s-md px-2 outline-none"
             />
             <FormInput
               id={`env_value_${envIdx}`}
-              name={`services.${podIndex}.environment.${envIdx}.value`}
+              name={`services.${serviceIndex}.environment.${envIdx}.value`}
               label=""
               placeholder="Hi"
               className={cn('h-12 w-full rounded-s-md px-2 outline-none', {
@@ -73,4 +73,4 @@ const PodEnvironmentFields: FC<PodEnvironmentFieldsProps> = ({ podIndex }) => {
   );
 };
 
-export default PodEnvironmentFields;
+export default ServiceEnvironmentFields;

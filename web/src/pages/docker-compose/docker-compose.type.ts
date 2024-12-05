@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z as zod } from 'zod';
 
 export interface DockerComposeBody {}
 
@@ -17,38 +17,35 @@ export interface DockerComposeValidationError {
   ];
 }
 
-const BuildArgsSchema = z.record(z.string(), z.string());
+const KVchema = zod.array(
+  zod.object({
+    key: zod.string(),
+    value: zod.string(),
+  }),
+);
 
-export const BuildSchema = z.object({
-  args: BuildArgsSchema,
-  context: z.string(),
-  dockerfile: z.string(),
+export const BuildSchema = zod.object({
+  args: KVchema,
+  context: zod.string(),
+  dockerfile: zod.string(),
 });
 
-export const EnvironmentSchema = z.record(z.string(), z.string());
-
-export const ServiceSchema = z.object({
-  name: z.string(),
+export const ServiceSchema = zod.object({
+  name: zod.string(),
   build: BuildSchema,
-  command: z.string().optional(),
-  container_name: z.string(),
-  depends_on: z.array(z.string()),
-  environment: EnvironmentSchema,
-  image: z.string(),
-  networks: z.array(z.string()),
-  ports: z.array(z.string()),
-  volumes: z.array(z.string()),
+  image: zod.string(),
+  environment: KVchema,
+  container_name: zod.string(),
+  ports: zod.array(zod.string()),
+  command: zod.string().optional(),
+  volumes: zod.array(zod.string()),
+  networks: zod.array(zod.string()),
+  depends_on: zod.array(zod.string()),
 });
 
-export const NetworkSchema = z.object({
-  driver: z.string(),
+export const DockerComposeSchema = zod.object({
+  version: zod.string(),
+  services: zod.array(ServiceSchema),
 });
 
-export const DockerComposeSchema = z.object({
-  version: z.string(),
-  services: z.array(ServiceSchema),
-  networks: z.record(z.string(), NetworkSchema),
-});
-
-export type DockerComposeSchema = z.infer<typeof DockerComposeSchema>;
-export type TDockerCompose = z.infer<typeof ServiceSchema>;
+export type TDockerCompose = zod.infer<typeof ServiceSchema>;

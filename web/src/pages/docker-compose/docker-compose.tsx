@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { usePost } from '@/core/react-query';
 import { API } from '@/enums/api.enums';
-import ServiceEnvironmentFields from '../helm-template/components/pod-environment-fields';
+import ServiceEnvironmentFields from './components/service-environment-fields';
 
 const DockerCompose: FC = () => {
   const [openService, setOpenService] = useState<number | null>(0);
@@ -33,31 +33,26 @@ const DockerCompose: FC = () => {
     );
 
   const defaultValues = {
-    version: '3',
+    version: '',
     services: [
       {
-        name: 'web',
+        name: '',
         build: {
           enabled: false,
-          context: '.',
-          dockerfile: 'Dockerfile',
+          context: '',
+          dockerfile: '',
           args: [],
         },
-        command: 'command...',
-        container_name: 'web_server',
-        depends_on: [],
-        environment: { foo: 'bar' },
-        image: 'nginx:latest',
-        networks: ['app_network'],
-        ports: [],
-        volumes: [],
+        command: '',
+        container_name: '',
+        environment: [],
+        image: '',
+        ports: [''],
+        volumes: [''],
+        networks: [''],
+        depends_on: [''],
       },
     ],
-    networks: {
-      app_network: {
-        driver: 'bridge',
-      },
-    },
   };
 
   const methods = useForm({
@@ -78,17 +73,18 @@ const DockerCompose: FC = () => {
 
   const handleAddService = () => {
     append({
-      name: '',
       build: {
-        args: {},
+        enabled: false,
+        args: [],
         context: '',
         dockerfile: '',
       },
+      name: '',
       command: '',
       container_name: '',
-      depends_on: [''],
-      environment: {},
       image: '',
+      environment: [],
+      depends_on: [''],
       networks: [''],
       ports: [''],
       volumes: [''],

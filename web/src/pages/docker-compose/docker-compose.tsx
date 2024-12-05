@@ -6,6 +6,11 @@ import { FormWrapper } from '@/components/form/form-wrapper';
 import { FormInput } from '@/components/form/form-input';
 import { DockerComposeSchema } from './docker-compose.type';
 import { cn } from '@/lib/utils';
+import ServiceNetworkFields from './components/service-network-fields';
+import ServiceDependsOnFields from './components/service-depends-on-fields';
+import { ServiceVolumesFields } from './components/service-volumes-fields';
+import ServicePortsFields from './components/service-ports-fields';
+import { ServiceBuildFields } from './components/service-build-fields';
 
 const DockerCompose: FC = () => {
   const [openService, setOpenService] = useState<number | null>(0);
@@ -16,18 +21,19 @@ const DockerCompose: FC = () => {
       {
         name: 'web',
         build: {
-          args: { foo: 'bar' },
+          enabled: false,
           context: '.',
-          dockerfile: 'DockerFile',
+          dockerfile: 'Dockerfile',
+          args: []
         },
         command: 'command...',
         container_name: 'web_server',
-        depends_on: ['service 0'],
+        depends_on: [],
         environment: { foo: 'bar' },
         image: 'nginx:latest',
         networks: ['app_network'],
-        ports: ['80:80'],
-        volumes: ['./foo:bar'],
+        ports: [],
+        volumes: [],
       },
     ],
     networks: {
@@ -146,7 +152,7 @@ const DockerCompose: FC = () => {
                       id="service_name"
                       name={`services.${index}.name`}
                       label="Name"
-                      placeholder="web"
+                      placeholder="service name"
                     />
                   </div>
                   <div className="mb-4 flex flex-col">
@@ -157,6 +163,19 @@ const DockerCompose: FC = () => {
                       placeholder="image"
                     />
                   </div>
+                  <div className="mb-4 flex flex-col">
+                    <FormInput
+                      id="container_name"
+                      name={`services.${index}.container_name`}
+                      label="ContainerName"
+                      placeholder="container_name"
+                    />
+                  </div>
+                  <ServiceBuildFields serviceIndex={index} />
+                  <ServiceNetworkFields serviceIndex={index} />
+                  <ServiceDependsOnFields serviceIndex={index} />
+                  <ServiceVolumesFields serviceIndex={index} />
+                  <ServicePortsFields serviceIndex={index} />
                 </div>
               </div>
             ))}

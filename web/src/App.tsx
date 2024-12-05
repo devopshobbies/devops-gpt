@@ -16,6 +16,7 @@ import { AnsibleLayout } from './pages/ansible/components/layout';
 import DockerAnsible from './pages/ansible/docker/docker';
 import NginxAnsible from './pages/ansible/nginx/nginx';
 import KubernetesAnsible from './pages/ansible/kuber/kuber';
+import DockerCompose from './pages/docker-compose/docker-compose';
 
 function App() {
   const location = useLocation();

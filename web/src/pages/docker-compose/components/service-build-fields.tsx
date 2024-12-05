@@ -3,6 +3,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { FormInput } from '@/components/form/form-input';
 import { FormCheckbox } from '@/components/form/form-checkbox';
+import { cn } from '@/lib/utils';
 
 type ServiceBuildFieldsProps = {
   serviceIndex: number;
@@ -31,7 +32,7 @@ export const ServiceBuildFields: FC<ServiceBuildFieldsProps> = ({
 
       {buildEnabled && (
         <div className="space-y-4 rounded-md border border-gray-200 p-4 dark:border-gray-500">
-          <div className="flex [&>div]:flex-1 gap-2">
+          <div className="flex gap-2 [&>div]:flex-1">
             <FormInput
               name={`services.${serviceIndex}.build.context`}
               label="Context"
@@ -57,8 +58,19 @@ export const ServiceBuildFields: FC<ServiceBuildFieldsProps> = ({
             </div>
 
             {fields.map((field, idx) => (
-              <div key={field.id} className="flex items-center gap-2">
-                <div className="flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500">
+              <div className="flex items-center">
+                <div
+                  className={cn(
+                    'flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500',
+                    {
+                      'divide-red-500 border-red-500 dark:divide-red-500 dark:border-red-500':
+                        control.getFieldState(
+                          `services.${serviceIndex}.volumes.${idx}`,
+                        ).invalid,
+                    },
+                  )}
+                  key={field.id}
+                >
                   <FormInput
                     label=""
                     name={`services.${serviceIndex}.build.args.${idx}.key`}
@@ -71,14 +83,14 @@ export const ServiceBuildFields: FC<ServiceBuildFieldsProps> = ({
                     placeholder="Value"
                     className="h-12 w-full rounded-e-md px-2"
                   />
+                  <button
+                    type="button"
+                    onClick={() => remove(idx)}
+                    className="btn btn-error rounded-e-md rounded-s-none"
+                  >
+                    <Trash2 />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => remove(idx)}
-                  className="btn btn-error"
-                >
-                  <Trash2 className="size-4" />
-                </button>
               </div>
             ))}
           </div>

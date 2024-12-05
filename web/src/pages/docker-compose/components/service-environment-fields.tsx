@@ -4,15 +4,15 @@ import { FormInput } from '@/components/form/form-input';
 import { cn } from '@/lib/utils';
 import { FC } from 'react';
 
-type ServiceEnvironmentFieldsProps = {
-  serviceIndex: number;
+type PodEnvironmentFieldsProps = {
+  podIndex: number;
 };
 
-const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({ serviceIndex }) => {
+const PodEnvironmentFields: FC<PodEnvironmentFieldsProps> = ({ podIndex }) => {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `pods.${serviceIndex}.environment`,
+    name: `services.${podIndex}.environment`,
   });
 
   return (
@@ -36,7 +36,7 @@ const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({ serviceIn
               {
                 'divide-red-500 border-red-500 dark:divide-red-500 dark:border-red-500':
                   control.getFieldState(
-                    `pods.${serviceIndex}.environment.${envIdx}.name`,
+                    `services.${podIndex}.environment.${envIdx}.name`,
                   ).invalid,
               },
             )}
@@ -44,14 +44,14 @@ const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({ serviceIn
           >
             <FormInput
               id={`env_name_${envIdx}`}
-              name={`pods.${serviceIndex}.environment.${envIdx}.name`}
+              name={`services.${podIndex}.environment.${envIdx}.name`}
               label=""
               placeholder="Env"
               className="h-12 w-full rounded-s-md px-2 outline-none"
             />
             <FormInput
               id={`env_value_${envIdx}`}
-              name={`pods.${serviceIndex}.environment.${envIdx}.value`}
+              name={`services.${podIndex}.environment.${envIdx}.value`}
               label=""
               placeholder="Hi"
               className={cn('h-12 w-full rounded-s-md px-2 outline-none', {
@@ -73,4 +73,4 @@ const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({ serviceIn
   );
 };
 
-export default ServiceEnvironmentFields;
+export default PodEnvironmentFields;

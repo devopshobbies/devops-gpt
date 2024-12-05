@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-export interface DockerComposeBody {
-
-}
+export interface DockerComposeBody {}
 
 export interface DockerComposeResponse {
   output: string;
@@ -53,4 +51,4 @@ export const DockerComposeSchema = z.object({
 });
 
 export type DockerComposeSchema = z.infer<typeof DockerComposeSchema>;
-export type ServiceType = z.infer<typeof ServiceSchema>;
+export type TDockerCompose = z.infer<typeof ServiceSchema>;

@@ -8,6 +8,8 @@ import {
   DockerComposeBody,
   DockerComposeResponse,
   DockerComposeSchema,
+  DockerComposeValidationError,
+  TDockerCompose,
 } from './docker-compose.type';
 import { cn } from '@/lib/utils';
 import ServiceNetworkFields from './components/service-network-fields';
@@ -19,6 +21,7 @@ import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { usePost } from '@/core/react-query';
 import { API } from '@/enums/api.enums';
+import ServiceEnvironmentFields from '../helm-template/components/pod-environment-fields';
 
 const DockerCompose: FC = () => {
   const [openService, setOpenService] = useState<number | null>(0);
@@ -96,14 +99,14 @@ const DockerCompose: FC = () => {
     remove(index);
   };
 
-  const handleSubmit = async (data: THelmTemplate) => {
+  const handleSubmit = async (data: TDockerCompose) => {
     try {
       console.log(data);
 
       // dockerComposeMutate(data)
     } catch (error) {
       console.log(error);
-      if (isAxiosError<helmTemplateValidationError>(error)) {
+      if (isAxiosError<DockerComposeValidationError>(error)) {
         toast.error(
           `${error.response?.data.detail[0].loc[error.response?.data.detail[0].loc.length - 1]} ${error.response?.data.detail[0].msg}`,
         );
@@ -203,6 +206,7 @@ const DockerCompose: FC = () => {
                   <ServiceDependsOnFields serviceIndex={index} />
                   <ServiceVolumesFields serviceIndex={index} />
                   <ServicePortsFields serviceIndex={index} />
+                  <ServiceEnvironmentFields serviceIndex={index} />
                 </div>
               </div>
             ))}

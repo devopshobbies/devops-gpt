@@ -1,28 +1,44 @@
-import { custom, z as zod } from 'zod';
+import { z as zod } from 'zod';
+
+interface IBuildConfig {
+  args: {
+    [key: string]: string;
+  };
+  context: string;
+  dockerfile: string;
+}
+
+interface IServiceConfig {
+  [key: string]: {
+    build: IBuildConfig;
+    image: string;
+    environment: {
+      [key: string]: string;
+    };
+    container_name: string;
+    ports: string[];
+    command?: string;
+    volumes: string[];
+    networks: string[];
+    depends_on: string[];
+  };
+}
+
+export interface INetworkConfig {
+  [key: string]:
+    | {
+        driver: 'bridge' | 'host' | 'none' | 'overlay';
+      }
+    | {
+        name: string;
+        external: boolean;
+      };
+}
 
 export interface DockerComposeBody {
   version: string;
-  services: {
-    [key: string]: {
-      build: {
-        args: {
-          [key: string]: string;
-        };
-        context: string;
-        dockerfile: string;
-      };
-      command: string;
-      container_name: string;
-      depends_on: string[];
-      environment: {
-        [key: string]: string;
-      };
-      image: string;
-      networks: string[];
-      ports: string[];
-      volumes: string[];
-    };
-  };
+  services: IServiceConfig;
+  networks: INetworkConfig;
 }
 
 export interface DockerComposeResponse {
@@ -54,12 +70,8 @@ const KV_Schema = zod.array(
 export const BuildSchema = zod.object({
   enabled: zod.boolean(),
   args: KV_Schema,
-  context: zod
-    .string()
-    .min(1, { message: 'Context must be at least 1 character long' }),
-  dockerfile: zod
-    .string()
-    .min(1, { message: 'Dockerfile must be at least 1 character long' }),
+  context: zod.string(),
+  dockerfile: zod.string(),
 });
 
 export const ServiceSchema = zod.object({
@@ -80,7 +92,7 @@ const labelValueSchema = zod.object({
   value: zod.enum(['bridge', 'host', 'none', 'overlay']),
 });
 
-const NetworkSchema = zod.union([
+export const NetworkSchema = zod.union([
   zod.object({
     custom: zod.literal(false),
     app_network: zod.array(

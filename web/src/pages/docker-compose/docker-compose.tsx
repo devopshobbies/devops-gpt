@@ -9,7 +9,9 @@ import {
   DockerComposeResponse,
   DockerComposeSchema,
   DockerComposeValidationError,
+  INetworkConfig,
   TDockerCompose,
+  TNetworkDockerCompose,
 } from './docker-compose.type';
 import { cn } from '@/lib/utils';
 import ServiceNetworkFields from './components/service-network-fields';
@@ -117,15 +119,17 @@ const DockerCompose: FC = () => {
         ({ build: { enabled, ...buildRest }, ...service }) => ({
           ...service,
           environment: convertKVtoObject(service.environment),
-          build: {
-            ...buildRest,
-            args: convertKVtoObject(buildRest.args),
-          },
+          ...(enabled && {
+            build: {
+              ...buildRest,
+              args: convertKVtoObject(buildRest.args),
+            },
+          }),
         }),
       );
 
       const refactoredNetwork = data.networks.app_network.reduce(
-        (acc, network) => {
+        (acc: INetworkConfig, network) => {
           if (!data.networks.custom) {
             acc[network.network_name] = {
               driver: network.driver?.value,
@@ -149,7 +153,7 @@ const DockerCompose: FC = () => {
 
       console.log(requestBody);
 
-      await dockerComposeMutate(data);
+      await dockerComposeMutate(requestBody);
       await download();
     } catch (error) {
       console.log(error);

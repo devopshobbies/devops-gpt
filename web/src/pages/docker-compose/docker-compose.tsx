@@ -117,13 +117,17 @@ const DockerCompose: FC = () => {
       const refactoredService = data.services.map(
         ({ build: { enabled, ...buildRest }, ...service }) => ({
           ...service,
-          environment: convertKVtoObject(service.environment),
-          ...(enabled && {
-            build: {
-              ...buildRest,
-              args: convertKVtoObject(buildRest.args),
-            },
+          ...(service.environment && {
+            environment: convertKVtoObject(service.environment),
           }),
+          ...(enabled
+            ? {
+                build: {
+                  ...buildRest,
+                  args: convertKVtoObject(buildRest.args),
+                },
+              }
+            : { build: null }),
         }),
       );
 
@@ -147,9 +151,31 @@ const DockerCompose: FC = () => {
         {},
       );
 
+      const services = refactoredService.map((item) => {
+        if (item.ports && item?.ports[0].length === 0) {
+          item.ports = null;
+        }
+        if (item.volumes && item.volumes[0].length === 0) {
+          item.volumes = null;
+        }
+        if (item.networks && item.networks[0].length === 0) {
+          item.networks = null;
+        }
+        if (item.depends_on && item.depends_on[0].length === 0) {
+          item.depends_on = null;
+        }
+        if (item.environment && !item.environment[0]) {
+          item.environment = null;
+        }
+        if (item.environment && item.environment[0]) {
+          item.environment = null;
+        }
+        return item;
+      });
+
       const requestBody: DockerComposeBody = {
         version: data.version,
-        services: convertServicesToObject(refactoredService),
+        services: convertServicesToObject(services),
         networks: refactoredNetwork,
       };
 
@@ -162,6 +188,7 @@ const DockerCompose: FC = () => {
           `${error.response?.data.detail[0].loc[error.response?.data.detail[0].loc.length - 1]} ${error.response?.data.detail[0].msg}`,
         );
       } else {
+        console.log(error);
         toast.error('Something went wrong');
       }
     }

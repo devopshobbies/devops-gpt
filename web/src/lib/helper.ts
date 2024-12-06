@@ -5,14 +5,18 @@ export const getNestedValue = (obj: any, path: string) => {
 };
 
 export const convertKVtoObject = (
-  kvArray: Array<{ key: string; value: string }>,
+  kvArray: Array<{ key: string; value: string } | null>,
 ) => {
-  return kvArray.reduce(
+  return kvArray?.reduce(
     (acc, curr) => {
-      acc[curr.key] = curr.value;
+
+      if (curr && acc) {
+        acc[curr.key] = curr?.value;
+
+      }
       return acc;
     },
-    {} as Record<string, string>,
+    {} as Record<string, string> | null,
   );
 };
 

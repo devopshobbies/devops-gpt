@@ -64,7 +64,7 @@ const KV_Schema = zod.array(
     value: zod
       .string()
       .min(1, { message: 'Value must be at least 1 character long' }),
-  }),
+  }).nullable(),
 );
 
 export const BuildSchema = zod.object({
@@ -80,11 +80,11 @@ export const ServiceSchema = zod.object({
   image: zod.string(),
   environment: KV_Schema,
   container_name: zod.string(),
-  ports: zod.array(zod.string()),
+  ports: zod.array(zod.string()).nullable(),
   command: zod.string().optional(),
-  volumes: zod.array(zod.string()),
-  networks: zod.array(zod.string()),
-  depends_on: zod.array(zod.string()),
+  volumes: zod.array(zod.string()).nullable(),
+  networks: zod.array(zod.string()).nullable(),
+  depends_on: zod.array(zod.string()).nullable(),
 });
 
 const labelValueSchema = zod.object({

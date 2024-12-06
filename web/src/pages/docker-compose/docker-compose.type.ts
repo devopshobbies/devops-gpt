@@ -57,14 +57,16 @@ export interface DockerComposeValidationError {
 }
 
 const KV_Schema = zod.array(
-  zod.object({
-    key: zod
-      .string()
-      .min(1, { message: 'Key must be at least 1 character long' }),
-    value: zod
-      .string()
-      .min(1, { message: 'Value must be at least 1 character long' }),
-  }).nullable(),
+  zod
+    .object({
+      key: zod
+        .string()
+        .min(1, { message: 'Key must be at least 1 character long' }),
+      value: zod
+        .string()
+        .min(1, { message: 'Value must be at least 1 character long' }),
+    })
+    .nullable(),
 );
 
 export const BuildSchema = zod.object({
@@ -81,7 +83,7 @@ export const ServiceSchema = zod.object({
   environment: KV_Schema,
   container_name: zod.string(),
   ports: zod.array(zod.string()).nullable(),
-  command: zod.string().optional(),
+  command: zod.string().optional().nullable(),
   volumes: zod.array(zod.string()).nullable(),
   networks: zod.array(zod.string()).nullable(),
   depends_on: zod.array(zod.string()).nullable(),
@@ -122,12 +124,11 @@ export const DockerComposeSchema = zod.object({
 
 export type TDockerCompose = zod.infer<typeof DockerComposeSchema>;
 
-
 type AppNetwork = {
   network_name: string;
   driver: {
     label: string;
-    value: "bridge" | "host" | "none" | "overlay";
+    value: 'bridge' | 'host' | 'none' | 'overlay';
   };
 };
 

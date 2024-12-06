@@ -170,6 +170,9 @@ const DockerCompose: FC = () => {
         if (item.environment && item.environment[0]) {
           item.environment = null;
         }
+        if (item.command?.length === 0) {
+          item.command = null;
+        }
         return item;
       });
 
@@ -280,6 +283,13 @@ const DockerCompose: FC = () => {
                       name={`services.${index}.container_name`}
                       label="Container Name"
                       placeholder="container_name"
+                    />
+                  </div>
+                  <div className="mb-4 flex flex-col">
+                    <FormInput
+                      id="command"
+                      name={`services.${index}.command`}
+                      label="Command"
                     />
                   </div>
                   <ServiceBuildFields serviceIndex={index} />

@@ -33,4 +33,5 @@ class DockerCompose(BaseModel):
     version: str = "3"
     services: Dict[str, Service] = {"web":Service(), "web2":Service()}
     networks: Union[Optional[Dict[str, PreCreatedNetwork]],Optional[Dict[str, Network]]] = {"app_network": {"driver":"bridge"}}
+    
    

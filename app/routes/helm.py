@@ -4,7 +4,7 @@ from app.services import (write_installation,edit_directory_generator,execute_py
 from app.models import (HelmTemplateGeneration,Output)
 from app.prompt_generators import (helm_template_generator)
 import os
-@app.post("/Helm-template/")
+@app.post("/api/Helm-template/")
 async def Helm_template_generation(request:HelmTemplateGeneration) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output')

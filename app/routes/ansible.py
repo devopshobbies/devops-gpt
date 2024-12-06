@@ -9,7 +9,7 @@ from app.models import (AnsibleInstallNginx,Output)
 from app.template_generators.ansible.install.main import ansible_install_template
 import os
 
-@app.post("/ansible-install/nginx/")
+@app.post("/api/ansible-install/nginx/")
 async def ansible_install_generation_nginx(request:AnsibleInstallNginx) -> Output:
     
         if os.environ.get("TEST"):
@@ -22,7 +22,7 @@ async def ansible_install_generation_nginx(request:AnsibleInstallNginx) -> Outpu
         return Output(output='output')
     
     
-@app.post("/ansible-install/docker/")
+@app.post("/api/ansible-install/docker/")
 async def ansible_install_generation_docker(request:AnsibleInstallDocker) -> Output:
     
         if os.environ.get("TEST"):
@@ -35,7 +35,7 @@ async def ansible_install_generation_docker(request:AnsibleInstallDocker) -> Out
         return Output(output='output')
     
     
-@app.post("/ansible-install/kuber/")
+@app.post("/api/ansible-install/kuber/")
 async def ansible_install_generation_kuber(request:AnsibleInstallKuber) -> Output:
     
         if os.environ.get("TEST"):

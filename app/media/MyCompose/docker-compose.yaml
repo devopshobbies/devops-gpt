@@ -3,41 +3,14 @@ services:
   web:
     build:
       context: .
-      dockerfile: DockerFile
-      args:
-        foo: bar
+      dockerfile: Dockerfile
+      args: {}
     image: nginx:latest
-    container_name: web_server
-    command: command...
-    volumes:
-    - ./foo:bar
-    environment:
-      foo: bar
+    container_name: x
     ports:
     - 80:80
-    networks:
-    - app_network
-    depends_on:
-    - service 0
-  web2:
-    build:
-      context: .
-      dockerfile: DockerFile
-      args:
-        foo: bar
-    image: nginx:latest
-    container_name: web_server
-    command: command...
-    volumes:
-    - ./foo:bar
-    environment:
-      foo: bar
-    ports:
-    - 80:80
-    networks:
-    - app_network
-    depends_on:
-    - service 0
+    - 90:90
+    - 70:70
 networks:
-  app_network:
+  p:
     driver: bridge

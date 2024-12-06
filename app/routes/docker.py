@@ -5,7 +5,7 @@ from app.models import (DockerCompose,Output)
 from app.template_generators.docker.compose import docker_compose_generator
 import os
 
-@app.post("/docker-compose/")
+@app.post("/api/docker-compose/")
 async def docker_compose_template(request:DockerCompose) -> Output:
     
         if os.environ.get("TEST"):

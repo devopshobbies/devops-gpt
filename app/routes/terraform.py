@@ -31,7 +31,7 @@ from app.template_generators.terraform.aws.ELB import (IaC_template_generator_el
 from app.template_generators.terraform.aws.EFS import (IaC_template_generator_efs)
 import os
 
-@app.post("/IaC-basic/")
+@app.post("/api/IaC-basic/")
 async def IaC_basic_generation(request:IaCBasicInput) -> Output:
         if os.environ.get("TEST"):
             return Output(output='Terraform developed by hashicorp and it is very usefull')
@@ -39,7 +39,7 @@ async def IaC_basic_generation(request:IaCBasicInput) -> Output:
         output = gpt_service(generated_prompt)
         return Output(output=output)
    
-@app.post("/IaC-bugfix/")
+@app.post("/api/IaC-bugfix/")
 async def IaC_bugfix_generation(request:IaCBugfixInput) -> Output:
         if os.environ.get("TEST"):
             return Output(output='fix this bug by adding x to the y')
@@ -48,7 +48,7 @@ async def IaC_bugfix_generation(request:IaCBugfixInput) -> Output:
         return Output(output=output)
 
 
-@app.post("/IaC-install/")
+@app.post("/api/IaC-install/")
 async def IaC_install_generation(request:IaCInstallationInput) -> Output:
         if os.environ.get("TEST"):
             return Output(output='apt-get install xyz \n apt-get update (covert them to shell file output)')
@@ -56,7 +56,7 @@ async def IaC_install_generation(request:IaCInstallationInput) -> Output:
         output = gpt_service(generated_prompt)
         return Output(output=output)
 
-@app.post("/IaC-template/docker")
+@app.post("/api/IaC-template/docker")
 async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
@@ -66,7 +66,7 @@ async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) ->
         execute_pythonfile("MyTerraform","terraform_generator")
         return Output(output='output')
 
-@app.post("/IaC-template/aws/ec2")
+@app.post("/api/IaC-template/aws/ec2")
 async def IaC_template_generation_aws_ec2(request:IaCTemplateGenerationEC2) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
@@ -77,7 +77,7 @@ async def IaC_template_generation_aws_ec2(request:IaCTemplateGenerationEC2) -> O
         execute_pythonfile("MyTerraform","terraform_generator")
         return Output(output='output')
 
-@app.post("/IaC-template/aws/s3")
+@app.post("/api/IaC-template/aws/s3")
 async def IaC_template_generation_aws_s3(request:IaCTemplateGenerationS3) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
@@ -87,7 +87,7 @@ async def IaC_template_generation_aws_s3(request:IaCTemplateGenerationS3) -> Out
         execute_pythonfile("MyTerraform","terraform_generator")
         return Output(output='output')
 
-@app.post("/IaC-template/aws/iam")
+@app.post("/api/IaC-template/aws/iam")
 async def IaC_template_generation_aws_iam(request:IaCTemplateGenerationIAM) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
@@ -98,7 +98,7 @@ async def IaC_template_generation_aws_iam(request:IaCTemplateGenerationIAM) -> O
         return Output(output='output')
 
 
-@app.post("/IaC-template/argocd")
+@app.post("/api/IaC-template/argocd")
 async def IaC_template_generation_argocd(request:IaCTemplateGenerationArgoCD) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
@@ -110,7 +110,7 @@ async def IaC_template_generation_argocd(request:IaCTemplateGenerationArgoCD) ->
 
 
 
-@app.post("/IaC-template/aws/elb")
+@app.post("/api/IaC-template/aws/elb")
 async def IaC_template_generation_aws_elb(request:IaCTemplateGenerationELB) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')
@@ -120,7 +120,7 @@ async def IaC_template_generation_aws_elb(request:IaCTemplateGenerationELB) -> O
         execute_pythonfile("MyTerraform","terraform_generator")
         return Output(output='output')
 
-@app.post("/IaC-template/aws/efs")
+@app.post("/api/IaC-template/aws/efs")
 async def IaC_template_generation_aws_efs(request:IaCTemplateGenerationEFS) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output (nothing special)')

@@ -26,7 +26,7 @@ def add_files_to_folder(files:list,folder:str):
         shutil.copy(filename, destination_file)
 
 
-@app.get("/download-folder{folder_name}/{source}")
+@app.get("/api/download-folder{folder_name}/{source}")
 async def download_folder_MyHelm(folder_name: str,source:str):
     folder_path = f"app/media/{folder_name}"  # Adjust the path as needed
     if not os.path.exists(folder_path):

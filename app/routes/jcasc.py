@@ -5,7 +5,7 @@ from app.models import (Jcasc,Output)
 from app.template_generators.jenkins.jcasc import jcasc_template_generator
 import os
 
-@app.post("/jcasc-template/")
+@app.post("/api/jcasc-template/")
 async def jcasc_template_generation(request:Jcasc) -> Output:
         if os.environ.get("TEST"):
             return Output(output='output')

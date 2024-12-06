@@ -3,28 +3,20 @@ import { NavLink, Outlet } from 'react-router';
 
 const menu = [
   {
+    url: 'nginx',
+    title: 'Nginx Service',
+  },
+  {
     url: 'docker',
     title: 'Docker Service',
   },
   {
-    url: 'ec2',
-    title: 'EC2 Service',
-  },
-  {
-    url: 's3',
-    title: 'S3 Service',
-  },
-  {
-    url: 'iam',
-    title: 'IAM Service',
-  },
-  {
-    url: 'argocd',
-    title: 'ArgoCD Service',
+    url: 'kuber',
+    title: 'Kubernetes Service',
   },
 ];
 
-const TerraformTemplate: FC = () => {
+export const AnsibleLayout: FC = () => {
   return (
     <div className="flex h-[calc(100vh-56px)] items-center">
       <div className="flex h-full w-full max-w-96 flex-col items-center justify-center divide-y divide-gray-500 border-r border-gray-500">
@@ -46,5 +38,3 @@ const TerraformTemplate: FC = () => {
     </div>
   );
 };
-
-export default TerraformTemplate;

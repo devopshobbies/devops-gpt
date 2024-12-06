@@ -11,6 +11,7 @@ export enum API {
   BugFix = '/IaC-bugfix',
   Installation = '/IaC-install',
   HelmTemplate = '/Helm-template',
+  DockerCompose = "/docker-compose"
 }
 
 export enum AnsibleTemplateAPI {

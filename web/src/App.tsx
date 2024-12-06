@@ -16,6 +16,7 @@ import { AnsibleLayout } from './pages/ansible/components/layout';
 import DockerAnsible from './pages/ansible/docker/docker';
 import NginxAnsible from './pages/ansible/nginx/nginx';
 import KubernetesAnsible from './pages/ansible/kuber/kuber';
+import DockerCompose from './pages/docker-compose/docker-compose';
 
 function App() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function App() {
             <Route index element={<Basic />} />
             <Route path="bug-fix" element={<BugFix />} />
             <Route path="helm-template" element={<HelmTemplate />} />
+            <Route path="docker-compose" element={<DockerCompose />} />
             <Route path="terraform-template" element={<TerraformTemplate />}>
               <Route path="docker" element={<Docker />} />
               <Route path="ec2" element={<EC2 />} />

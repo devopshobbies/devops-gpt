@@ -24,6 +24,10 @@ const navbar = [
     title: 'Helm Template',
   },
   {
+    url: '/docker-compose',
+    title: 'Docker Compose',
+  },
+  {
     url: '/ansible-template',
     title: 'Ansible Template',
   },

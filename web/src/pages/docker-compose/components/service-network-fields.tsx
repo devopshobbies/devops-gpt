@@ -15,7 +15,7 @@ const ServiceNetworkFields: FC<ServiceNetworkFieldsProps> = ({
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `services.${serviceIndex}.network`,
+    name: `services.${serviceIndex}.networks`,
   });
 
   return (
@@ -25,36 +25,36 @@ const ServiceNetworkFields: FC<ServiceNetworkFieldsProps> = ({
 
         <button
           type="button"
-          onClick={() => append({ name: '', value: '' })}
+          onClick={() => append('')}
           className="btn btn-xs ml-4"
         >
           Add <Plus className="size-3" />
         </button>
       </div>
       <div className="flex gap-4">
-        {fields.map((field, envIdx) => (
+        {fields.map((field, networkIdx) => (
           <div
             className={cn(
               'mb-4 flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0',
               {
                 'divide-red-500 border-red-500 dark:divide-red-500 dark:border-red-500':
                   control.getFieldState(
-                    `pods.${serviceIndex}.environment.${envIdx}.name`,
+                    `services.${serviceIndex}.networks.${networkIdx}`,
                   ).invalid,
               },
             )}
             key={field.id}
           >
             <FormInput
-              id={`env_name_${envIdx}`}
-              name={`pods.${serviceIndex}.environment.${envIdx}.name`}
+              id={`network_${networkIdx}`}
+              name={`services.${serviceIndex}.networks.${networkIdx}`}
               label=""
-              placeholder="Env"
+              placeholder=""
               className="h-12 w-full rounded-s-md px-2 outline-none"
             />
 
             <button
-              onClick={() => remove(envIdx)}
+              onClick={() => remove(networkIdx)}
               className="btn btn-error rounded-e-md rounded-s-none"
             >
               <Trash2 />

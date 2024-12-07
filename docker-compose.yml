@@ -23,7 +23,7 @@ services:
       context: ./web
       dockerfile: Dockerfile
       args:
-        VITE_API_CLIENT_BASE_URL: "http://localhost:8080"
+        VITE_API_CLIENT_BASE_URL: "http://localhost:8080/api/"
     image: 81318131/web_gpt
     container_name: web_gpt
     ports:

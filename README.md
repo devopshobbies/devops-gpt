@@ -4,37 +4,29 @@
 This project helps you to balance your daily work as a DevOps engineer, from simple bug fixes to project template generation. you don't need to search on Google for some routine jobs and it helps you with a robust prompt to simplify your career.
 
 
-## Run Locally
+## Run DevOpsGPT
 
-Clone the project
+Builds and starts the Docker Compose stack:
+     
+    make
+    
+Stops and removes the Docker Compose stack:
 
-```
-git clone https://github.com/devopshobbies/devops-gpt.git
-```
+    make down
 
-Go to the project directory
+ Installs the Helm chart for the devopsgpt app on a Kubernetes cluster:
 
-```
-cd devops-gpt
-```
+    make helm-install
 
-Run the project by its docker-compose
+Uninstalls the Helm chart for the devopsgpt app:
 
-```
-sh run.sh
-```
+    make helm-uninstall
 
+You can override the release name and namespace for Helm commands by running:
 
+    make [helm-install|helm-uninstall] namespace=NAMESPACE releaseName=RELEASENAME
 
-
-## Deployment
-
-If you want to run and use this chatbot app within your Kubernetes cluster, you can easily install it using the Helm chart provided in this repository
-
-```
-helm install [RELEASE_NAME] helm/ -f helm/values.yaml
-```
-
+The default namespace is `default` and the default release name is `devopsgpt`.
 
 
 
@@ -163,6 +155,124 @@ POST /IaC-template/aws/iam
 | `iam_group`      | `boolean` | **Required** |
 
 
+
+#### Post terraform template generation of ELB resources
+
+```
+POST /IaC-template/aws/elb
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `security_group`      | `boolean` | **Required** |
+| `lb_target_group`      | `boolean` | **Required** |
+| `lb`      | `boolean` | **Required** |
+| `lb_listener_rule`      | `boolean` | **Required** |
+| `key_pair`      | `boolean` | **Required** |
+| `launch_configuration`      | `boolean` | **Required** |
+| `autoscaling_group`      | `boolean` | **Required** |
+| `autoscaling_attachment`      | `boolean` | **Required** |
+| `autoscaling_policy`      | `boolean` | **Required** |
+
+
+#### Post terraform template generation of EFS resources
+
+```
+POST /IaC-template/aws/efs
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `efs_file_system`      | `boolean` | **Required** |
+| `efs_mount_target`      | `boolean` | **Required** |
+| `efs_backup_policy`      | `boolean` | **Required** |
+
+#### Post terraform template generation of ArgoCD resources
+
+```
+POST /IaC-template/aws/argocd
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `argocd_applicatio.sync_policy.auto_prune`      | `boolean` | **No-Required** |
+| `argocd_applicatio.sync_policy.self_heal`      | `boolean` | **No-Required** |
+| `argocd_applicatio.sync_policy.argocd_repository`      | `boolean` | **Required** |
+| `argocd_applicatio.sync_policy.application_depends_repository`      | `boolean` | **Required** |
+
+#### Post Helm template generation
+
+```
+POST /Helm-template
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `api_version`      | `integer` | **Required** |
+| `pods.name`      | `string` | **Required** |
+| `pods.image`      | `string` | **Required** |
+| `pods.target_port`      | `integer` | **Required** |
+| `pods.replicas`      | `integer` | **Required** |
+| `pods.persistance`      | `dict` | **Required** |
+| `pods.environment`      | `list(dict)` | **Required** |
+| `pods.stateless`      | `boolean` | **Required** |
+| `pods.ingress`      | `dict` | **Required** |
+
+#### Post Ansible install Nginx
+
+```
+POST /ansible-install/nginx
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `ansible_user`      | `string` | **Required** |
+| `ansible_port`      | `string` | **Required** |
+| `os`      | `string` | **Required** |
+| `hosts`      | `list` | **Required** |
+| `version`      | `string` | **Required** |
+
+
+#### Post Ansible install Docker
+
+```
+POST /ansible-install/docker
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `ansible_user`      | `string` | **Required** |
+| `ansible_port`      | `string` | **Required** |
+| `os`      | `string` | **Required** |
+| `hosts`      | `list` | **Required** |
+
+#### Post Ansible install Kubernetes
+
+```
+POST /ansible-install/kuber
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `ansible_user`      | `string` | **Required** |
+| `ansible_port`      | `string` | **Required** |
+| `os`      | `string` | **Required** |
+| `hosts`      | `list` | **Required** |
+| `version`      | `string` | **Required** |
+| `k8s_worker_nodes`      | `list` | **Required** |
+| `k8s_master_nodes`      | `list` | **Required** |
+
+#### Post docker compose generation
+
+```
+POST /docker-compose
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `networks.app_network.driver`      | `string` | **Required** |
+| `version`      | `string` | **Required** |
+| `services`      | `list` | **Required** |
 
 ## Tech Stack
 

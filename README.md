@@ -224,6 +224,61 @@ POST /Helm-template
 | `pods.stateless`      | `boolean` | **Required** |
 | `pods.ingress`      | `dict` | **Required** |
 
+#### Post Ansible install Nginx
+
+```
+POST /ansible-install/nginx
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `ansible_user`      | `string` | **Required** |
+| `ansible_port`      | `string` | **Required** |
+| `os`      | `string` | **Required** |
+| `hosts`      | `list` | **Required** |
+| `version`      | `string` | **Required** |
+
+
+#### Post Ansible install Docker
+
+```
+POST /ansible-install/docker
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `ansible_user`      | `string` | **Required** |
+| `ansible_port`      | `string` | **Required** |
+| `os`      | `string` | **Required** |
+| `hosts`      | `list` | **Required** |
+
+#### Post Ansible install Kubernetese
+
+```
+POST /ansible-install/kuber
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `ansible_user`      | `string` | **Required** |
+| `ansible_port`      | `string` | **Required** |
+| `os`      | `string` | **Required** |
+| `hosts`      | `list` | **Required** |
+| `version`      | `string` | **Required** |
+| `k8s_worker_nodes`      | `list` | **Required** |
+| `k8s_master_nodes`      | `list` | **Required** |
+
+#### Post docker compose generation
+
+```
+POST /docker-compose
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `networks.app_network.driver`      | `string` | **Required** |
+| `version`      | `string` | **Required** |
+| `services`      | `list` | **Required** |
 
 ## Tech Stack
 

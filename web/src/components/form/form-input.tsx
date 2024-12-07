@@ -11,6 +11,7 @@ export const FormInput = ({
   isNumber,
   inputType,
   inputClass,
+  showError = true,
   ...props
 }: FormFieldProps) => {
   const { className, ...restProps } = props;
@@ -26,7 +27,7 @@ export const FormInput = ({
   return (
     <Form.Field
       className={cn('form-field relative', {
-        'mb-6': errorMessage,
+        'mb-6': errorMessage && showError,
       })}
       name={name}
     >
@@ -49,7 +50,7 @@ export const FormInput = ({
           {...restProps}
         />
       </Form.Control>
-      {errorMessage && (
+      {showError && errorMessage && (
         <div className="absolute left-0 top-full">
           <Form.Message className="form-message ml-auto text-sm text-red-500">
             {errorMessage}

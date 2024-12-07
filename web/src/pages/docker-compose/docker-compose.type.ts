@@ -120,7 +120,7 @@ export const NetworkSchema = zod.union([
     custom: zod.literal(false),
     app_network: zod.array(
       zod.object({
-        network_name: zod.string(),
+        network_name: zod.string().min(1, 'Network name is required.'),
         driver: labelValueSchema,
       }),
     ),
@@ -129,16 +129,16 @@ export const NetworkSchema = zod.union([
     custom: zod.literal(true),
     app_network: zod.array(
       zod.object({
-        network_name: zod.string(),
+        network_name: zod.string().min(1, 'Network name is required.'),
         external: zod.boolean().optional(),
-        name: zod.string(),
+        name: zod.string().min(1, 'Name is required.'),
       }),
     ),
   }),
 ]);
 
 export const DockerComposeSchema = zod.object({
-  version: zod.string(),
+  version: zod.string().min(1, 'Version is required.'),
   services: zod.array(ServiceSchema),
   networks: NetworkSchema,
 });

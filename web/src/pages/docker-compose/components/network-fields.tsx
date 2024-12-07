@@ -41,13 +41,13 @@ const NetworkFields: FC = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center">
           <p className="text-2xl font-bold">Networks</p>
           <button
             type="button"
             onClick={handleAppendNetwork}
-            className="ml-4 btn btn-xs"
+            className="btn btn-xs ml-4"
           >
             Add <Plus className="size-3" />
           </button>
@@ -56,10 +56,10 @@ const NetworkFields: FC = () => {
       </div>
 
       <div className="space-y-4">
-        <div className="w-full p-5 border border-gray-500 rounded-md">
+        <div className="w-full rounded-md border border-gray-500 p-5">
           {fields.map((field, index) => (
             <div key={field.id} className="mb-4">
-              <div className="flex items-center justify-between mb-4">
+              <div className="mb-4 flex items-center justify-between">
                 <p className="font-semibold">Network #{index + 1}</p>
                 {index > 0 && (
                   <button
@@ -73,7 +73,7 @@ const NetworkFields: FC = () => {
 
               <div>
                 {customNetwork && (
-                  <div className="flex justify-end mb-2">
+                  <div className="mb-2 flex justify-end">
                     <FormCheckbox
                       name={`networks.app_network.${index}.external`}
                       label="External Network"
@@ -85,6 +85,7 @@ const NetworkFields: FC = () => {
                     name={`networks.app_network.${index}.network_name`}
                     label="App Network"
                     placeholder="network_name"
+                    showError={false}
                   />
                   {!customNetwork && (
                     <FormSelect
@@ -101,6 +102,7 @@ const NetworkFields: FC = () => {
                       name={`networks.app_network.${index}.name`}
                       label="Name"
                       placeholder="Name"
+                      showError={false}
                     />
                   )}
                 </div>

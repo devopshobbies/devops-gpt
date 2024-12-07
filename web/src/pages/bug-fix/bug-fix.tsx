@@ -5,6 +5,7 @@ import { BugFixBody, BugFixMessage, BugFixResponse } from './bug-fix.types';
 import { usePost } from '@/core/react-query';
 import { toast } from 'sonner';
 import { BeatLoader } from 'react-spinners';
+import { isAxiosError } from 'axios';
 
 const BugFix: FC = () => {
   const { mutateAsync } = usePost<BugFixResponse, BugFixBody>(
@@ -57,18 +58,23 @@ const BugFix: FC = () => {
         ),
       );
     } catch (error) {
-      console.log(error);
       setMessages((prev) => prev.slice(0, -1));
-      toast.error('Something went wrong');
+      if (isAxiosError(error)) {
+        if (error.response?.data.detail) {
+          toast.error(error.response.data.detail);
+        } else {
+          toast.error('Something went wrong');
+        }
+      }
     }
   };
 
   return (
     <div className="flex h-[calc(100vh-56px)] w-full items-center justify-center text-black dark:text-white">
       <div className="w-full max-w-[1024px]">
-        <div className="w-full rounded-md p-2">
-          <div className="flex h-full w-full items-center justify-center gap-3">
-            <div className="flex w-full flex-col">
+        <div className="w-full p-2 rounded-md">
+          <div className="flex items-center justify-center w-full h-full gap-3">
+            <div className="flex flex-col w-full">
               <label htmlFor="min_token" className="mb-2">
                 Min Token
               </label>
@@ -77,10 +83,10 @@ const BugFix: FC = () => {
                 type="number"
                 value={minToken}
                 onChange={(e) => setMinToken(e.target.value)}
-                className="w-full rounded-md bg-gray-200 p-3 outline-none dark:bg-black-1"
+                className="w-full p-3 bg-gray-200 rounded-md outline-none dark:bg-black-1"
               />
             </div>
-            <div className="flex w-full flex-col">
+            <div className="flex flex-col w-full">
               <label htmlFor="max_token" className="mb-2">
                 Max Token
               </label>
@@ -89,10 +95,10 @@ const BugFix: FC = () => {
                 type="number"
                 value={maxToken}
                 onChange={(e) => setMaxToken(e.target.value)}
-                className="w-full rounded-md bg-gray-200 p-3 outline-none dark:bg-black-1"
+                className="w-full p-3 bg-gray-200 rounded-md outline-none dark:bg-black-1"
               />
             </div>
-            <div className="flex w-full flex-col">
+            <div className="flex flex-col w-full">
               <label htmlFor="service" className="mb-2">
                 Service
               </label>
@@ -101,10 +107,10 @@ const BugFix: FC = () => {
                 type="text"
                 value={service}
                 onChange={(e) => setService(e.target.value)}
-                className="w-full rounded-md bg-gray-200 p-3 outline-none dark:bg-black-1"
+                className="w-full p-3 bg-gray-200 rounded-md outline-none dark:bg-black-1"
               />
             </div>
-            <div className="flex w-full flex-col">
+            <div className="flex flex-col w-full">
               <label htmlFor="version" className="mb-2">
                 Version
               </label>
@@ -113,7 +119,7 @@ const BugFix: FC = () => {
                 type="text"
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
-                className="w-full rounded-md bg-gray-200 p-3 outline-none dark:bg-black-1"
+                className="w-full p-3 bg-gray-200 rounded-md outline-none dark:bg-black-1"
               />
             </div>
           </div>
@@ -124,14 +130,14 @@ const BugFix: FC = () => {
             >
               {messages.map((message) =>
                 message.role === 'user' ? (
-                  <div className="chat chat-end max-w-full">
-                    <div className="chat-bubble bg-gray-600 text-white">
+                  <div className="max-w-full chat chat-end">
+                    <div className="text-white bg-gray-600 chat-bubble">
                       {message.content}
                     </div>
                   </div>
                 ) : (
-                  <div className="chat chat-start max-w-full">
-                    <div className="chat-bubble text-white">
+                  <div className="max-w-full chat chat-start">
+                    <div className="text-white chat-bubble">
                       {message.loading ? (
                         <BeatLoader color="#e3e3e3" size={10} />
                       ) : (
@@ -148,12 +154,12 @@ const BugFix: FC = () => {
               value={bugDescription}
               onChange={(e) => setBugDescription(e.target.value)}
               rows={2}
-              className="w-full resize-none rounded-md bg-gray-200 p-4 pr-16 outline-none dark:bg-black-1"
+              className="w-full p-4 pr-16 bg-gray-200 rounded-md outline-none resize-none dark:bg-black-1"
             />
             <button
               disabled={!bugDescription}
               onClick={handleSendMessage}
-              className="absolute right-3 top-5 flex items-center justify-center rounded-full bg-white p-2 transition-all disabled:opacity-50"
+              className="absolute flex items-center justify-center p-2 transition-all bg-white rounded-full right-3 top-5 disabled:opacity-50"
             >
               <Send className="size-6 stroke-[#121212]" />
             </button>

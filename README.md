@@ -4,37 +4,29 @@
 This project helps you to balance your daily work as a DevOps engineer, from simple bug fixes to project template generation. you don't need to search on Google for some routine jobs and it helps you with a robust prompt to simplify your career.
 
 
-## Run Locally
+## Run DevOpsGPT
 
-Clone the project
+Builds and starts the Docker Compose stack:
+     
+    make
+    
+Stops and removes the Docker Compose stack:
 
-```
-git clone https://github.com/devopshobbies/devops-gpt.git
-```
+    make down
 
-Go to the project directory
+ Installs the Helm chart for the devopsgpt app on a Kubernetes cluster:
 
-```
-cd devops-gpt
-```
+    make helm-install
 
-Run the project by its docker-compose
+Uninstalls the Helm chart for the devopsgpt app:
 
-```
-sh run.sh
-```
+    make helm-uninstall
 
+You can override the release name and namespace for Helm commands by running:
 
+    make [helm-install|helm-uninstall] namespace=NAMESPACE releaseName=RELEASENAME
 
-
-## Deployment
-
-If you want to run and use this chatbot app within your Kubernetes cluster, you can easily install it using the Helm chart provided in this repository
-
-```
-helm install [RELEASE_NAME] helm/ -f helm/values.yaml
-```
-
+The default namespace is `default` and the default release name is `devopsgpt`.
 
 
 

@@ -66,22 +66,49 @@ const KV_Schema = zod.array(
 export const BuildSchema = zod.object({
   enabled: zod.boolean(),
   args: KV_Schema,
-  context: zod.string(),
-  dockerfile: zod.string(),
+  context: zod.string().optional(),
+  dockerfile: zod.string().optional(),
 });
 
-export const ServiceSchema = zod.object({
-  name: zod.string(),
-  build: BuildSchema,
-  image: zod.string(),
-  environment: KV_Schema,
-  container_name: zod.string(),
-  ports: zod.array(zod.object({ value: zod.string() })).nullable(),
-  command: zod.string().optional().nullable(),
-  volumes: zod.array(zod.object({ value: zod.string() })).nullable(),
-  networks: zod.array(zod.object({ value: zod.string() })).nullable(),
-  depends_on: zod.array(zod.object({ value: zod.string() })).nullable(),
-});
+export const ServiceSchema = zod
+  .object({
+    name: zod.string().min(1, 'Name is required!'),
+    build: BuildSchema,
+    image: zod.string().nullable(),
+    environment: KV_Schema,
+    container_name: zod.string().nullable(),
+    ports: zod.array(zod.object({ value: zod.string() })).nullable(),
+    command: zod.string().optional().nullable(),
+    volumes: zod.array(zod.object({ value: zod.string() })).nullable(),
+    networks: zod.array(zod.object({ value: zod.string() })).nullable(),
+    depends_on: zod.array(zod.object({ value: zod.string() })).nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.build.enabled && !data.image) {
+      ctx.addIssue({
+        path: ['image'],
+        message: 'Image is required.',
+        code: zod.ZodIssueCode.custom,
+      });
+    }
+
+    if (data.build.enabled) {
+      if (!data.build.context) {
+        ctx.addIssue({
+          path: ['build', 'context'],
+          message: 'Context is required.',
+          code: zod.ZodIssueCode.custom,
+        });
+      }
+      if (!data.build.dockerfile) {
+        ctx.addIssue({
+          path: ['build', 'dockerfile'],
+          message: 'Dockerfile is required.',
+          code: zod.ZodIssueCode.custom,
+        });
+      }
+    }
+  });
 
 const labelValueSchema = zod.object({
   label: zod.string(),

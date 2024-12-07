@@ -57,8 +57,8 @@ const DockerCompose: FC = () => {
             },
           ],
         },
-        command: '',
-        container_name: '',
+        command: null,
+        container_name: null,
         environment: [
           {
             key: '',
@@ -124,8 +124,8 @@ const DockerCompose: FC = () => {
         dockerfile: '',
       },
       name: '',
-      command: '',
-      container_name: '',
+      command: null,
+      container_name: null,
       image: '',
       environment: [
         {
@@ -228,6 +228,7 @@ const DockerCompose: FC = () => {
         ) {
           item.build.args = null;
         }
+
         return item;
       });
 
@@ -240,13 +241,11 @@ const DockerCompose: FC = () => {
       await dockerComposeMutate(requestBody);
       await download();
     } catch (error) {
-      console.log(error);
       if (isAxiosError<DockerComposeValidationError>(error)) {
         toast.error(
           `${error.response?.data.detail[0].loc[error.response?.data.detail[0].loc.length - 1]} ${error.response?.data.detail[0].msg}`,
         );
       } else {
-        console.log(error);
         toast.error('Something went wrong');
       }
     }
@@ -256,19 +255,19 @@ const DockerCompose: FC = () => {
     <div className="flex h-[calc(100%-56px)] w-full justify-center overflow-y-auto p-4 text-black-1 scrollbar-thin dark:text-white">
       <div className="h-full w-full max-w-[768px]">
         <FormWrapper methods={methods} onSubmit={handleSubmit}>
-          <div className="flex flex-col w-full mb-4">
+          <div className="mb-4 flex w-full flex-col">
             <FormInput label="Version" name="version" placeholder="3" />
           </div>
-          <div className="flex flex-col w-full mb-4">
+          <div className="mb-4 flex w-full flex-col">
             <NetworkFields />
           </div>
 
-          <div className="flex items-center mb-4">
+          <div className="mb-4 flex items-center">
             <h1 className="text-2xl font-bold">Services</h1>
             <button
               type="button"
               onClick={handleAddService}
-              className="ml-4 btn btn-xs"
+              className="btn btn-xs ml-4"
             >
               Add <Plus className="size-3" />
             </button>
@@ -278,7 +277,7 @@ const DockerCompose: FC = () => {
             {services.map((service, index) => (
               <div
                 key={service.id}
-                className="w-full p-5 border border-gray-500 rounded-md"
+                className="w-full rounded-md border border-gray-500 p-5"
               >
                 <div
                   className={cn(
@@ -316,7 +315,7 @@ const DockerCompose: FC = () => {
                     },
                   )}
                 >
-                  <div className="flex flex-col mb-4">
+                  <div className="mb-4 flex flex-col">
                     <FormInput
                       id="service_name"
                       name={`services.${index}.name`}
@@ -324,7 +323,7 @@ const DockerCompose: FC = () => {
                       placeholder="service name"
                     />
                   </div>
-                  <div className="flex flex-col mb-4">
+                  <div className="mb-4 flex flex-col">
                     <FormInput
                       id="image"
                       name={`services.${index}.image`}
@@ -332,7 +331,7 @@ const DockerCompose: FC = () => {
                       placeholder="image"
                     />
                   </div>
-                  <div className="flex flex-col mb-4">
+                  <div className="mb-4 flex flex-col">
                     <FormInput
                       id="container_name"
                       name={`services.${index}.container_name`}
@@ -340,7 +339,7 @@ const DockerCompose: FC = () => {
                       placeholder="container_name"
                     />
                   </div>
-                  <div className="flex flex-col mb-4">
+                  <div className="mb-4 flex flex-col">
                     <FormInput
                       id="command"
                       name={`services.${index}.command`}
@@ -361,7 +360,7 @@ const DockerCompose: FC = () => {
           <button
             type="submit"
             disabled={dockerComposePending}
-            className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+            className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
           >
             {dockerComposePending
               ? 'Generating...'

@@ -50,16 +50,38 @@ const DockerCompose: FC = () => {
         build: {
           context: '',
           dockerfile: '',
-          args: [],
+          args: [
+            {
+              key: '',
+              value: '',
+            },
+          ],
         },
         command: '',
         container_name: '',
-        environment: [],
+        environment: [
+          {
+            key: '',
+            value: '',
+          },
+        ],
         image: '',
-        ports: [''],
-        volumes: [''],
-        networks: [''],
-        depends_on: [''],
+        ports: [
+          {
+            value: '',
+          },
+        ],
+        volumes: [
+          {
+            value: '',
+          },
+        ],
+        networks: [
+          {
+            value: '',
+          },
+        ],
+        depends_on: [{ value: '' }],
       },
     ],
     networks: {
@@ -67,7 +89,7 @@ const DockerCompose: FC = () => {
       app_network: [
         {
           network_name: '',
-          driver: { value: 'bridge', label: 'bridge' },
+          driver: { value: 'bridge', label: 'Bridge' },
         },
       ],
     },
@@ -92,7 +114,12 @@ const DockerCompose: FC = () => {
   const handleAddService = () => {
     append({
       build: {
-        args: [],
+        args: [
+          {
+            key: '',
+            value: '',
+          },
+        ],
         context: '',
         dockerfile: '',
       },
@@ -100,11 +127,32 @@ const DockerCompose: FC = () => {
       command: '',
       container_name: '',
       image: '',
-      environment: [],
-      depends_on: [''],
-      networks: [''],
-      ports: [''],
-      volumes: [''],
+      environment: [
+        {
+          key: '',
+          value: '',
+        },
+      ],
+      depends_on: [
+        {
+          value: '',
+        },
+      ],
+      networks: [
+        {
+          value: '',
+        },
+      ],
+      ports: [
+        {
+          value: '',
+        },
+      ],
+      volumes: [
+        {
+          value: '',
+        },
+      ],
     });
   };
 
@@ -152,26 +200,33 @@ const DockerCompose: FC = () => {
       );
 
       const services = refactoredService.map((item) => {
-        if (item.ports && item?.ports[0].length === 0) {
+        if (item.ports?.some((port) => !port.value)) {
           item.ports = null;
         }
-        if (item.volumes && item.volumes[0].length === 0) {
+        if (item.volumes?.some((volume) => !volume.value)) {
           item.volumes = null;
         }
-        if (item.networks && item.networks[0].length === 0) {
+        if (item.networks?.some((network) => !network.value)) {
           item.networks = null;
         }
-        if (item.depends_on && item.depends_on[0].length === 0) {
+        if (item.depends_on?.some((depend_on) => !depend_on.value)) {
           item.depends_on = null;
         }
-        if (item.environment && !item.environment[0]) {
+        if (
+          item.environment &&
+          !Object.entries(item.environment).some(
+            ([k, v]) => k !== '' || v !== '',
+          )
+        ) {
           item.environment = null;
         }
-        if (item.environment && item.environment[0]) {
-          item.environment = null;
-        }
-        if (item.command?.length === 0) {
-          item.command = null;
+        if (
+          item.build?.args &&
+          !Object.entries(item.build?.args).some(
+            ([k, v]) => k !== '' || v !== '',
+          )
+        ) {
+          item.build.args = null;
         }
         return item;
       });
@@ -201,19 +256,19 @@ const DockerCompose: FC = () => {
     <div className="flex h-[calc(100%-56px)] w-full justify-center overflow-y-auto p-4 text-black-1 scrollbar-thin dark:text-white">
       <div className="h-full w-full max-w-[768px]">
         <FormWrapper methods={methods} onSubmit={handleSubmit}>
-          <div className="mb-4 flex w-full flex-col">
+          <div className="flex flex-col w-full mb-4">
             <FormInput label="Version" name="version" placeholder="3" />
           </div>
-          <div className="mb-4 flex w-full flex-col">
+          <div className="flex flex-col w-full mb-4">
             <NetworkFields />
           </div>
 
-          <div className="mb-4 flex items-center">
+          <div className="flex items-center mb-4">
             <h1 className="text-2xl font-bold">Services</h1>
             <button
               type="button"
               onClick={handleAddService}
-              className="btn btn-xs ml-4"
+              className="ml-4 btn btn-xs"
             >
               Add <Plus className="size-3" />
             </button>
@@ -223,7 +278,7 @@ const DockerCompose: FC = () => {
             {services.map((service, index) => (
               <div
                 key={service.id}
-                className="w-full rounded-md border border-gray-500 p-5"
+                className="w-full p-5 border border-gray-500 rounded-md"
               >
                 <div
                   className={cn(
@@ -255,13 +310,13 @@ const DockerCompose: FC = () => {
                 </div>
                 <div
                   className={cn(
-                    'h-full max-h-0 overflow-hidden px-1 transition-all duration-500',
+                    'h-full max-h-0 overflow-y-auto px-1 transition-all duration-500',
                     {
                       'max-h-[1000px]': openService === index,
                     },
                   )}
                 >
-                  <div className="mb-4 flex flex-col">
+                  <div className="flex flex-col mb-4">
                     <FormInput
                       id="service_name"
                       name={`services.${index}.name`}
@@ -269,7 +324,7 @@ const DockerCompose: FC = () => {
                       placeholder="service name"
                     />
                   </div>
-                  <div className="mb-4 flex flex-col">
+                  <div className="flex flex-col mb-4">
                     <FormInput
                       id="image"
                       name={`services.${index}.image`}
@@ -277,7 +332,7 @@ const DockerCompose: FC = () => {
                       placeholder="image"
                     />
                   </div>
-                  <div className="mb-4 flex flex-col">
+                  <div className="flex flex-col mb-4">
                     <FormInput
                       id="container_name"
                       name={`services.${index}.container_name`}
@@ -285,11 +340,12 @@ const DockerCompose: FC = () => {
                       placeholder="container_name"
                     />
                   </div>
-                  <div className="mb-4 flex flex-col">
+                  <div className="flex flex-col mb-4">
                     <FormInput
                       id="command"
                       name={`services.${index}.command`}
                       label="Command"
+                      placeholder="command..."
                     />
                   </div>
                   <ServiceBuildFields serviceIndex={index} />
@@ -305,7 +361,7 @@ const DockerCompose: FC = () => {
           <button
             type="submit"
             disabled={dockerComposePending}
-            className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+            className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
           >
             {dockerComposePending
               ? 'Generating...'

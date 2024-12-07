@@ -13,6 +13,8 @@ export const FormInput = ({
   inputClass,
   ...props
 }: FormFieldProps) => {
+  const { className, ...restProps } = props;
+
   const {
     register,
     formState: { errors },
@@ -29,7 +31,7 @@ export const FormInput = ({
       name={name}
     >
       {label && (
-        <div className="flex items-baseline justify-between mb-1">
+        <div className="mb-1 flex items-baseline justify-between">
           <Form.Label className="form-label">{label}</Form.Label>
         </div>
       )}
@@ -38,18 +40,18 @@ export const FormInput = ({
           type={inputType}
           className={cn(
             'w-full rounded-md border border-gray-500 px-3 py-2 outline-none transition-all focus:border-orange-base',
-            props.className,
+            inputClass,
             {
               'border-red-500 dark:border': errorMessage,
             },
           )}
           {...register(name, { ...(isNumber && { valueAsNumber: true }) })}
-          {...props}
+          {...restProps}
         />
       </Form.Control>
       {errorMessage && (
         <div className="absolute left-0 top-full">
-          <Form.Message className="ml-auto text-sm text-red-500 form-message">
+          <Form.Message className="form-message ml-auto text-sm text-red-500">
             {errorMessage}
           </Form.Message>
         </div>

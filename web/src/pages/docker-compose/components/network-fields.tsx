@@ -5,7 +5,7 @@ import { FormInput } from '@/components/form/form-input';
 import { FormCheckbox } from '@/components/form/form-checkbox';
 import { FormSelect } from '@/components/form/form-select';
 
-const defaultNetworkDrivers = ['bridge', 'host', 'none', 'overlay'] as const;
+const defaultNetworkDrivers = ['Bridge', 'Host', 'None', 'Overlay'] as const;
 
 const NetworkFields: FC = () => {
   const { control, watch } = useFormContext();
@@ -31,7 +31,7 @@ const NetworkFields: FC = () => {
       : {
           network_name: '',
           driver: {
-            label: 'bridge',
+            label: 'Bridge',
             value: 'bridge',
           },
         };
@@ -41,13 +41,13 @@ const NetworkFields: FC = () => {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <p className="text-2xl font-bold">Networks</p>
           <button
             type="button"
             onClick={handleAppendNetwork}
-            className="btn btn-xs ml-4"
+            className="ml-4 btn btn-xs"
           >
             Add <Plus className="size-3" />
           </button>
@@ -56,10 +56,10 @@ const NetworkFields: FC = () => {
       </div>
 
       <div className="space-y-4">
-        <div className="w-full rounded-md border border-gray-500 p-5">
+        <div className="w-full p-5 border border-gray-500 rounded-md">
           {fields.map((field, index) => (
             <div key={field.id} className="mb-4">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center justify-between mb-4">
                 <p className="font-semibold">Network #{index + 1}</p>
                 {index > 0 && (
                   <button
@@ -73,7 +73,7 @@ const NetworkFields: FC = () => {
 
               <div>
                 {customNetwork && (
-                  <div className="mb-2 flex justify-end">
+                  <div className="flex justify-end mb-2">
                     <FormCheckbox
                       name={`networks.app_network.${index}.external`}
                       label="External Network"

@@ -57,16 +57,10 @@ export interface DockerComposeValidationError {
 }
 
 const KV_Schema = zod.array(
-  zod
-    .object({
-      key: zod
-        .string()
-        .min(1, { message: 'Key must be at least 1 character long' }),
-      value: zod
-        .string()
-        .min(1, { message: 'Value must be at least 1 character long' }),
-    })
-    .nullable(),
+  zod.object({
+    key: zod.string(),
+    value: zod.string(),
+  }),
 );
 
 export const BuildSchema = zod.object({
@@ -82,11 +76,11 @@ export const ServiceSchema = zod.object({
   image: zod.string(),
   environment: KV_Schema,
   container_name: zod.string(),
-  ports: zod.array(zod.string()).nullable(),
+  ports: zod.array(zod.object({ value: zod.string() })).nullable(),
   command: zod.string().optional().nullable(),
-  volumes: zod.array(zod.string()).nullable(),
-  networks: zod.array(zod.string()).nullable(),
-  depends_on: zod.array(zod.string()).nullable(),
+  volumes: zod.array(zod.object({ value: zod.string() })).nullable(),
+  networks: zod.array(zod.object({ value: zod.string() })).nullable(),
+  depends_on: zod.array(zod.object({ value: zod.string() })).nullable(),
 });
 
 const labelValueSchema = zod.object({

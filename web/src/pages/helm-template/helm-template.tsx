@@ -119,7 +119,7 @@ const HelmTemplate: FC = () => {
     <div className="flex h-[calc(100%-56px)] w-full justify-center overflow-y-auto p-4 text-black-1 scrollbar-thin dark:text-white">
       <div className="h-full w-full max-w-[768px]">
         <FormWrapper methods={methods} onSubmit={handleSubmit}>
-          <div className="mb-4 flex w-full flex-col">
+          <div className="flex flex-col w-full mb-4">
             <FormInput
               label="Api Version"
               id="api_version"
@@ -129,13 +129,13 @@ const HelmTemplate: FC = () => {
               isNumber={true}
             />
           </div>
-          <div className="mb-4 flex items-center">
+          <div className="flex items-center mb-4">
             <h1 className="text-2xl font-bold">Pods</h1>
             <button
               type="button"
               disabled={pods.length >= 6}
               onClick={handleAddPod}
-              className="btn btn-xs ml-4"
+              className="ml-4 btn btn-xs"
             >
               Add <Plus className="size-3" />
             </button>
@@ -144,7 +144,7 @@ const HelmTemplate: FC = () => {
             {pods.map((pod, index) => (
               <div
                 key={pod.id}
-                className="w-full rounded-md border border-gray-500 p-5"
+                className="w-full p-5 border border-gray-500 rounded-md"
               >
                 <div
                   className={cn(
@@ -174,29 +174,25 @@ const HelmTemplate: FC = () => {
                 </div>
                 <div
                   className={cn(
-                    'h-full max-h-0 overflow-hidden px-1 transition-all duration-500',
+                    'h-full max-h-0 overflow-auto px-1 transition-all duration-500 scrollbar-thin',
                     {
-                      'max-h-[1500px]': openPod === index,
+                      'max-h-[1000px]': openPod === index,
                     },
                   )}
                 >
-                  <div className="mb-4 flex flex-col">
+                  <div className="grid grid-cols-2 gap-4">
                     <FormInput
                       id="pods_name"
                       name={`pods.${index}.name`}
                       label="Name"
                       placeholder="web"
                     />
-                  </div>
-                  <div className="mb-4 flex flex-col">
                     <FormInput
                       id="pods_image"
                       name={`pods.${index}.image`}
                       label="Image"
                       placeholder="nginx"
                     />
-                  </div>
-                  <div className="mb-4 flex flex-col">
                     <FormInput
                       id="pods_target_port"
                       name={`pods.${index}.target_port`}
@@ -205,8 +201,6 @@ const HelmTemplate: FC = () => {
                       inputType="number"
                       isNumber={true}
                     />
-                  </div>
-                  <div className="mb-2 flex flex-col">
                     <FormInput
                       id="pods_replicas"
                       name={`pods.${index}.replicas`}
@@ -216,8 +210,8 @@ const HelmTemplate: FC = () => {
                       isNumber={true}
                     />
                   </div>
-                  <p className="mb-2 mt-6 text-base font-bold">Persistence</p>
-                  <div className="mb-2 flex flex-col">
+                  <p className="mt-6 mb-2 text-base font-bold">Persistence</p>
+                  <div className="flex flex-col mb-2">
                     <p className="mb-1">Size</p>
                     <div className="flex gap-3 [&>div]:flex-1">
                       <FormInput
@@ -233,7 +227,7 @@ const HelmTemplate: FC = () => {
                       />
                     </div>
                   </div>
-                  <div className="mb-2 flex flex-col">
+                  <div className="flex flex-col mb-2">
                     <label className="mb-1">Access Modes</label>
                     <FormSelect
                       name={`pods.${index}.persistance.accessModes`}
@@ -244,7 +238,7 @@ const HelmTemplate: FC = () => {
                   </div>
 
                   <PodEnvironmentFields podIndex={index} />
-                  <div className="mb-2 mt-7 flex justify-between">
+                  <div className="flex justify-between mb-2 mt-7">
                     <label htmlFor="pods_stateless" className="mb-1">
                       Stateless
                     </label>
@@ -254,8 +248,8 @@ const HelmTemplate: FC = () => {
                       label=""
                     />
                   </div>
-                  <p className="mb-2 mt-6 text-base font-bold">Ingress</p>
-                  <div className="mb-2 mt-3 flex justify-between">
+                  <p className="mt-6 mb-2 text-base font-bold">Ingress</p>
+                  <div className="flex justify-between mt-3 mb-2">
                     <label htmlFor="pods_stateless" className="mb-1">
                       Enabled
                     </label>
@@ -265,7 +259,7 @@ const HelmTemplate: FC = () => {
                       label=""
                     />
                   </div>
-                  <div className="mb-2 mt-3 flex flex-col">
+                  <div className="flex flex-col mt-3 mb-2">
                     <FormInput
                       id="pods_ingress_host"
                       name={`pods.${index}.ingress.host`}
@@ -280,7 +274,7 @@ const HelmTemplate: FC = () => {
           <button
             type="submit"
             disabled={helmTemplatePending}
-            className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+            className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
           >
             {helmTemplatePending
               ? 'Generating...'

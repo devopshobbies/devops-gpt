@@ -162,6 +162,19 @@ POST /IaC-template/aws/iam
 | `iam_user`      | `boolean` | **Required** |
 | `iam_group`      | `boolean` | **Required** |
 
+#### Post terraform template generation of ArgoCD resources
+
+```
+POST /IaC-template/aws/argocd
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `argocd_applicatio.sync_policy.auto_prune`      | `boolean` | **No-Required** |
+| `argocd_applicatio.sync_policy.self_heal`      | `boolean` | **No-Required** |
+| `argocd_applicatio.sync_policy.argocd_repository`      | `boolean` | **Required** |
+| `argocd_applicatio.sync_policy.application_depends_repository`      | `boolean` | **Required** |
+
 
 
 ## Tech Stack

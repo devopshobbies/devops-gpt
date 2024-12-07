@@ -252,7 +252,7 @@ POST /ansible-install/docker
 | `os`      | `string` | **Required** |
 | `hosts`      | `list` | **Required** |
 
-#### Post Ansible install Kubernetese
+#### Post Ansible install Kubernetes
 
 ```
 POST /ansible-install/kuber

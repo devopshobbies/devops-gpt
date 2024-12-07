@@ -1,7 +1,8 @@
-
 # DevOps-GPT
 
 This project helps you to balance your daily work as a DevOps engineer, from simple bug fixes to project template generation. you don't need to search on Google for some routine jobs and it helps you with a robust prompt to simplify your career.
+
+[![devopsgpt demo](devopsgpt.jpg)](https://youtu.be/b9KPfWTY24U?si=fPtLhW4D-lgXTp0S)
 
 
 ## Run DevOpsGPT

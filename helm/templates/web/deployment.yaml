@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "web.deploymentName" . }}
+  labels:
+    {{- include "web.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.web.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "web.labels" . | nindent 8 }}
+  template:
+    metadata:
+      labels:
+        {{- include "web.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "web.deploymentName" . }}
+          image: {{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}
+          ports:
+            - containerPort: {{ .Values.web.service.targetPort }}
+      {{- if .Values.web.nodeSelector }}
+      nodeSelector: {{ .Values.web.nodeSelector | toYaml | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.web.affinity }}
+      affinity: {{ .Values.web.affinity | toYaml | nindent 8 }}
+      {{- end }}

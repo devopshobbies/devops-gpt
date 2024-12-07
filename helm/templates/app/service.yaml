@@ -10,8 +10,5 @@ spec:
     - port: {{ .Values.app.service.port }}
       targetPort: {{ .Values.app.service.targetPort }}
       protocol: {{ .Values.app.service.protocol }}
-      {{- if eq .Values.app.service.type "NodePort" }}
-      nodePort: {{ .Values.app.service.nodePort }}
-      {{- end }}
   selector:
     {{- include "app.labels" . | nindent 4 }}

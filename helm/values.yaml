@@ -5,11 +5,29 @@ app:
     tag: latest
   service:
     type: ClusterIP
-    port: 80
+    port: 8080
     targetPort: 8080
     protocol: TCP
-    nodePort: 30080
   environment:
     OPENAI_API_KEY: ""
   nodeSelector: {}
   affinity: {}
+
+web:
+  replicaCount: 1
+  image:
+    repository: 81318131/web_gpt
+    tag: kubernetes-local
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 4173
+    protocol: TCP
+    nodePort: 30080
+  nodeSelector: {}
+  affinity: {}
+
+ingress:
+  enabled: true
+  host: "devopsgpt.local"
+  ingressClassName: "nginx"

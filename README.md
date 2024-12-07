@@ -175,6 +175,54 @@ POST /IaC-template/aws/argocd
 | `argocd_applicatio.sync_policy.argocd_repository`      | `boolean` | **Required** |
 | `argocd_applicatio.sync_policy.application_depends_repository`      | `boolean` | **Required** |
 
+#### Post terraform template generation of ELB resources
+
+```
+POST /IaC-template/aws/elb
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `security_group`      | `boolean` | **Required** |
+| `lb_target_group`      | `boolean` | **Required** |
+| `lb`      | `boolean` | **Required** |
+| `lb_listener_rule`      | `boolean` | **Required** |
+| `key_pair`      | `boolean` | **Required** |
+| `launch_configuration`      | `boolean` | **Required** |
+| `autoscaling_group`      | `boolean` | **Required** |
+| `autoscaling_attachment`      | `boolean` | **Required** |
+| `autoscaling_policy`      | `boolean` | **Required** |
+
+
+#### Post terraform template generation of EFS resources
+
+```
+POST /IaC-template/aws/efs
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `efs_file_system`      | `boolean` | **Required** |
+| `efs_mount_target`      | `boolean` | **Required** |
+| `efs_backup_policy`      | `boolean` | **Required** |
+
+#### Post Helm template generation
+
+```
+POST /Helm-template
+```
+
+| Request Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `api_version`      | `integer` | **Required** |
+| `pods.name`      | `string` | **Required** |
+| `pods.image`      | `string` | **Required** |
+| `pods.target_port`      | `integer` | **Required** |
+| `pods.replicas`      | `integer` | **Required** |
+| `pods.persistance`      | `dict` | **Required** |
+| `pods.environment`      | `list(dict)` | **Required** |
+| `pods.stateless`      | `boolean` | **Required** |
+| `pods.ingress`      | `dict` | **Required** |
 
 
 ## Tech Stack

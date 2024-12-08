@@ -145,6 +145,26 @@ export const DockerComposeSchema = zod.object({
 
 export type TDockerCompose = zod.infer<typeof DockerComposeSchema>;
 
+export type DockerCompose = {
+  version: string;
+  services: {
+    [key: string]: {
+      build: IBuildConfig | null;
+      image: string | null;
+      environment: {
+        [key: string]: string;
+      } | null;
+      container_name: string | null;
+      ports: string[] | null;
+      command: string | null;
+      volumes: string[] | null;
+      networks: string[] | null;
+      depends_on: string[] | null;
+    };
+  }[];
+  networks: INetworkConfig;
+};
+
 type AppNetwork = {
   network_name: string;
   driver: {

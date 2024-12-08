@@ -12,6 +12,7 @@ import {
   INetworkConfig,
   TDockerCompose,
 } from './docker-compose.type';
+import type { DockerCompose } from './docker-compose.type';
 import { cn } from '@/lib/utils';
 import ServiceNetworkFields from './components/service-network-fields';
 import ServiceDependsOnFields from './components/service-depends-on-fields';
@@ -200,36 +201,31 @@ const DockerCompose: FC = () => {
       );
 
       const services = refactoredService.map((item) => {
-        if (item.ports?.some((port) => !port.value)) {
-          item.ports = null;
-        }
-        if (item.volumes?.some((volume) => !volume.value)) {
-          item.volumes = null;
-        }
-        if (item.networks?.some((network) => !network.value)) {
-          item.networks = null;
-        }
-        if (item.depends_on?.some((depend_on) => !depend_on.value)) {
-          item.depends_on = null;
-        }
-        if (
-          item.environment &&
-          !Object.entries(item.environment).some(
-            ([k, v]) => k !== '' || v !== '',
-          )
-        ) {
-          item.environment = null;
-        }
-        if (
-          item.build?.args &&
-          !Object.entries(item.build?.args).some(
-            ([k, v]) => k !== '' || v !== '',
-          )
-        ) {
-          item.build.args = null;
-        }
-
-        return item;
+        const bodyService = {
+          name: item.name,
+          build: item.build?.context ? item.build : null,
+          command: item.command ? item.command : null,
+          image: item.image ? item.image : null,
+          container_name: item.container_name ? item.container_name : null,
+          depends_on: item.depends_on?.some((item) => item.value) ? [''] : null,
+          ports: item.ports?.some((item) => item.value)
+            ? item.ports.map((port) => port.value)
+            : null,
+          volumes: item.volumes?.some((item) => item.value)
+            ? item.volumes.map((volume) => volume.value)
+            : null,
+          networks: item.networks?.some((item) => item.value)
+            ? item.networks.map((network) => network.value)
+            : null,
+          environment:
+            item.environment &&
+            Object.entries(item.environment).some(
+              ([k, v]) => k !== '' || v !== '',
+            )
+              ? item.environment
+              : null,
+        };
+        return bodyService;
       });
 
       const requestBody: DockerComposeBody = {

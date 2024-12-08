@@ -11,6 +11,7 @@ export type FormFieldProps = {
   isNumber?: boolean;
   inputType?: typeof HTMLInputElement.prototype.type;
   inputClass?: string;
+  showError?: boolean;
 } & ComponentPropsWithoutRef<typeof Form.Field>;
 
 export type FormConfig<T extends z.ZodType> = {

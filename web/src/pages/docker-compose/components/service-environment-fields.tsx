@@ -18,14 +18,14 @@ const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({
   });
 
   return (
-    <div className="mb-2 mt-6">
-      <div className="mb-2 flex items-center">
+    <div className="mt-6 mb-2">
+      <div className="flex items-center mb-2">
         <p className="text-base font-bold">Environments</p>
 
         <button
           type="button"
           onClick={() => append({ name: '', value: '' })}
-          className="btn btn-xs ml-4"
+          className="ml-4 btn btn-xs"
         >
           Add <Plus className="size-3" />
         </button>
@@ -34,7 +34,7 @@ const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({
         {fields.map((field, envIdx) => (
           <div
             className={cn(
-              'mb-4 flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0',
+              'relative mb-4 flex items-center divide-x-2 divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0',
               {
                 'divide-red-500 border-red-500 dark:divide-red-500 dark:border-red-500':
                   control.getFieldState(
@@ -49,24 +49,27 @@ const ServiceEnvironmentFields: FC<ServiceEnvironmentFieldsProps> = ({
               name={`services.${serviceIndex}.environment.${envIdx}.key`}
               label=""
               placeholder="Env"
-              className="h-12 w-full rounded-s-md px-2 outline-none"
+              inputClass={'border-none'}
             />
             <FormInput
               id={`env_value_${envIdx}`}
               name={`services.${serviceIndex}.environment.${envIdx}.value`}
               label=""
               placeholder="Hi"
-              className={cn('h-12 w-full rounded-s-md px-2 outline-none', {
+              inputClass={cn('border-none rounded-s-none', {
                 'rounded-e-md': envIdx === 0,
               })}
             />
 
-            <button
-              onClick={() => remove(envIdx)}
-              className="btn btn-error rounded-e-md rounded-s-none"
-            >
-              <Trash2 />
-            </button>
+            {envIdx > 0 && (
+              <button
+                type="button"
+                onClick={() => remove(envIdx)}
+                className="z-10 h-full px-4"
+              >
+                <Trash2 className="size-4" />
+              </button>
+            )}
           </div>
         ))}
       </div>

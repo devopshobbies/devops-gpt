@@ -51,9 +51,19 @@ const Installation: FC = () => {
       URL.revokeObjectURL(url);
     } catch (error) {
       if (isAxiosError<InstallationValidationError>(error)) {
-        toast.error(error.response?.data.detail[0].msg);
-      } else {
-        toast.error('Something went wrong');
+        if (
+          Array.isArray(error.response?.data.detail) &&
+          error.response?.data.detail[0].msg
+        ) {
+          toast.error(error.response.data.detail[0].msg);
+        } else if (
+          !Array.isArray(error.response?.data.detail) &&
+          error.response?.data.detail
+        ) {
+          toast.error(error.response.data.detail);
+        } else {
+          toast.error('Something went wrong');
+        }
       }
     }
   };
@@ -64,7 +74,7 @@ const Installation: FC = () => {
       className="flex h-[calc(100vh-56px)] w-full items-center justify-center"
     >
       <div className="w-full max-w-96">
-        <div className="divide-y divide-gray-500 rounded-md border border-gray-500">
+        <div className="border border-gray-500 divide-y divide-gray-500 rounded-md">
           <Select
             options={osSelectOptions}
             placeholder="os"
@@ -83,7 +93,7 @@ const Installation: FC = () => {
         <button
           type="submit"
           disabled={isPending || !os || !tool}
-          className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+          className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
         >
           {isPending ? 'Wait...' : 'Generate'}
         </button>

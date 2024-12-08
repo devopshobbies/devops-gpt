@@ -12,6 +12,7 @@ import {
   INetworkConfig,
   TDockerCompose,
 } from './docker-compose.type';
+import type { DockerCompose } from './docker-compose.type';
 import { cn } from '@/lib/utils';
 import ServiceNetworkFields from './components/service-network-fields';
 import ServiceDependsOnFields from './components/service-depends-on-fields';
@@ -50,24 +51,46 @@ const DockerCompose: FC = () => {
         build: {
           context: '',
           dockerfile: '',
-          args: [],
+          args: [
+            {
+              key: '',
+              value: '',
+            },
+          ],
         },
-        command: '',
-        container_name: '',
-        environment: [],
+        command: null,
+        container_name: null,
+        environment: [
+          {
+            key: '',
+            value: '',
+          },
+        ],
         image: '',
-        ports: [''],
-        volumes: [''],
-        networks: [''],
-        depends_on: [''],
+        ports: [
+          {
+            value: '',
+          },
+        ],
+        volumes: [
+          {
+            value: '',
+          },
+        ],
+        networks: [
+          {
+            value: '',
+          },
+        ],
+        depends_on: [{ value: '' }],
       },
     ],
     networks: {
-      custom: false,
+      external_network: false,
       app_network: [
         {
           network_name: '',
-          driver: { value: 'bridge', label: 'bridge' },
+          driver: { value: 'bridge', label: 'Bridge' },
         },
       ],
     },
@@ -92,19 +115,45 @@ const DockerCompose: FC = () => {
   const handleAddService = () => {
     append({
       build: {
-        args: [],
+        args: [
+          {
+            key: '',
+            value: '',
+          },
+        ],
         context: '',
         dockerfile: '',
       },
       name: '',
-      command: '',
-      container_name: '',
+      command: null,
+      container_name: null,
       image: '',
-      environment: [],
-      depends_on: [''],
-      networks: [''],
-      ports: [''],
-      volumes: [''],
+      environment: [
+        {
+          key: '',
+          value: '',
+        },
+      ],
+      depends_on: [
+        {
+          value: '',
+        },
+      ],
+      networks: [
+        {
+          value: '',
+        },
+      ],
+      ports: [
+        {
+          value: '',
+        },
+      ],
+      volumes: [
+        {
+          value: '',
+        },
+      ],
     });
   };
 
@@ -131,49 +180,58 @@ const DockerCompose: FC = () => {
         }),
       );
 
-      const refactoredNetwork = data.networks.app_network.reduce(
-        (acc: INetworkConfig, network) => {
-          if (!data.networks.custom) {
-            if ('driver' in network) {
+      let refactoredNetwork: any;
+
+      if (!data.networks.app_network.some((network) => network.network_name)) {
+        refactoredNetwork = null;
+      } else {
+        refactoredNetwork = data.networks.app_network.reduce(
+          (acc: INetworkConfig, network) => {
+            if (!data.networks.external_network) {
+              if ('driver' in network) {
+                acc[network.network_name] = {
+                  driver: network.driver?.value,
+                };
+              }
+            }
+            if ('name' in network) {
               acc[network.network_name] = {
-                driver: network.driver?.value,
+                name: network.name,
+                external_network: true,
               };
             }
-          }
-          if ('name' in network && 'external' in network) {
-            acc[network.network_name] = {
-              name: network.name,
-              external: !!network.external,
-            };
-          }
-          return acc;
-        },
-        {},
-      );
+            return acc;
+          },
+          {},
+        );
+      }
 
       const services = refactoredService.map((item) => {
-        if (item.ports && item?.ports[0].length === 0) {
-          item.ports = null;
-        }
-        if (item.volumes && item.volumes[0].length === 0) {
-          item.volumes = null;
-        }
-        if (item.networks && item.networks[0].length === 0) {
-          item.networks = null;
-        }
-        if (item.depends_on && item.depends_on[0].length === 0) {
-          item.depends_on = null;
-        }
-        if (item.environment && !item.environment[0]) {
-          item.environment = null;
-        }
-        if (item.environment && item.environment[0]) {
-          item.environment = null;
-        }
-        if (item.command?.length === 0) {
-          item.command = null;
-        }
-        return item;
+        const bodyService = {
+          name: item.name,
+          build: item.build?.context ? item.build : null,
+          command: item.command ? item.command : null,
+          image: item.image ? item.image : null,
+          container_name: item.container_name ? item.container_name : null,
+          depends_on: item.depends_on?.some((item) => item.value) ? [''] : null,
+          ports: item.ports?.some((item) => item.value)
+            ? item.ports.map((port) => port.value)
+            : null,
+          volumes: item.volumes?.some((item) => item.value)
+            ? item.volumes.map((volume) => volume.value)
+            : null,
+          networks: item.networks?.some((item) => item.value)
+            ? item.networks.map((network) => network.value)
+            : null,
+          environment:
+            item.environment &&
+            Object.entries(item.environment).some(
+              ([k, v]) => k !== '' || v !== '',
+            )
+              ? item.environment
+              : null,
+        };
+        return bodyService;
       });
 
       const requestBody: DockerComposeBody = {
@@ -185,13 +243,11 @@ const DockerCompose: FC = () => {
       await dockerComposeMutate(requestBody);
       await download();
     } catch (error) {
-      console.log(error);
       if (isAxiosError<DockerComposeValidationError>(error)) {
         toast.error(
           `${error.response?.data.detail[0].loc[error.response?.data.detail[0].loc.length - 1]} ${error.response?.data.detail[0].msg}`,
         );
       } else {
-        console.log(error);
         toast.error('Something went wrong');
       }
     }
@@ -255,7 +311,7 @@ const DockerCompose: FC = () => {
                 </div>
                 <div
                   className={cn(
-                    'h-full max-h-0 overflow-hidden px-1 transition-all duration-500',
+                    'h-full max-h-0 overflow-y-auto px-1 transition-all duration-500',
                     {
                       'max-h-[1000px]': openService === index,
                     },
@@ -290,6 +346,7 @@ const DockerCompose: FC = () => {
                       id="command"
                       name={`services.${index}.command`}
                       label="Command"
+                      placeholder="command..."
                     />
                   </div>
                   <ServiceBuildFields serviceIndex={index} />

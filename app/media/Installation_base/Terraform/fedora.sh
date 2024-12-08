@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 
 sudo dnf install -y dnf-plugins-core

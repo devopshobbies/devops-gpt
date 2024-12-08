@@ -52,9 +52,9 @@ async def IaC_bugfix_generation(request:IaCBugfixInput) -> Output:
 @app.post("/api/IaC-install/")
 async def IaC_install_generation(request:IaCInstallationInput) -> Output:
         if os.environ.get("TEST"):
-            return Output(output='apt-get install xyz \n apt-get update (covert them to shell file output)')
-        selected_script = select_install(request)   
-        return Output(output=selected_script)
+            return Output(output='nothing special')
+        select_install(request)   
+        return Output(output="pk")
 
 @app.post("/api/IaC-template/docker")
 async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) -> Output:

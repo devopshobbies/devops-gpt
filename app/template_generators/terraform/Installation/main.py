@@ -1,31 +1,43 @@
+import os
+import shutil
 
+
+def create_MyBash_directory():
+    
+    dir = 'app/media/MyBash'
+    
+    
+    if not os.path.exists(dir): 
+        os.makedirs(dir)
+        os.path.join(dir, 'bash.sh') 
+            
+        
+    
 def select_install(input):
+    create_MyBash_directory()
     
     match input.os:
         
+        
         case "Ubuntu":
-            with open("app/media/Installation_base/Terraform/ubuntu.sh", 'r') as file:
-                file_content = file.read()
-
-            return file_content
+            source = 'app/media/Installation_base/Terraform/ubuntu.sh'
+            dest = 'app/media/MyBash/bash.sh'
+            shutil.copyfile(source, dest)
                 
         case "Fedora":
-            with open("app/media/Installation_base/Terraform/fedora.sh", 'r') as file:
-                file_content = file.read()
-
-            return file_content
+            source = 'app/media/Installation_base/Terraform/fedora.sh'
+            dest = 'app/media/MyBash/bash.sh'
+            shutil.copyfile(source, dest)
         
         case "Centos":
-            with open("app/media/Installation_base/Terraform/centos.sh", 'r') as file:
-                file_content = file.read()
-
-            return file_content
+            source = 'app/media/Installation_base/Terraform/centos.sh'
+            dest = 'app/media/MyBash/bash.sh'
+            shutil.copyfile(source, dest)
         
         case "Amazon_linux":
-            with open("app/media/Installation_base/Terraform/amazon_linux.sh", 'r') as file:
-                file_content = file.read()
-
-            return file_content
+            source = 'app/media/Installation_base/Terraform/amazon_linux.sh'
+            dest = 'app/media/MyBash/bash.sh'
+            shutil.copyfile(source, dest)
         case _:
             raise ValueError()
         

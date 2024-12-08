@@ -29,6 +29,7 @@ from app.template_generators.terraform.aws.s3 import (IaC_template_generator_s3)
 from app.template_generators.terraform.argocd import (IaC_template_generator_argocd)
 from app.template_generators.terraform.aws.ELB import (IaC_template_generator_elb)
 from app.template_generators.terraform.aws.EFS import (IaC_template_generator_efs)
+from app.template_generators.terraform.Installation.main import (select_install)
 import os
 
 @app.post("/api/IaC-basic/")
@@ -51,10 +52,9 @@ async def IaC_bugfix_generation(request:IaCBugfixInput) -> Output:
 @app.post("/api/IaC-install/")
 async def IaC_install_generation(request:IaCInstallationInput) -> Output:
         if os.environ.get("TEST"):
-            return Output(output='apt-get install xyz \n apt-get update (covert them to shell file output)')
-        generated_prompt = IaC_installation_generator(request)
-        output = gpt_service(generated_prompt)
-        return Output(output=output)
+            return Output(output='nothing special')
+        select_install(request)   
+        return Output(output="pk")
 
 @app.post("/api/IaC-template/docker")
 async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) -> Output:

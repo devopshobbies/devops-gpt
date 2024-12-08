@@ -11,7 +11,7 @@ class TestIaCBasic:
         self.mock_gpt_service = patch('app.main.gpt_service', return_value='Mocked GPT Response').start()
         self.mock_openai = patch('app.gpt_services.OpenAI', return_value=mock_client_instance).start()
 
-        self.url = '/IaC-basic/'
+        self.url = '/api/IaC-basic/'
 
     def teardown_method(self):
         patch.stopall()

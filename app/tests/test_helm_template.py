@@ -15,7 +15,7 @@ class TestHelmTemplate:
         self.mock_builtin_open = patch('builtins.open', mock_open()).start()
         self.mock_shutil_rm = patch('shutil.rmtree').start()
 
-        self.url = '/Helm-template/'
+        self.url = '/api/Helm-template/'
 
     def teardown_method(self):
         patch.stopall()

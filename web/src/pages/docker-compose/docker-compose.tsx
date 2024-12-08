@@ -86,7 +86,7 @@ const DockerCompose: FC = () => {
       },
     ],
     networks: {
-      custom: false,
+      external_network: false,
       app_network: [
         {
           network_name: '',
@@ -180,25 +180,31 @@ const DockerCompose: FC = () => {
         }),
       );
 
-      const refactoredNetwork = data.networks.app_network.reduce(
-        (acc: INetworkConfig, network) => {
-          if (!data.networks.custom) {
-            if ('driver' in network) {
+      let refactoredNetwork: any;
+
+      if (!data.networks.app_network.some((network) => network.network_name)) {
+        refactoredNetwork = null;
+      } else {
+        refactoredNetwork = data.networks.app_network.reduce(
+          (acc: INetworkConfig, network) => {
+            if (!data.networks.external_network) {
+              if ('driver' in network) {
+                acc[network.network_name] = {
+                  driver: network.driver?.value,
+                };
+              }
+            }
+            if ('name' in network) {
               acc[network.network_name] = {
-                driver: network.driver?.value,
+                name: network.name,
+                external_network: true,
               };
             }
-          }
-          if ('name' in network && 'external' in network) {
-            acc[network.network_name] = {
-              name: network.name,
-              external: !!network.external,
-            };
-          }
-          return acc;
-        },
-        {},
-      );
+            return acc;
+          },
+          {},
+        );
+      }
 
       const services = refactoredService.map((item) => {
         const bodyService = {

@@ -31,7 +31,7 @@ export interface INetworkConfig {
       }
     | {
         name: string;
-        external: boolean;
+        external_network: boolean;
       };
 }
 
@@ -117,20 +117,19 @@ const labelValueSchema = zod.object({
 
 export const NetworkSchema = zod.union([
   zod.object({
-    custom: zod.literal(false),
+    external_network: zod.literal(false),
     app_network: zod.array(
       zod.object({
-        network_name: zod.string().min(1, 'Network name is required.'),
+        network_name: zod.string(),
         driver: labelValueSchema,
       }),
     ),
   }),
   zod.object({
-    custom: zod.literal(true),
+    external_network: zod.literal(true),
     app_network: zod.array(
       zod.object({
         network_name: zod.string().min(1, 'Network name is required.'),
-        external: zod.boolean().optional(),
         name: zod.string().min(1, 'Name is required.'),
       }),
     ),
@@ -162,7 +161,7 @@ export type DockerCompose = {
       depends_on: string[] | null;
     };
   }[];
-  networks: INetworkConfig;
+  networks: INetworkConfig | null;
 };
 
 type AppNetwork = {

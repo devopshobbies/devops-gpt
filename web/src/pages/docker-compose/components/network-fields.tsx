@@ -5,7 +5,7 @@ import { FormInput } from '@/components/form/form-input';
 import { FormCheckbox } from '@/components/form/form-checkbox';
 import { FormSelect } from '@/components/form/form-select';
 
-const defaultNetworkDrivers = ['bridge', 'host', 'none', 'overlay'] as const;
+const defaultNetworkDrivers = ['Bridge', 'Host', 'None', 'Overlay'] as const;
 
 const NetworkFields: FC = () => {
   const { control, watch } = useFormContext();
@@ -15,7 +15,7 @@ const NetworkFields: FC = () => {
     name: 'networks.app_network',
   });
 
-  const customNetwork = watch('networks.custom');
+  const customNetwork = watch('networks.external_network');
 
   const handleRemoveNetwork = (index: number) => {
     remove(index);
@@ -25,13 +25,12 @@ const NetworkFields: FC = () => {
     const networkData = customNetwork
       ? {
           network_name: '',
-          external: false,
           name: '',
         }
       : {
           network_name: '',
           driver: {
-            label: 'bridge',
+            label: 'Bridge',
             value: 'bridge',
           },
         };
@@ -52,11 +51,14 @@ const NetworkFields: FC = () => {
             Add <Plus className="size-3" />
           </button>
         </div>
-        <FormCheckbox label="Custom" name="networks.custom" />
+        <FormCheckbox
+          label="External Network"
+          name="networks.external_network"
+        />
       </div>
 
       <div className="space-y-4">
-        <div className="w-full rounded-md border border-gray-500 p-5">
+        <div className="flex w-full flex-col gap-4 rounded-md border border-gray-500 p-5">
           {fields.map((field, index) => (
             <div key={field.id} className="mb-4">
               <div className="mb-4 flex items-center justify-between">
@@ -72,19 +74,12 @@ const NetworkFields: FC = () => {
               </div>
 
               <div>
-                {customNetwork && (
-                  <div className="mb-2 flex justify-end">
-                    <FormCheckbox
-                      name={`networks.app_network.${index}.external`}
-                      label="External Network"
-                    />
-                  </div>
-                )}
                 <div className="flex items-center gap-3 [&>div]:flex-1">
                   <FormInput
                     name={`networks.app_network.${index}.network_name`}
                     label="App Network"
                     placeholder="network_name"
+                    showError={false}
                   />
                   {!customNetwork && (
                     <FormSelect
@@ -101,6 +96,7 @@ const NetworkFields: FC = () => {
                       name={`networks.app_network.${index}.name`}
                       label="Name"
                       placeholder="Name"
+                      showError={false}
                     />
                   )}
                 </div>

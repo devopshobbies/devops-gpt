@@ -37,7 +37,9 @@ export const selectStyle = (
       background: isDark ? '#121212' : '#fff',
       border: '1px solid #fff',
       borderRadius: '6px',
-      boxShadow: '0 10px 10px 4px #000',
+      boxShadow: isDark
+        ? '0 10px 10px 4px #000'
+        : '0 5px 5px 2px rgba(0, 0, 0, 0.3)',
     }),
 
     option: (styles) => ({

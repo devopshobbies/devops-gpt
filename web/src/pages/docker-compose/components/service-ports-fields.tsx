@@ -29,33 +29,29 @@ const ServicePortsFields: FC<ServicePortsFieldsProps> = ({ serviceIndex }) => {
           Add <Plus className="size-3" />
         </button>
       </div>
-      <div className="flex space-x-4">
+      <div className="grid grid-cols-4 gap-4">
         {fields.map((field, idx) => (
-          <div
-            className={cn(
-              'flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500',
-              {
+          <div className={'relative'} key={field.id}>
+            <FormInput
+              label=""
+              name={`services.${serviceIndex}.ports.${idx}.value`}
+              placeholder="8080:80"
+              inputClass={cn({
+                'pr-8': idx > 0,
                 'divide-red-500 border-red-500 dark:divide-red-500 dark:border-red-500':
                   control.getFieldState(`services.${serviceIndex}.ports.${idx}`)
                     .invalid,
-              },
-            )}
-            key={field.id}
-          >
-            <FormInput
-              name={`services.${serviceIndex}.ports.${idx}`}
-              label=""
-              placeholder="8080:80"
-              className="h-12 w-full rounded-s-md px-2 outline-none"
+              })}
             />
-
-            <button
-              type="button"
-              onClick={() => remove(idx)}
-              className="btn btn-error rounded-e-md rounded-s-none"
-            >
-              <Trash2 />
-            </button>
+            {idx > 0 && (
+              <button
+                type="button"
+                onClick={() => remove(idx)}
+                className="absolute right-3 top-0 z-10 h-full rounded-e-md rounded-s-none"
+              >
+                <Trash2 className="size-4" />
+              </button>
+            )}
           </div>
         ))}
       </div>

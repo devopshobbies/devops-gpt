@@ -19,40 +19,42 @@ const ServiceDependsOnFields: FC<ServiceDependsOnFieldsProps> = ({
   });
 
   return (
-    <div className="mb-2 mt-6">
-      <div className="mb-2 flex items-center">
+    <div className="mt-6 mb-2">
+      <div className="flex items-center mb-2">
         <p className="text-base font-bold">Depends On</p>
 
         <button
           type="button"
           onClick={() => append('')}
-          className="btn btn-xs ml-4"
+          className="ml-4 btn btn-xs"
         >
           Add <Plus className="size-3" />
         </button>
       </div>
-      <div className="flex gap-4">
-        {fields.map((field, depIdx) => (
-          <div
-            className={cn(
-              'mb-4 flex items-center divide-x divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-500 dark:border-gray-500 [&>div]:mb-0',
-            )}
-            key={field.id}
-          >
+      <div className="grid grid-cols-3 gap-4">
+        {fields.map((field, idx) => (
+          <div className={'relative'} key={field.id}>
             <FormInput
-              id={`depends_on_${depIdx}`}
-              name={`services.${serviceIndex}.depends_on.${depIdx}`}
               label=""
+              name={`services.${serviceIndex}.depends_on.${idx}.value`}
               placeholder="Service name"
-              className="h-12 w-full rounded-s-md px-2 outline-none"
+              inputClass={cn({
+                'pr-8': idx > 0,
+                'divide-red-500 border-red-500 dark:divide-red-500 dark:border-red-500':
+                  control.getFieldState(
+                    `services.${serviceIndex}.depends_on.${idx}`,
+                  ).invalid,
+              })}
             />
-
-            <button
-              onClick={() => remove(depIdx)}
-              className="btn btn-error rounded-e-md rounded-s-none"
-            >
-              <Trash2 />
-            </button>
+            {idx > 0 && (
+              <button
+                type="button"
+                onClick={() => remove(idx)}
+                className="absolute top-0 z-10 h-full right-3 rounded-e-md rounded-s-none"
+              >
+                <Trash2 className="size-4" />
+              </button>
+            )}
           </div>
         ))}
       </div>

@@ -6,6 +6,7 @@ import { usePost } from '@/core/react-query';
 import { ArgocdBody, ArgocdResponse } from './argocd.types';
 import { toast } from 'sonner';
 import { useDownload } from '@/hooks';
+import { isAxiosError } from 'axios';
 
 const Argocd: FC = () => {
   const { mutateAsync: argocdMutate, isPending: argocdPending } = usePost<
@@ -63,19 +64,24 @@ const Argocd: FC = () => {
       await argocdMutate(argocdBody);
       await download();
     } catch (error) {
-      console.log(error);
-      toast.error('Something went wrong');
+      if (isAxiosError(error)) {
+        if (error.response?.data.detail) {
+          toast.error(error.response.data.detail);
+        } else {
+          toast.error('Something went wrong');
+        }
+      }
     }
   };
 
   return (
     <form
       onSubmit={handleForm}
-      className="w-full max-w-96 text-black dark:text-white"
+      className="w-full text-black max-w-96 dark:text-white"
     >
-      <div className="rounded-md border border-gray-500">
+      <div className="border border-gray-500 rounded-md">
         <div className="divide-y divide-gray-500">
-          <div className="flex w-full items-center justify-between px-3 py-3">
+          <div className="flex items-center justify-between w-full px-3 py-3">
             <p>Argo Application</p>
             <input
               type="checkbox"
@@ -95,7 +101,7 @@ const Argocd: FC = () => {
             )}
           >
             <div
-              className="flex cursor-pointer items-center justify-between py-3 pl-10 pr-3"
+              className="flex items-center justify-between py-3 pl-10 pr-3 cursor-pointer"
               onClick={() => handleDropdown('sync_policy')}
             >
               <p>Sync Policy</p>
@@ -137,7 +143,7 @@ const Argocd: FC = () => {
               </div>
             </div>
           </div>
-          <div className="flex w-full items-center justify-between px-3 py-3">
+          <div className="flex items-center justify-between w-full px-3 py-3">
             <p>ArgoCD Repository</p>
             <input
               type="checkbox"
@@ -148,7 +154,7 @@ const Argocd: FC = () => {
               onChange={() => handleServices('argocd_repository')}
             />
           </div>
-          <div className="flex w-full items-center justify-between px-3 py-3">
+          <div className="flex items-center justify-between w-full px-3 py-3">
             <p>Application Depends Repository</p>
             <input
               type="checkbox"
@@ -164,7 +170,7 @@ const Argocd: FC = () => {
       <button
         type="submit"
         disabled={argocdPending || downloadPending}
-        className="btn mt-3 w-full bg-orange-base text-white hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
+        className="w-full mt-3 text-white btn bg-orange-base hover:bg-orange-base/70 disabled:bg-orange-base/50 disabled:text-white/70"
       >
         {argocdPending
           ? 'Wait...'

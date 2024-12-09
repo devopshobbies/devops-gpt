@@ -1,0 +1,4 @@
+[submodule "admin-panel"]
+	path = admin-panel
+	url = https://github.com/devopsgpt/admin-panel.git
+	branch = master

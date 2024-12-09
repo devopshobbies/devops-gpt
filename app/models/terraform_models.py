@@ -1,6 +1,5 @@
 from pydantic import BaseModel, validator, ValidationError
 from typing import List, Optional
-
 from .utils import BasicInput
 
 
@@ -46,22 +45,23 @@ class IaCBugfixInput(BasicInput):
         return value
 
 class IaCInstallationInput(BaseModel):
-    os:str = "ubuntu"
-    service:Optional[str] = 'terraform'
-
+    os:str = "Ubuntu"
+    environment:str = "Linux"
+    
     @validator("os")
     def validate_os(cls, value):
-        allowed_os = ['ubuntu', 'centos', 'debian']
+        allowed_os = ['Ubuntu', 'Centos', 'Fedora', 'Amazon_linux']
         if value not in allowed_os:
             raise ValueError(f"OS must be one of {allowed_os}.")
         return value
-
-    @validator("service")
-    def validate_service(cls, value):
-        allowed_services = ['terraform']
-        if value not in allowed_services:
-            raise ValueError(f"Service must be one of {allowed_services}.")
+    
+    @validator("environment")
+    def validate_environment(cls, value):
+        allowed_os = ['Linux']
+        if value not in allowed_os:
+            raise ValueError(f"Environment must be one of {allowed_os}.")
         return value
+    
 
 class IaCTemplateGenerationDocker(BaseModel):
     docker_image: bool = True

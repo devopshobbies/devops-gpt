@@ -4,3 +4,6 @@ from .utils import *
 from .ansible_models import *
 from .jcasc import *
 from .compose_models import *
+from .docker_installation_models import *
+from .jenkins import *
+from .gitlab_models import *

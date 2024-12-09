@@ -14,13 +14,13 @@ class TestIaCTemplates:
         self.mock_openai = patch('app.gpt_services.OpenAI', return_value=mock_client_instance).start()
         self.mock_builtin_open = patch('builtins.open', mock_open()).start()
 
-        self.iac_template_docker_url = '/IaC-template/docker'
-        self.iac_template_ec2_url = '/IaC-template/aws/ec2'
-        self.iac_template_s3_url = '/IaC-template/aws/s3'
-        self.iac_template_iam_url = '/IaC-template/aws/iam'
-        self.iac_template_argocd_url = '/IaC-template/argocd'
-        self.iac_template_elb_url = '/IaC-template/aws/elb'
-        self.iac_template_efs_url = '/IaC-template/aws/efs'
+        self.iac_template_docker_url = '/api/IaC-template/docker'
+        self.iac_template_ec2_url = '/api/IaC-template/aws/ec2'
+        self.iac_template_s3_url = '/api/IaC-template/aws/s3'
+        self.iac_template_iam_url = '/api/IaC-template/aws/iam'
+        self.iac_template_argocd_url = '/api/IaC-template/argocd'
+        self.iac_template_elb_url = '/api/IaC-template/aws/elb'
+        self.iac_template_efs_url = '/api/IaC-template/aws/efs'
 
     def teardown_method(self):
         patch.stopall()

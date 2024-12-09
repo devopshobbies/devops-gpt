@@ -2,19 +2,19 @@ import os
 import shutil
 
 
-def create_MyBash_directory():
+def create_directory(folder:str,filename:str):
     
-    dir = 'app/media/MyBash'
+    dir = f"app/media/{folder}"
     
     
     if not os.path.exists(dir): 
         os.makedirs(dir)
-        os.path.join(dir, 'bash.sh') 
+        os.path.join(dir, filename) 
             
         
     
 def select_install(input):
-    create_MyBash_directory()
+    create_directory("MyBash","bash.sh")
     
     match input.os:
         

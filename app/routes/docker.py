@@ -13,6 +13,7 @@ async def docker_compose_template(request:DockerCompose) -> Output:
 
         return Output(output='output')
     
+    
 @app.post("/api/docker/installation")
 async def docker_installation(request:DockerInstallationInput) -> Output:
         

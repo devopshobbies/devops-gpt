@@ -6,7 +6,8 @@ from app.main import app
 from app.models import (
     IaCTemplateGenerationDocker, IaCTemplateGenerationEC2, IaCTemplateGenerationS3, IaCTemplateGenerationIAM,
     IaCTemplateGenerationArgoCD, IaCTemplateGenerationELB, IaCTemplateGenerationEFS, SyncPolicy, ArgoApplication,
-    HelmTemplateGeneration, Pod, Persistance, Ingress, Environment, IaCBasicInput, IaCBugfixInput, IaCInstallationInput
+    HelmTemplateGeneration, Pod, Persistance, Ingress, Environment, IaCBasicInput, IaCBugfixInput, IaCInstallationInput,
+    AnsibleInstallNginx, AnsibleInstallDocker, AnsibleInstallKuber
 )
 
 
@@ -155,3 +156,45 @@ def iac_install_invalid_sample_input():
         'os': 'Kali',  # Unsupported OS
         'service': 'terraform',
     }
+
+
+@pytest.fixture
+def ansible_nginx_sample_input():
+    return AnsibleInstallNginx().model_dump()
+
+
+@pytest.fixture
+def ansible_nginx_invalid_sample_input():
+    sample_input = AnsibleInstallNginx().model_dump()
+    sample_input['os'] = 'Kali'
+    return sample_input
+
+
+@pytest.fixture
+def ansible_docker_sample_input():
+    return AnsibleInstallDocker().model_dump()
+
+
+@pytest.fixture
+def ansible_docker_invalid_sample_input():
+    sample_input = AnsibleInstallDocker().model_dump()
+    sample_input['os'] = 'Kali'
+    return sample_input
+
+
+@pytest.fixture
+def ansible_kuber_sample_input():
+    return AnsibleInstallKuber(
+        k8s_worker_nodes=['node-1', 'node-2'],
+        k8s_master_nodes=['node-1', 'node-2']
+    ).model_dump()
+
+
+@pytest.fixture
+def ansible_kuber_invalid_sample_input():
+    sample_input = AnsibleInstallKuber(
+        k8s_worker_nodes=['node-1', 'node-2'],
+        k8s_master_nodes=['node-1', 'node-2']
+    ).model_dump()
+    sample_input['os'] = 'Kali'
+    return sample_input

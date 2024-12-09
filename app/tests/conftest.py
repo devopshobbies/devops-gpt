@@ -7,7 +7,8 @@ from app.models import (
     IaCTemplateGenerationDocker, IaCTemplateGenerationEC2, IaCTemplateGenerationS3, IaCTemplateGenerationIAM,
     IaCTemplateGenerationArgoCD, IaCTemplateGenerationELB, IaCTemplateGenerationEFS, SyncPolicy, ArgoApplication,
     HelmTemplateGeneration, Pod, Persistance, Ingress, Environment, IaCBasicInput, IaCBugfixInput, IaCInstallationInput,
-    AnsibleInstallNginx, AnsibleInstallDocker, AnsibleInstallKuber
+    AnsibleInstallNginx, AnsibleInstallDocker, AnsibleInstallKuber, Build, Service, Network, PreCreatedNetwork,
+    DockerCompose
 )
 
 
@@ -197,4 +198,17 @@ def ansible_kuber_invalid_sample_input():
         k8s_master_nodes=['node-1', 'node-2']
     ).model_dump()
     sample_input['os'] = 'Kali'
+    return sample_input
+
+
+@pytest.fixture
+def docker_compose_sample_input():
+    return DockerCompose().model_dump()
+
+
+@pytest.fixture
+def docker_compose_invalid_sample_input():
+    sample_input = DockerCompose().model_dump()
+    sample_input['services']['web']['build'] = None
+    sample_input['services']['web']['image'] = None
     return sample_input

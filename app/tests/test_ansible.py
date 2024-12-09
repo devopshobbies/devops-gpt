@@ -12,9 +12,10 @@ class TestAnsibleInstall:
         self.mock_gpt_service = patch('app.main.gpt_service', return_value='Mocked GPT Response').start()
         self.mock_openai = patch('app.gpt_services.OpenAI', return_value=mock_client_instance).start()
         self.mock_builtin_open = patch('builtins.open', mock_open()).start()
-        self.mock_makedirs = patch('os.makedirs').start()
-        self.join_patch = patch('os.path.join', side_effect=lambda *args: '/'.join(args)).start()
-        self.copy_patch = patch('shutil.copy').start()
+        self.mock_os_makedirs = patch('os.makedirs').start()
+        self.mock_os_path_join = patch('os.path.join', side_effect=lambda *args: '/'.join(args)).start()
+        self.mock_shutil_copy = patch('shutil.copy').start()
+        self.mock_shutil_rmtree = patch('shutil.rmtree').start()
 
         self.ansible_nginx_url = '/api/ansible-install/nginx/'
         self.ansible_docker_url = '/api/ansible-install/docker/'

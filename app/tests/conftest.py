@@ -19,6 +19,7 @@ def client():
     return TestClient(app)
 
 
+
 @pytest.fixture
 def iac_template_docker_sample_input():
     return IaCTemplateGenerationDocker().model_dump()

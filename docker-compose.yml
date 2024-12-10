@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: 81318131/fastapi_gpt
+    image: fastapi_gpt
     container_name: fastapi_gpt
     command: fastapi run app/main.py --port 8080
     volumes:
@@ -24,7 +24,7 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_API_CLIENT_BASE_URL: "http://localhost:8080/api/"
-    image: 81318131/web_gpt
+    image: web_gpt
     container_name: web_gpt
     ports:
       - "80:4173"

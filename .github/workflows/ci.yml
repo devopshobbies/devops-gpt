@@ -43,7 +43,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        submodules: recursive
+        submodules: true
         
     - name: install requirements
       run: pip install -r requirements.txt

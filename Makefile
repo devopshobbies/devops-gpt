@@ -1,7 +1,10 @@
 namespace ?= default
 releaseName ?= devopsgpt
 
-all: build up
+all: update-submodule build up
+
+update-submodule:
+	git submodule init && git submodule update
 
 build:
 	docker compose build

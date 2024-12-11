@@ -1,92 +1,43 @@
-
-import argparse
-import csv
-import logging
 import requests
 from bs4 import BeautifulSoup
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
-from content_parser import WebContentParser
+import os
 
+# List of URLs to crawl
+urls = [
+    "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html",
+    "https://docs.aws.amazon.com/ec2/latest/instancetypes/instance-types.html#current-gen-instances"
+]
 
-def setup_logging():
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[logging.StreamHandler()]
-    )
+# Directory to save the files
+save_dir = "crawled_data"
+os.makedirs(save_dir, exist_ok=True)
 
+def fetch_and_save(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Check if the request was successful
 
-def setup_http_session():
-    retry_strategy = Retry(
-        total=5,
-        backoff_factor=8,
-    )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    adapter.max_retries.respect_retry_after_header = False
-    session = requests.Session()
-    session.mount("https://", adapter)
-    session.mount("http://", adapter)
-    return session
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
 
+        # For demonstration, we are fetching the page title and all paragraphs
+        title = soup.title.string if soup.title else "no_title"
+        paragraphs = soup.find_all('p')
 
-def process_urls(file_path, save_result):
-    http = setup_http_session()
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+        # Prepare the file name
+        file_name = os.path.join(save_dir, f"{title}.txt")
+        
+        # Write the content to the file
+        with open(file_name, 'w', encoding='utf-8') as file:
+            file.write(f"Title: {title}\n\n")
+            for para in paragraphs:
+                file.write(para.get_text() + "\n")
 
-    with open(file_path, 'r') as file:
-        csv_reader = csv.reader(file)
-        for row in csv_reader:
-            if row:  # Check if the row is not empty
-                main_url = row[0]
-                try:
-                    main_response = http.get(main_url, verify=False, timeout=30, headers=headers)
-                    logging.info(f'Fetched URL: {main_url}')
-                except requests.RequestException as e:
-                    logging.error(f"Failed to fetch URL {main_url}: {e}")
-                    continue
+        print(f"Saved content from {url} to {file_name}")
 
-                main_soup = BeautifulSoup(main_response.content, 'html.parser')
-                products = main_soup.find('div', {'class': 'marketing-content_root__DE3hU'}).find_all('div', {'class': 'card-grid-block_root__yDdm_'})
-                logging.info(f'Found {len(products)} products on page: {main_url}')
-                all_data = []
-                for product in products:
-                    # Get org title
-                    title = product.find('h2').text
-                    sub_content_link=[]
-                    all_sub_title = product.find_all('li')
-                    for res in all_sub_title:
-                        sub_part_content = {}
-                        sub_part_content['main_title'] = title
-                        sub_title = res.find('span', {'class': 'card-title_text__F97Wj'}).get_text()
-                        sub_part_content['sub_title'] = sub_title
-                        sub_title_link = 'https://developer.hashicorp.com' + res.find('a').attrs['href']
-                        sub_part_content['sub_title_link'] = sub_title_link
+    except requests.RequestException as e:
+        print(f"Failed to fetch {url}: {e}")
 
-                        parser = WebContentParser(sub_title_link)
-                        data = parser.get_data()
-                        sub_part_content['all_data_info'] = data
-
-                        logging.info(f'Parsed content for sub-title: {sub_title}')
-                        sub_content_link.append(sub_part_content)
-                    all_data.append(sub_content_link)
-                if save_result:
-                    # Logic to save sub_part_content goes here (e.g., writing to a file or database)
-                    logging.info(f'Saving result for: {all_data}')
-                else:
-                    print(all_data)
-                          
-
-def main():
-    setup_logging()
-
-    parser = argparse.ArgumentParser(description='Process URLs from a CSV file.')
-    parser.add_argument('--csv_path', type=str, default='./urls.csv', help='Path to the CSV file containing URLs')
-    parser.add_argument('--save_result', type=bool, default=False, help='Flag to indicate if the results should be saved')
-    args = parser.parse_args()
-
-    process_urls(args.csv_path, args.save_result)
-
-
-if __name__ == '__main__':
-    main()
+# Fetch and save data from each URL
+for url in urls:
+    fetch_and_save(url)

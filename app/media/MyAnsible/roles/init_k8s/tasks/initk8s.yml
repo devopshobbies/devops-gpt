@@ -62,3 +62,4 @@
 - name: Example Task After Reboot
   debug:
     msg: "Server back online and ready for tasks."
+    

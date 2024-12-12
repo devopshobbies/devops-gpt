@@ -18,3 +18,5 @@
   delegate_to: "{{ groups['k8s_masters'][0] }}"
   when: calico_crd_check.rc != 0
   run_once: true
+
+    

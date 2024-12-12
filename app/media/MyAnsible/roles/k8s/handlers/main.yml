@@ -10,3 +10,4 @@
   service:
     name: kubelet
     state: restarted
+    

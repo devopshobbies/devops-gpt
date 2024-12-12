@@ -1,13 +1,13 @@
 ---
-    # handlers file for k8s
+# handlers file for k8s
 
-    - name: Remove temporary GPG key file
-      file:
-        path: "/tmp/docker.list"
-        state: absent
+- name: Remove temporary GPG key file
+  file:
+    path: "/tmp/docker.list"
+    state: absent
 
-    - name: Restart kubelet
-      service:
-        name: kubelet
-        state: restarted
+- name: Restart kubelet
+  service:
+    name: kubelet
+    state: restarted
     

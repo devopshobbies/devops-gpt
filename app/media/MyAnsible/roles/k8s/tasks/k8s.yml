@@ -1,196 +1,196 @@
 - name: Disable SWAP since kubernetes can't work with swap enabled
-      shell: |
-        swapoff -a
+  shell: |
+    swapoff -a
 
-    - name: Disable SWAP in fstab since kubernetes can't work with swap enabled
-      replace:
-        path: /etc/fstab
-        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
-        replace: '# \1'
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
 
-    - name: Check if ufw is installed
-      package_facts:
-        manager: "auto"
+- name: Check if ufw is installed
+  package_facts:
+    manager: "auto"
 
-    - name: Disable ufw # just in Ubuntu
-      ufw:
-        state: disabled
-      when: "'ufw' in ansible_facts.packages"
+- name: Disable ufw # just in Ubuntu
+  ufw:
+    state: disabled
+  when: "'ufw' in ansible_facts.packages"
 
-    - name: Ensure kernel modules for containerd are enabled
-      lineinfile:
-        path: /etc/modules-load.d/containerd.conf
-        line: "{{ item }}"
-        create: yes
-        state: present
-      loop:
-        - overlay
-        - br_netfilter
+- name: Ensure kernel modules for containerd are enabled
+  lineinfile:
+    path: /etc/modules-load.d/containerd.conf
+    line: "{{ item }}"
+    create: yes
+    state: present
+  loop:
+    - overlay
+    - br_netfilter
 
-    - name: Load kernel modules
-      command:
-        cmd: "modprobe {{ item }}"
-      loop:
-        - overlay
-        - br_netfilter
+- name: Load kernel modules
+  command:
+    cmd: "modprobe {{ item }}"
+  loop:
+    - overlay
+    - br_netfilter
 
-    - name: Ensure sysctl settings for Kubernetes are present
-      blockinfile:
-        path: /etc/sysctl.d/kubernetes.conf
-        block: |
-          net.bridge.bridge-nf-call-ip6tables = 1
-          net.bridge.bridge-nf-call-iptables = 1
-          net.ipv4.ip_forward = 1
-        create: yes
-        marker: "# {mark} ANSIBLE MANAGED BLOCK"
-        owner: root
-        group: root
-        mode: '0644'
+- name: Ensure sysctl settings for Kubernetes are present
+  blockinfile:
+    path: /etc/sysctl.d/kubernetes.conf
+    block: |
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.bridge.bridge-nf-call-iptables = 1
+      net.ipv4.ip_forward = 1
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    owner: root
+    group: root
+    mode: '0644'
 
-    - name: Reload sysctl settings
-      command:
-        cmd: sysctl --system
+- name: Reload sysctl settings
+  command:
+    cmd: sysctl --system
 
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+- name: Update apt cache
+  apt:
+    update_cache: yes
 
-    - name: Install required packages
-      apt:
-        pkg:
-          - ca-certificates
-          - curl
-          - gnupg
-          - lsb-release
-          - gpg
-        state: present
-        update_cache: yes
+- name: Install required packages
+  apt:
+    pkg:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - gpg
+    state: present
+    update_cache: yes
 
-    - name: Ensure the /etc/apt/keyrings directory exists
-      file:
-        path: /etc/apt/keyrings
-        state: directory
-        mode: '0755'  # Adjust the permissions as necessary
-        owner: root   # Set the owner, if required
-        group: root
+- name: Ensure the /etc/apt/keyrings directory exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'  # Adjust the permissions as necessary
+    owner: root   # Set the owner, if required
+    group: root
 
-    - name: Remove existing Docker GPG key if it exists
-      file:
-        path: '{{ docker_gpg_key_path }}'
-        state: absent
+- name: Remove existing Docker GPG key if it exists
+  file:
+    path: '{{ docker_gpg_key_path }}'
+    state: absent
 
-    - name: Download Docker GPG key
-      shell: |
-        curl -fsSL {{ docker_gpg_key_url }} | gpg --dearmor -o {{ docker_gpg_key_path }}
+- name: Download Docker GPG key
+  shell: |
+    curl -fsSL {{ docker_gpg_key_url }} | gpg --dearmor -o {{ docker_gpg_key_path }}
 
-    - name: Determine the architecture
-      command: dpkg --print-architecture
-      register: architecture
+- name: Determine the architecture
+  command: dpkg --print-architecture
+  register: architecture
 
-    - name: Determine the distribution codename
-      command: lsb_release -cs
-      register: distribution_codename
+- name: Determine the distribution codename
+  command: lsb_release -cs
+  register: distribution_codename
 
-    - name: Add Docker APT repository
-      lineinfile:
-        path: /etc/apt/sources.list.d/docker.list
-        create: yes
-        line: "deb [arch={{ architecture.stdout }} signed-by={{ docker_gpg_key_path }}] {{ docker_apt_repo }} {{ distribution_codename.stdout }} stable"
-        state: present
+- name: Add Docker APT repository
+  lineinfile:
+    path: /etc/apt/sources.list.d/docker.list
+    create: yes
+    line: "deb [arch={{ architecture.stdout }} signed-by={{ docker_gpg_key_path }}] {{ docker_apt_repo }} {{ distribution_codename.stdout }} stable"
+    state: present
 
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+- name: Update apt cache
+  apt:
+    update_cache: yes
 
-    - name: Install required packages (containerd)
-      apt:
-        pkg:
-          - containerd.io
-        state: present
+- name: Install required packages (containerd)
+  apt:
+    pkg:
+      - containerd.io
+    state: present
 
-    - name: Generate default containerd configuration
-      shell:
-        cmd: containerd config default > /etc/containerd/config.toml
+- name: Generate default containerd configuration
+  shell:
+    cmd: containerd config default > /etc/containerd/config.toml
 
-    - name: Replace SystemdCgroup from false to true in containerd config
-      replace:
-        path: /etc/containerd/config.toml
-        regexp: 'SystemdCgroup = false'
-        replace: 'SystemdCgroup = true'
+- name: Replace SystemdCgroup from false to true in containerd config
+  replace:
+    path: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
 
-    - name: Restart containerd service
-      systemd:
-        name: containerd
-        state: restarted
-        daemon_reload: yes
+- name: Restart containerd service
+  systemd:
+    name: containerd
+    state: restarted
+    daemon_reload: yes
 
-    - name: Enable containerd service
-      systemd:
-        name: containerd
-        enabled: yes
+- name: Enable containerd service
+  systemd:
+    name: containerd
+    enabled: yes
 
-    - name: Delete the existing Kubernetes APT keyring file if it exists
-      file:
-        path: '{{ kubernetes_gpg_keyring_path }}'
-        state: absent
+- name: Delete the existing Kubernetes APT keyring file if it exists
+  file:
+    path: '{{ kubernetes_gpg_keyring_path }}'
+    state: absent
 
-    - name: Download Kubernetes GPG key
-      shell: |
-        curl -fsSL '{{ kubernetes_gpg_key_url }}' | gpg --dearmor -o '{{ kubernetes_gpg_keyring_path }}'
+- name: Download Kubernetes GPG key
+  shell: |
+    curl -fsSL '{{ kubernetes_gpg_key_url }}' | gpg --dearmor -o '{{ kubernetes_gpg_keyring_path }}'
 
-    - name: Add Kubernetes repo
-      apt_repository:
-        repo: "deb [signed-by={{ kubernetes_gpg_keyring_path }}] {{ kubernetes_apt_repo }} /"
-        state: present
-        filename: kubernetes.list
+- name: Add Kubernetes repo
+  apt_repository:
+    repo: "deb [signed-by={{ kubernetes_gpg_keyring_path }}] {{ kubernetes_apt_repo }} /"
+    state: present
+    filename: kubernetes.list
 
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+- name: Update apt cache
+  apt:
+    update_cache: yes
 
-    - name: Install Kubernetes packages
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - kubeadm=1.31.2-1.1
-        - kubelet=1.31.2-1.1
-        - kubectl=1.31.2-1.1
+- name: Install Kubernetes packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - kubeadm=1.31.2-1.1
+    - kubelet=1.31.2-1.1
+    - kubectl=1.31.2-1.1
 
-    - name: Hold Kubernetes packages
-      dpkg_selections:
-        name: "{{ item }}"
-        selection: hold
-      loop:
-        - kubeadm
-        - kubelet
-        - kubectl
-        - containerd.io
+- name: Hold Kubernetes packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubeadm
+    - kubelet
+    - kubectl
+    - containerd.io
 
-    - name: Configure node ip
-      lineinfile:
-        path: /etc/default/kubelet
-        line: KUBELET_EXTRA_ARGS=--node-ip={{ private_ip }}
-        create: yes
-        state: present
-      notify: Restart kubelet
+- name: Configure node ip
+  lineinfile:
+    path: /etc/default/kubelet
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ private_ip }}
+    create: yes
+    state: present
+  notify: Restart kubelet
 
-    - name: Add hosts to /etc/hosts
-      lineinfile:
-        path: /etc/hosts
-        line: "{{ hostvars[item].private_ip }} {{ item }} {{ item }}.{{ domain }}"
-        state: present
-        create: no
-      loop: "{{ groups['all'] }}"
-      when: hostvars[item].private_ip is defined
+- name: Add hosts to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ hostvars[item].private_ip }} {{ item }} {{ item }}.{{ domain }}"
+    state: present
+    create: no
+  loop: "{{ groups['all'] }}"
+  when: hostvars[item].private_ip is defined
 
-    - name: Add apiserver_url to point to the masters temporary
-      lineinfile:
-        dest: /etc/hosts
-        line: "{{ hostvars[groups['k8s_masters'][0]].private_ip }} {{ apiserver_url }}"
-        state: present
+- name: Add apiserver_url to point to the masters temporary
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ hostvars[groups['k8s_masters'][0]].private_ip }} {{ apiserver_url }}"
+    state: present
 
-    - name: Pull Kubernetes images | If you got error check your dns and sanction
-      command:
-        cmd: kubeadm config images pull
+- name: Pull Kubernetes images | If you got error check your dns and sanction
+  command:
+    cmd: kubeadm config images pull
     

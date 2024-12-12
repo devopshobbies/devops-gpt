@@ -90,44 +90,46 @@ def ansible_kuber_install(input):
 
     # Create kubernetes_playbook.yml
     with open(os.path.join(ansible_dir, "kubernetes_playbook.yml"), "w") as playbook_file:
-        playbook_file.write("""- hosts: all
-      roles:
-        - role: preinstall
-      gather_facts: yes
-      any_errors_fatal: true
-      tags: [preinstall]
+        playbook_file.write("""
+- hosts: all
+  roles:
+    - role: preinstall
+  gather_facts: yes
+  any_errors_fatal: true
+  tags: [preinstall]
 
-    - hosts: k8s
-      roles:
-        - role: k8s
-      gather_facts: yes
-      any_errors_fatal: true
-      tags: [k8s]
+- hosts: k8s
+  roles:
+    - role: k8s
+  gather_facts: yes
+  any_errors_fatal: true
+  tags: [k8s]
 
-    - hosts: k8s
-      roles:
-        - role: init_k8s
-      gather_facts: yes
-      any_errors_fatal: true
-      tags: [init_k8s]
+- hosts: k8s
+  roles:
+    - role: init_k8s
+  gather_facts: yes
+  any_errors_fatal: true
+  tags: [init_k8s]
 
-    - hosts: k8s_masters
-      roles:
-        - role: preinstall
-        - role: k8s
-        - role: join_master
-      gather_facts: yes
-      any_errors_fatal: true
-      tags: [join_master]
+- hosts: k8s_masters
+  roles:
+    - role: preinstall
+    - role: k8s
+    - role: join_master
+  gather_facts: yes
+  any_errors_fatal: true
+  tags: [join_master]
 
-    - hosts: k8s_workers
-      roles:
-        - role: preinstall
-        - role: k8s
-        - role: join_worker
-      gather_facts: yes
-      any_errors_fatal: true
-      tags: [join_worker]
+- hosts: k8s_workers
+  roles:
+    - role: preinstall
+    - role: k8s
+    - role: join_worker
+  gather_facts: yes
+  any_errors_fatal: true
+  tags: [join_worker]
+  
     """)
 
     # Create preinstall files

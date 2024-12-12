@@ -8,12 +8,20 @@ from app.models import (AnsibleInstallNginx,Output)
 
 from app.template_generators.ansible.install.main import ansible_install_template
 import os
+import shutil
 
 @app.post("/api/ansible-install/nginx/")
 async def ansible_install_generation_nginx(request:AnsibleInstallNginx) -> Output:
     
+        
+            
         if os.environ.get("TEST"):
             return Output(output='output')
+        
+        dir = 'app/media/MyAnsible'
+        if os.path.exists(dir):     
+            shutil.rmtree(dir) 
+        
         ansible_install_template(request,"nginx")
 
         
@@ -22,9 +30,15 @@ async def ansible_install_generation_nginx(request:AnsibleInstallNginx) -> Outpu
     
 @app.post("/api/ansible-install/docker/")
 async def ansible_install_generation_docker(request:AnsibleInstallDocker) -> Output:
+        
     
         if os.environ.get("TEST"):
             return Output(output='output')
+        
+        dir = 'app/media/MyAnsible'
+        if os.path.exists(dir):     
+            shutil.rmtree(dir)  
+            
         ansible_install_template(request,"docker")
 
         return Output(output='output')
@@ -32,9 +46,15 @@ async def ansible_install_generation_docker(request:AnsibleInstallDocker) -> Out
     
 @app.post("/api/ansible-install/kuber/")
 async def ansible_install_generation_kuber(request:AnsibleInstallKuber) -> Output:
-    
+        
+            
         if os.environ.get("TEST"):
             return Output(output='output')
+        
+        dir = 'app/media/MyAnsible'
+        if os.path.exists(dir):     
+            shutil.rmtree(dir)  
+             
         ansible_install_template(request,"kuber")
         add_files_to_folder(files = ['app/media/kuber_configs/resolv.conf.j2'] , folder='app/media/MyAnsible/roles/preinstall/templates/')
         add_files_to_folder(files = ['app/media/kuber_configs/kubeadmcnf.yml.j2'] , folder='app/media/MyAnsible/roles/init_k8s/templates/')

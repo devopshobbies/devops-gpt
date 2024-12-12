@@ -1,13 +1,13 @@
 [all]
-stringoooooooooooooooooo private_ip=x.x.x.x
-stringppppppppp private_ip=x.x.x.x
+string private_ip=x.x.x.x
+string private_ip=x.x.x.x
 
 [k8s]
-stringoooooooooooooooooo
-stringppppppppp
+string
+string
 
 [k8s_masters]
-stringoooooooooooooooooo
+string
 
 [k8s_workers]
-stringppppppppp
+string

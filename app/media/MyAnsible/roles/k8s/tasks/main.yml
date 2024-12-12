@@ -1,3 +1,0 @@
----
-- name: Install kubernetes packages
-  include_tasks: k8s.yml

@@ -1,0 +1,3 @@
+nginx_repo_key_url: "https://nginx.org/keys/nginx_signing.key"
+nginx_repo_url: "http://nginx.org/packages/mainline/ubuntu/"
+nginx_version: "*"

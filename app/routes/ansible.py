@@ -16,9 +16,7 @@ async def ansible_install_generation_nginx(request:AnsibleInstallNginx) -> Outpu
             return Output(output='output')
         generated_prompt = ansible_install_template(request,"nginx")
 
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("ansible_generator",output)
-        execute_pythonfile("MyAnsible","ansible_generator")
+        
         return Output(output='output')
     
     

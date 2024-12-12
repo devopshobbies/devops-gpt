@@ -14,7 +14,7 @@ async def ansible_install_generation_nginx(request:AnsibleInstallNginx) -> Outpu
     
         if os.environ.get("TEST"):
             return Output(output='output')
-        generated_prompt = ansible_install_template(request,"nginx")
+        ansible_install_template(request,"nginx")
 
         
         return Output(output='output')
@@ -25,11 +25,8 @@ async def ansible_install_generation_docker(request:AnsibleInstallDocker) -> Out
     
         if os.environ.get("TEST"):
             return Output(output='output')
-        generated_prompt = ansible_install_template(request,"docker")
+        ansible_install_template(request,"docker")
 
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("ansible_generator",output)
-        execute_pythonfile("MyAnsible","ansible_generator")
         return Output(output='output')
     
     

@@ -1,0 +1,83 @@
+- name: Set timezone to UTC
+      timezone:
+        name: Etc/UTC
+
+    - name: Set hostname
+      command: hostnamectl set-hostname {{ inventory_hostname }}
+
+    - name: Remove symlink resolve.conf
+      file:
+        path: "/etc/resolv.conf"
+        state: absent
+      ignore_errors: true
+      when: use_iran == "true"
+
+    - name: Configure resolv.conf
+      template:
+        src: "resolv.conf.j2"
+        dest: "/etc/resolv.conf"
+        mode: "0644"
+      when: use_iran == "true"
+
+    - name: Add hostname
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.0\.1'
+        line: "127.0.0.1 {{ inventory_hostname }} localhost"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Install necessary tools
+      apt:
+        state: latest
+        update_cache: true
+        name:
+          - vim
+          - sudo
+          - wget
+          - curl
+          - telnet
+          - nload
+          - s3cmd
+          - cron
+          - ipset
+          - lvm2
+          - python3
+          - python3-setuptools
+          - python3-pip
+          - python3-apt
+          - intel-microcode
+          - htop
+          - tcpdump
+          - net-tools
+          - screen
+          - tmux
+          - byobu
+          - iftop
+          - bmon
+          - iperf
+          - sysstat
+          - ethtool
+          - plocate
+          - thin-provisioning-tools
+          - conntrack
+          - stress
+          - cpufrequtils
+          - rsync
+          - xz-utils
+          - build-essential
+          - apt-transport-https
+          - ca-certificates
+          - software-properties-common
+          - gnupg-agent
+          - iptables-persistent
+          - open-iscsi
+          - nfs-common
+          - tzdata
+          - tree
+
+    - name: Fix broken packages
+      apt:
+        state: fixed
+    

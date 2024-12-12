@@ -1,0 +1,4 @@
+---
+    - name: basic setup
+      include_tasks: basic.yml
+    

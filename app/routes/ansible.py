@@ -35,11 +35,7 @@ async def ansible_install_generation_kuber(request:AnsibleInstallKuber) -> Outpu
     
         if os.environ.get("TEST"):
             return Output(output='output')
-        generated_prompt = ansible_install_template(request,"kuber")
-
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("ansible_generator",output)
-        execute_pythonfile("MyAnsible","ansible_generator")
+        ansible_install_template(request,"kuber")
         add_files_to_folder(files = ['app/media/kuber_configs/resolv.conf.j2'] , folder='app/media/MyAnsible/roles/preinstall/templates/')
         add_files_to_folder(files = ['app/media/kuber_configs/kubeadmcnf.yml.j2'] , folder='app/media/MyAnsible/roles/init_k8s/templates/')
         add_files_to_folder(files = ['app/media/kuber_configs/kubeadmcnf-join.yml.j2'] , folder='app/media/MyAnsible/roles/join_master/templates/')

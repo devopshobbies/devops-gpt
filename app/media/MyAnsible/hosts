@@ -1,4 +1,13 @@
-[docker_nodes]
-www.example.com
-x
-i
+[all]
+stringoooooooooooooooooo private_ip=x.x.x.x
+stringppppppppp private_ip=x.x.x.x
+
+[k8s]
+stringoooooooooooooooooo
+stringppppppppp
+
+[k8s_masters]
+stringoooooooooooooooooo
+
+[k8s_workers]
+stringppppppppp

@@ -1,0 +1,101 @@
+- name: Init cluster | Check if kubeadm has already run
+      stat:
+        path: "/var/lib/kubelet/config.yaml"
+      register: kubeadm_already_run
+
+    - block:
+        - name: Generate join command
+          command: kubeadm token create --print-join-command
+          register: join_command
+
+        - name: Print join command
+          debug:
+            msg: "{{ join_command.stdout_lines[0] }}"
+
+        - name: Copy join command to local file
+          become: false
+          local_action: copy content="{{ join_command.stdout_lines[0] }} $@" dest="roles/join_master/files/join-command"
+
+        - name: copy kubeadmcnf.yaml
+          template:
+            src: kubeadmcnf-join.yml.j2
+            dest: /root/kubeadm-config.yaml
+
+      when:
+        - inventory_hostname == groups['k8s_masters'][0]
+      delegate_to: "{{ groups['k8s_masters'][0] }}"
+
+    - block:
+        - name: Copy the join command to server location
+          copy:
+            src: roles/join_master/files/join-command
+            dest: /root/join-command.sh
+            mode: "0777"
+
+      when:
+        - inventory_hostname != groups['k8s_masters'][0]
+        - inventory_hostname in groups['k8s_masters']
+        - not kubeadm_already_run.stat.exists
+
+    - block:
+        - name: get certificate key
+          shell: kubeadm init phase upload-certs --upload-certs --config=/root/kubeadm-config.yaml
+          register: kubeadm_cert_key
+
+        - name: Print certificate key
+          debug:
+            msg: "{{ kubeadm_cert_key.stdout_lines[2] }}"
+
+        - name: register the cert key
+          set_fact:
+            control_plane_certkey: "{{ kubeadm_cert_key.stdout_lines[2] }}"
+
+      when:
+        - inventory_hostname  in groups['k8s_masters'][0]
+      delegate_to: "{{ groups['k8s_masters'][0] }}"
+      run_once: false
+      delegate_facts: true
+
+    - name: Join | Join control-plane to cluster
+      command: "sh /root/join-command.sh --control-plane --certificate-key={{ hostvars[groups['k8s_masters'][0]].control_plane_certkey }}  --cri-socket={{ cri_socket }}"
+      when:
+        - inventory_hostname != groups['k8s_masters'][0]
+        - inventory_hostname in groups['k8s_masters']
+        - not kubeadm_already_run.stat.exists
+
+    - block:
+        - name: Create kubectl directory
+          file:
+            path: /root/.kube
+            state: directory
+
+        - name: Configure kubectl
+          copy:
+            src: /etc/kubernetes/admin.conf
+            dest: /root/.kube/config
+            remote_src: yes
+
+        - name: Fetch kubeconfig
+          fetch:
+            src: /etc/kubernetes/admin.conf
+            dest: kubeconfig/
+            flat: yes
+      when:
+        - inventory_hostname != groups['k8s_masters'][0]
+        - inventory_hostname in groups['k8s_masters']
+        - not kubeadm_already_run.stat.exists
+
+    - name: remove apiserver_url to point to the masters temporary
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ hostvars[groups['k8s_masters'][0]].private_ip }} {{ apiserver_url }}"
+        state: absent
+
+    - name: Add apiserver_url to point to the masters
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ private_ip }} {{ apiserver_url }}"
+        state: present
+      when:
+        - inventory_hostname in groups['k8s_masters']
+    

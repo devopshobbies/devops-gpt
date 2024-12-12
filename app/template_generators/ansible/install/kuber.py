@@ -539,7 +539,7 @@ apiserver_url: "devopsgpt.com"
         init_k8s_tasks_initk8s_file.write("""- name: Init cluster | Check if kubeadm has already run
   stat:
     path: "/var/lib/kubelet/config.yaml"
-    register: kubeadm_already_run
+  register: kubeadm_already_run
   when: inventory_hostname == groups['k8s_masters'][0]
   delegate_to: "{{ groups['k8s_masters'][0] }}"
 
@@ -579,27 +579,27 @@ apiserver_url: "devopsgpt.com"
   when: inventory_hostname == groups['k8s_masters'][0]
   delegate_to: "{{ groups['k8s_masters'][0] }}"
 
-    - name: Sleep for 300 seconds and reboot the Master1 server
-      wait_for:
-        timeout: 300
+- name: Sleep for 300 seconds and reboot the Master1 server
+  wait_for:
+    timeout: 300
   delegate_to: localhost
 
-    - name: Reboot the servers
-      command: reboot
-      async: 1
-      poll: 0
-      # ignore_errors: yes
+- name: Reboot the servers
+  command: reboot
+  async: 1
+  poll: 0
+  # ignore_errors: yes
   delegate_to: "{{ groups['k8s_masters'][0] }}"
 
-    - name: Sleep for 300 seconds to Master1 up and running
-      wait_for:
-        timeout: 300
+- name: Sleep for 300 seconds to Master1 up and running
+  wait_for:
+    timeout: 300
   delegate_to: localhost
-      # when: use_iran == "true"
+  # when: use_iran == "true"
 
-    - name: Example Task After Reboot
-      debug:
-        msg: "Server back online and ready for tasks."
+- name: Example Task After Reboot
+  debug:
+    msg: "Server back online and ready for tasks."
     """)
 
     with open(os.path.join(init_k8s_tasks_dir, "main.yml"), "w") as init_k8s_tasks_main_file:

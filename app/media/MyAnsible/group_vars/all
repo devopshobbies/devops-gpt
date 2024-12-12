@@ -1,38 +1,38 @@
 # General
-    install_ansible_modules: "true"
-    disable_transparent_huge_pages: "true"
+install_ansible_modules: "true"
+disable_transparent_huge_pages: "true"
 
-    setup_interface: "false"
+setup_interface: "false"
 
-    # Network Calico see here for more details https://github.com/projectcalico/calico/releases
-    calico_operator_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/tigera-operator.yaml"
-    calico_crd_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/custom-resources.yaml"
-    pod_network_cidr: "192.168.0.0/16"
+# Network Calico see here for more details https://github.com/projectcalico/calico/releases
+calico_operator_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/tigera-operator.yaml"
+calico_crd_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/custom-resources.yaml"
+pod_network_cidr: "192.168.0.0/16"
 
-    # DNS
-    resolv_nameservers: [8.8.8.8, 4.2.2.4] # 403.online
+# DNS
+resolv_nameservers: [8.8.8.8, 4.2.2.4] # 403.online
 
-    # Sanction shekan
-    use_iran: "true" # change it to "false" if you are outside of iran
+# Sanction shekan
+use_iran: "true" # change it to "false" if you are outside of iran
 
-    # Docker
-    docker_gpg_key_url: "https://download.docker.com/linux/ubuntu/gpg"
-    docker_gpg_key_path: "/etc/apt/keyrings/docker.gpg"
-    docker_apt_repo: "https://download.docker.com/linux/ubuntu"
+# Docker
+docker_gpg_key_url: "https://download.docker.com/linux/ubuntu/gpg"
+docker_gpg_key_path: "/etc/apt/keyrings/docker.gpg"
+docker_apt_repo: "https://download.docker.com/linux/ubuntu"
 
-    # Kubernetes
-    kubernetes_gpg_keyring_path: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
-    kubernetes_gpg_key_url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
-    kubernetes_apt_repo: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/"
-    k8s_version: 1.31 # see here https://kubernetes.io/releases/patch-releases/ and https://github.com/kubernetes/kubernetes/releases
+# Kubernetes
+kubernetes_gpg_keyring_path: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+kubernetes_gpg_key_url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
+kubernetes_apt_repo: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/"
+k8s_version: 1.31 # see here https://kubernetes.io/releases/patch-releases/ and https://github.com/kubernetes/kubernetes/releases
 
-    # CRI
-    cri_socket: unix:///var/run/containerd/containerd.sock
+# CRI
+cri_socket: unix:///var/run/containerd/containerd.sock
 
-    # Ansible Connection
-    ansible_user: root
-    ansible_port: 22
-    ansible_python_interpreter: "/usr/bin/python3"
-    domain: "devopsgpt.com"
-    apiserver_url: "devopsgpt.com"
+# Ansible Connection
+ansible_user: root
+ansible_port: 22
+ansible_python_interpreter: "/usr/bin/python3"
+domain: "devopsgpt.com"
+apiserver_url: "devopsgpt.com"
     

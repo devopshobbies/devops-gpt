@@ -46,42 +46,42 @@ def ansible_kuber_install(input):
     # Create group_vars/all
     with open(os.path.join(group_vars_dir, "all"), "w") as group_vars_file:
         group_vars_file.write(f"""# General
-    install_ansible_modules: "true"
-    disable_transparent_huge_pages: "true"
+install_ansible_modules: "true"
+disable_transparent_huge_pages: "true"
 
-    setup_interface: "false"
+setup_interface: "false"
 
-    # Network Calico see here for more details https://github.com/projectcalico/calico/releases
-    calico_operator_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/tigera-operator.yaml"
-    calico_crd_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/custom-resources.yaml"
-    pod_network_cidr: "192.168.0.0/16"
+# Network Calico see here for more details https://github.com/projectcalico/calico/releases
+calico_operator_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/tigera-operator.yaml"
+calico_crd_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/custom-resources.yaml"
+pod_network_cidr: "192.168.0.0/16"
 
-    # DNS
-    resolv_nameservers: [8.8.8.8, 4.2.2.4] # 403.online
+# DNS
+resolv_nameservers: [8.8.8.8, 4.2.2.4] # 403.online
 
-    # Sanction shekan
-    use_iran: "true" # change it to "false" if you are outside of iran
+# Sanction shekan
+use_iran: "true" # change it to "false" if you are outside of iran
 
-    # Docker
-    docker_gpg_key_url: "https://download.docker.com/linux/ubuntu/gpg"
-    docker_gpg_key_path: "/etc/apt/keyrings/docker.gpg"
-    docker_apt_repo: "https://download.docker.com/linux/ubuntu"
+# Docker
+docker_gpg_key_url: "https://download.docker.com/linux/ubuntu/gpg"
+docker_gpg_key_path: "/etc/apt/keyrings/docker.gpg"
+docker_apt_repo: "https://download.docker.com/linux/ubuntu"
 
-    # Kubernetes
-    kubernetes_gpg_keyring_path: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
-    kubernetes_gpg_key_url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
-    kubernetes_apt_repo: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/"
-    k8s_version: {k8s_version} # see here https://kubernetes.io/releases/patch-releases/ and https://github.com/kubernetes/kubernetes/releases
+# Kubernetes
+kubernetes_gpg_keyring_path: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+kubernetes_gpg_key_url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
+kubernetes_apt_repo: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/"
+k8s_version: {k8s_version} # see here https://kubernetes.io/releases/patch-releases/ and https://github.com/kubernetes/kubernetes/releases
 
-    # CRI
-    cri_socket: unix:///var/run/containerd/containerd.sock
+# CRI
+cri_socket: unix:///var/run/containerd/containerd.sock
 
-    # Ansible Connection
-    ansible_user: {kubernetes_ansible_user}
-    ansible_port: {kubernetes_ansible_port}
-    ansible_python_interpreter: "/usr/bin/python3"
-    domain: "devopsgpt.com"
-    apiserver_url: "devopsgpt.com"
+# Ansible Connection
+ansible_user: {kubernetes_ansible_user}
+ansible_port: {kubernetes_ansible_port}
+ansible_python_interpreter: "/usr/bin/python3"
+domain: "devopsgpt.com"
+apiserver_url: "devopsgpt.com"
     """)
 
     # Create hosts
@@ -513,25 +513,25 @@ def ansible_kuber_install(input):
 
     with open(os.path.join(init_k8s_tasks_dir, "cni.yml"), "w") as init_k8s_tasks_cni_file:
         init_k8s_tasks_cni_file.write("""- block:
-  - name: Check if Calico CRDs exist
-    command: kubectl get crd felixconfigurations.crd.projectcalico.org
-    register: calico_crd_check
-    ignore_errors: true
-delegate_to: "{{ groups['k8s_masters'][0] }}"
+    - name: Check if Calico CRDs exist
+      command: kubectl get crd felixconfigurations.crd.projectcalico.org
+      register: calico_crd_check
+      ignore_errors: true
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
 
 - block:
-  - name: Apply CNI plugin (Calico)
-    command: kubectl create -f {{ calico_operator_url }}
-    retries: 3
-    delay: 3
+    - name: Apply CNI plugin (Calico)
+      command: kubectl create -f {{ calico_operator_url }}
+      retries: 3
+      delay: 3
 
-  - name: Apply CNI plugin (Calico)
-    command: kubectl create -f {{ calico_crd_url }}
-    retries: 3
-    delay: 3
-delegate_to: "{{ groups['k8s_masters'][0] }}"
-when: calico_crd_check.rc != 0
-run_once: true
+    - name: Apply CNI plugin (Calico)
+      command: kubectl create -f {{ calico_crd_url }}
+      retries: 3
+      delay: 3
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
+  when: calico_crd_check.rc != 0
+  run_once: true
 
     """)
 
@@ -540,66 +540,66 @@ run_once: true
   stat:
     path: "/var/lib/kubelet/config.yaml"
     register: kubeadm_already_run
-    when: inventory_hostname == groups['k8s_masters'][0]
-    delegate_to: "{{ groups['k8s_masters'][0] }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
 
-  - block:
-      - name: Init cluster | Copy kubeadmcnf.yaml
-        template:
-          src: kubeadmcnf.yml.j2
-          dest: /root/kubeadmcnf.yaml
+- block:
+    - name: Init cluster | Copy kubeadmcnf.yaml
+      template:
+        src: kubeadmcnf.yml.j2
+        dest: /root/kubeadmcnf.yaml
 
-      - name: Init cluster | Initiate cluster on node groups['kube_master'][0]
-        shell: kubeadm init --config=/root/kubeadmcnf.yaml
-        register: kubeadm_init
-        # Retry is because upload config sometimes fails
-        until: kubeadm_init is succeeded or "field is immutable" in kubeadm_init.stderr
-        notify: Restart kubelet
+    - name: Init cluster | Initiate cluster on node groups['kube_master'][0]
+      shell: kubeadm init --config=/root/kubeadmcnf.yaml
+      register: kubeadm_init
+      # Retry is because upload config sometimes fails
+      until: kubeadm_init is succeeded or "field is immutable" in kubeadm_init.stderr
+      notify: Restart kubelet
 
-    when: inventory_hostname == groups['k8s_masters'][0] and not kubeadm_already_run.stat.exists
-    delegate_to: "{{ groups['k8s_masters'][0] }}"
+  when: inventory_hostname == groups['k8s_masters'][0] and not kubeadm_already_run.stat.exists
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
 
-  - block:
-      - name: Create kubectl directory
-        file:
-          path: /root/.kube
-          state: directory
+- block:
+    - name: Create kubectl directory
+      file:
+        path: /root/.kube
+        state: directory
 
-      - name: Configure kubectl
-        copy:
-          src: /etc/kubernetes/admin.conf
-          dest: /root/.kube/config
-          remote_src: yes
+    - name: Configure kubectl
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /root/.kube/config
+        remote_src: yes
 
-      - name: Fetch kubeconfig
-        fetch:
-          src: /etc/kubernetes/admin.conf
-          dest: kubeconfig/
-          flat: yes
-    when: inventory_hostname == groups['k8s_masters'][0]
-    delegate_to: "{{ groups['k8s_masters'][0] }}"
+    - name: Fetch kubeconfig
+      fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: kubeconfig/
+        flat: yes
+  when: inventory_hostname == groups['k8s_masters'][0]
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
 
-  - name: Sleep for 300 seconds and reboot the Master1 server
-    wait_for:
-      timeout: 300
-    delegate_to: localhost
+    - name: Sleep for 300 seconds and reboot the Master1 server
+      wait_for:
+        timeout: 300
+  delegate_to: localhost
 
-  - name: Reboot the servers
-    command: reboot
-    async: 1
-    poll: 0
-    # ignore_errors: yes
-    delegate_to: "{{ groups['k8s_masters'][0] }}"
+    - name: Reboot the servers
+      command: reboot
+      async: 1
+      poll: 0
+      # ignore_errors: yes
+  delegate_to: "{{ groups['k8s_masters'][0] }}"
 
-  - name: Sleep for 300 seconds to Master1 up and running
-    wait_for:
-      timeout: 300
-    delegate_to: localhost
-    # when: use_iran == "true"
+    - name: Sleep for 300 seconds to Master1 up and running
+      wait_for:
+        timeout: 300
+  delegate_to: localhost
+      # when: use_iran == "true"
 
-  - name: Example Task After Reboot
-    debug:
-      msg: "Server back online and ready for tasks."
+    - name: Example Task After Reboot
+      debug:
+        msg: "Server back online and ready for tasks."
     """)
 
     with open(os.path.join(init_k8s_tasks_dir, "main.yml"), "w") as init_k8s_tasks_main_file:

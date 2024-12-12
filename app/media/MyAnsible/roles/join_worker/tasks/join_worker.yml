@@ -36,3 +36,4 @@
   when:
     - inventory_hostname not in groups['k8s_masters']
     - not kubeadm_already_run.stat.exists
+    

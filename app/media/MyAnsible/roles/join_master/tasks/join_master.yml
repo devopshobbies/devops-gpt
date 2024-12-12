@@ -98,3 +98,4 @@
     state: present
   when:
     - inventory_hostname in groups['k8s_masters']
+    

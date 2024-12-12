@@ -193,3 +193,4 @@
 - name: Pull Kubernetes images | If you got error check your dns and sanction
   command:
     cmd: kubeadm config images pull
+    

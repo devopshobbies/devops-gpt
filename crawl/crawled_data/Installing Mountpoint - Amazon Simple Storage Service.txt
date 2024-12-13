@@ -1,0 +1,94 @@
+Title: Installing Mountpoint - Amazon Simple Storage Service
+
+You can download and install prebuilt packages of Mountpoint for Amazon S3 by using the command line.
+      The instructions for downloading and installing Mountpoint vary, depending on which
+        Linux operating system that you're using. 
+Copy the following download URL for your architecture.
+x86_64:
+ARM64 (Graviton):
+Download the Mountpoint for Amazon S3 package. Replace
+                download-link with the appropriate download
+            URL from the preceding step.
+(Optional) Verify the authenticity and integrity of the downloaded file. First, copy
+            the appropriate signature URL for your architecture. 
+x86_64:
+ARM64 (Graviton):
+Next, see Verifying the signature of the
+              Mountpoint for Amazon S3 package.
+Install the package by using the following command:
+Verify that Mountpoint is successfully installed by entering the following
+            command:
+You should see output similar to the following:
+Copy the download URL for your architecture. 
+x86_64:
+ARM64 (Graviton):
+Download the Mountpoint for Amazon S3 package. Replace
+                download-link with the appropriate download
+            URL from the preceding step.
+(Optional) Verify the authenticity and integrity of the downloaded file. First, copy
+            the signature URL for your architecture.
+x86_64:
+ARM64 (Graviton):
+Next, see Verifying the signature of the
+              Mountpoint for Amazon S3 package.
+Install the package by using the following command:
+Verify that Mountpoint for Amazon S3 is successfully installed by running the following
+            command:
+You should see output similar to the following:
+Consult your operating system documentation to install the FUSE and
+              libfuse2 packages, which are required. 
+Copy the download URL for your architecture. 
+x86_64:
+ARM64
+            (Graviton):
+Download the Mountpoint for Amazon S3 package. Replace
+                download-link with the appropriate download
+            URL from the preceding step.
+(Optional) Verify the authenticity and integrity of the downloaded file. First, copy
+            the signature URL for your architecture. 
+x86_64:
+ARM64 (Graviton):
+Next, see Verifying the signature of the
+              Mountpoint for Amazon S3 package.
+Install the package by using the following command:
+Add the mount-s3 binary to your PATH environment variable.
+            In your $HOME/.profile file, append the following line:
+Save the .profile file, and run the following command:
+Verify that Mountpoint for Amazon S3 is successfully installed by running the following
+            command:
+You should see output similar to the following:
+Install GnuPG (the gpg command). It is required to
+            verify the authenticity and integrity of a downloaded Mountpoint for Amazon S3 package.
+              GnuPG is installed by default on Amazon Linux Amazon Machine Images (AMIs).
+            After you installGnuPG, proceed to step 2. 
+Download the Mountpoint public key by running the following command:
+Import the Mountpoint public key into your keyring by running the following
+            command:
+Verify the fingerprint of the Mountpoint public key by running the following
+            command:
+Confirm that the displayed fingerprint string matches the following:
+If the fingerprint string doesn't match, do not finish installing
+            Mountpoint, and contact AWS Support.
+Download the package signature file. Replace
+                signature-link with the appropriate
+            signature link from the preceding sections.
+Verify the signature of the downloaded package by running the following command.
+            Replace signature-filename with the file name
+            from the previous step.
+For example, on RPM-based distributions, including Amazon Linux, enter the following
+            command:
+The output should include the phrase Good signature. If the output
+            includes the phrase BAD signature, redownload the Mountpoint
+            package file and repeat these steps. If the issue persists, do not finish installing
+            Mountpoint, and contact AWS Support. 
+The output may include a warning about a trusted signature. This does not indicate a
+            problem. It only means that you have not independently verified the Mountpoint
+            public key.
+ Javascript is disabled or is unavailable in your browser.
+To use the Amazon Web Services Documentation, Javascript must be enabled. Please refer to your browser's Help pages for instructions.
+Thanks for letting us know we're doing a good job!
+If you've got a moment, please tell us what we did right so we can do more of it.
+
+Thanks for letting us know this page needs work. We're sorry we let you down.
+If you've got a moment, please tell us how we can make the documentation better.
+

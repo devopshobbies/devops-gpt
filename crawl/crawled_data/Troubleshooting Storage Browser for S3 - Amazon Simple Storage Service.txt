@@ -1,0 +1,22 @@
+Title: Troubleshooting Storage Browser for S3 - Amazon Simple Storage Service
+
+If youâre experiencing issues with Storage Browser for S3, make sure to review the following troubleshooting tips:
+Avoid trying to use the same token (idToken or accessToken) for multiple requests. Tokens can't be reused. This will result in a request failure.
+Make sure that the IAM credentials that you provide to the Storage Browser component includes permissions to invoke the s3:GetDataAccess operation. Otherwise, your end users wonât be able to access your data.
+Alternatively, you can check the following resources:
+Storage Browser for S3 is backed by AWS Support. If you need assistance, contact the
+            AWS Support
+          Center.
+If youâre having trouble with Storage Browser for S3 or would like to submit feedback, visit
+          the Amplify GitHub page.
+        
+If you discover a potential security issue in this project, you can notify AWS
+          Security through the AWS Vulnerability Reporting page.
+ Javascript is disabled or is unavailable in your browser.
+To use the Amazon Web Services Documentation, Javascript must be enabled. Please refer to your browser's Help pages for instructions.
+Thanks for letting us know we're doing a good job!
+If you've got a moment, please tell us what we did right so we can do more of it.
+
+Thanks for letting us know this page needs work. We're sorry we let you down.
+If you've got a moment, please tell us how we can make the documentation better.
+

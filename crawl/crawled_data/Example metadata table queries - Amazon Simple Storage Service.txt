@@ -1,0 +1,40 @@
+Title: Example metadata table queries - Amazon Simple Storage Service
+
+The S3 Metadata feature is in preview release for Amazon S3 and is subject to change.
+The following examples show how you can get different types information from your S3
+      Metadata tables by using standard SQL queries.
+Remember when using these examples:
+The examples are written to work with Amazon Athena. You might have to modify the examples
+          to work with a different query engine.
+Make sure that you understand how to optimize your
+          queries.
+Replace amzn-s3-demo-bucket with the name of the S3 table bucket that's
+          storing your metadata table.
+Replace my_metadata_table with the name of the
+          metadata table that you're querying.
+For a full list of supported columns, see the S3 Metadata tables schema.
+The following query returns objects with a specific file extension (.jpg in
+        this case).
+The following query returns object deletion events, including the AWS account ID or
+        AWS service principal that made the request.
+The following query returns the ARNs of the AWS Key Management Service (AWS KMS) keys encrypting your
+        objects.
+The following query returns objects that aren't encrypted with AWS KMS keys.
+Some AWS services (such as Amazon Bedrock),
+        upload objects to Amazon S3. You can query the object metadata provided by these services. For
+        example, the following query includes the user_metadata column to determine if
+        there are objects uploaded by Amazon Bedrock to a general purpose bucket.
+If Amazon Bedrock uploaded an object to your bucket, the user_metadata column will
+        display the following metadata associated with the object in the query result:
+The following query can help you determine the current state of your objects. The query
+        identifies the most recent version of each object, filters out deleted objects, and marks
+        the latest version of each object based on sequence numbers. Results are ordered by the
+          bucket, key, and sequence_number columns.
+ Javascript is disabled or is unavailable in your browser.
+To use the Amazon Web Services Documentation, Javascript must be enabled. Please refer to your browser's Help pages for instructions.
+Thanks for letting us know we're doing a good job!
+If you've got a moment, please tell us what we did right so we can do more of it.
+
+Thanks for letting us know this page needs work. We're sorry we let you down.
+If you've got a moment, please tell us how we can make the documentation better.
+

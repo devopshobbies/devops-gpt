@@ -1,0 +1,346 @@
+Title: Setting up Storage Browser for S3 - Amazon Simple Storage Service
+
+To connect end users with Amazon S3 locations, you must first set up an authentication and
+      authorization method. There are three methods to set up an authentication and authorization
+      method with Storage Browser:
+Method 1: Managing data access for your
+          customers and third party partners
+Method 2: Managing data access for your IAM
+          principals for your AWS account
+Method 3: Managing data access at
+          scale
+With this method, you can use AWS Amplify
+          Auth to manage access control and security for files. This method is ideal when
+        you want to connect your customers or third party partners with data in S3. With this
+        option, your customers can authenticate using social or enterprise identity
+        providers.
+You provide IAM credentials to your end users and third party partners using AWS Amplify
+        Auth with an S3 bucket thatâs configured to use Amplify Storage. AWS Amplify Auth is built
+        on Amazon Cognito, a fully
+        managed customer identity and access management service where you can authenticate and
+        authorize users from a built-in user directory or enterprise directory, or from consumer
+        identity providers. The Amplify authorization model defines which prefixes the current
+        authenticated user can access. For more information about how to set up authorization for
+        AWS Amplify, see Set up
+          storage.
+To initialize the component with the Amplify authentication and storage methods, add the
+        following code snippet to your web application:
+If you want to manage access for your IAM principals or your AWS account directly,
+        you can create an IAM role that has permissions to invoke the GetDataAccess S3 API operation. To set this up, you must create an
+        S3 Access Grants instance to map out permissions for S3 buckets and prefixes to the specified IAM
+        identities. The Storage Browser component will then invoke the ListCallerAccessGrants S3 API operation to fetch the available grants to the
+        identity requester and populate the locations in the component. After you obtain the
+          s3:GetDataAccess permission, those credentials are then used by the Storage
+        Browser component to request data access to S3.
+If you want to associate an S3 Access Grants instance to your IAM
+        Identity Center for a more scalable solution (such as providing data access to your whole
+        company), you can request data from Amazon S3 on behalf of the current authenticated user. For
+        example, you can grant user groups in your corporate directory access to your data in S3.
+        This approach allows you to centrally manage S3 Access Grants permissions for your users and groups,
+        including the ones hosted on external providers such as Microsoft Entra, Okta, and
+        others.
+When using this method, the integration with the
+          IAM Identity Center allows you to use existing user directories. Another benefit
+        of an IAM Identity Center trusted identity propagation is that each AWS CloudTrail data event for Amazon S3 contains a direct reference to the end user identity
+        that accessed the S3 data.
+If you have an application that supports OAuth 2.0 and your users need access from these
+        applications to AWS services, we recommend that you use trusted identity propagation. With
+        trusted identity propagation, a user can sign in to an application, and that application can
+        pass the userâs identity in any requests that access data in AWS services. This
+        application interacts with IAM Identity Center on behalf of any authenticated users. For
+        more information, see Using trusted identity propagation with customer managed applications.
+To set up Storage Browser authentication in the AWS Management Console using S3 Access Grants
+          and IAM Identity
+            Center trusted identity propagation, your applications must request data from
+          Amazon S3 on behalf of the current authenticated user. With this approach, you can give users
+          or groups of users from your corporate directory direct access to your S3 buckets,
+          prefixes, or objects. This means that your application wonât need to map any users to an
+          IAM principal.
+The following workflow outlines the steps for setting up Storage Browser for S3, using IAM
+          Identity Center and S3 Access Grants:
+The trusted token issuer represents your external identity provider (IdP)
+                    within IAM Identity Center, enabling it to recognize identity tokens for your
+                    applicationâs authenticated users.
+This application interacts with IAM Identity Center on behalf of
+                    authenticated users.
+This step connects your application to S3 Access Grants, so that it can make requests
+                    to S3 Access Grants on behalf of authenticated users.
+This step syncs users from AWS Identity and Access Management Identity Center with the System for
+                    Cross-domain Identity Management (SCIM). SCIM keeps your IAM Identity Center
+                    identities in sync with identities from your identity provider (IdP).
+To enable IAM Identity Center for your AWS Organizations, perform the following steps:
+Sign in to the AWS Management Console, using one of these methods:
+New to AWS (root user)
+                    â Sign in as the account owner by choosing Root user and
+                  entering your AWS account email address. On the next page, enter your
+                  password.
+Already using AWS (IAM
+                      credentials) â Sign in using your IAM
+                  credentials with administrative permissions.
+Open the IAM Identity
+                Center console.
+Under Enable IAM Identity Center, choose
+                Enable.
+IAM Identity Center requires the setup of AWS Organizations. If you haven't set up an
+                organization, you can choose to have AWS create one for you. Choose
+                  Create AWS organization to complete this process.
+Choose Enable with AWS Organizations.
+Choose Continue.
+(Optional) Add any tags that you want to associate with this organization
+              instance.
+(Optional) Configure the delegated administration.
+If youâre using a multi-account environment, we recommend that you configure
+                delegated administration. With delegated administration, you can limit the number of
+                people who require access to the management account in AWS Organizations. For more
+                information, see Delegated
+                  administration.
+Choose Save.
+AWS Organizations automatically sends a verification email to the address that is associated
+          with your management account. There might be a delay before you receive the verification
+          email. Make sure to verify your email address within 24 hours, before your verification
+          email expires.
+To use Storage Browser for S3 with corporate directory users, you must configure IAM
+          Identity Center to use an external identity provider (IdP). You can use the preferred
+          identity provider of your choice. However, be aware that each identity provider uses
+          different configuration settings. For tutorials on using different external identity
+          providers, see IAM Identity Center source
+            tutorials.
+Make sure to record the issuer URL and the audience attributes of the identity
+            provider that youâve configured because you will need to refer to it in later steps. If
+            you donât have the required access or permissions to configure an IdP, you might need to
+            contact the administrator of the external IdP to obtain them. 
+The trusted token issuer represents your external identity provider in the AWS Identity and Access Management
+          Identity Center, and recognizes tokens for your applicationâs authenticated users. The
+          account owner of the IAM Identity Center instance in your AWS Organizations must perform these
+          steps. These steps can be done either in the IAM Identity Center console, or
+          programmatically. 
+To add a trusted token issuer in the AWS Identity and Access Management Identity Center console, perform the
+          following steps:
+Open the IAM Identity
+                Center console.
+Choose Settings.
+Choose the Authentication tab.
+Navigate to the Trusted token issuers section, and fill out
+              the following details:
+Under Issuer URL, enter the URL of the external IdP that
+                  serves as the trusted token issuer. You might need to contact the administrator of
+                  the external IdP to obtain this information. For more information, see Using applications with a trusted token issuer.
+Under Trusted token issuer name, enter a name for the
+                  trusted token issuer. This name will appear in the list of trusted token issuers
+                  that you can select in Step 8, when an application resource is configured for
+                  identity propagation.
+Update your Map attributes to your preferred application
+              attribute, where each identity provider attribute is mapped to an IAM Identity
+              Center attribute. For example, you might want to map the
+                application attribute
+email to the IAM Identity Center user attribute email. To
+              see the list of allowed user attributes in IAM Identity Center, see the table in
+                Attribute mappings
+                for AWS Managed Microsoft AD directory.
+(Optional) If you want to add a resource tag, enter the key and value pair. To add
+              multiple resource tags, choose Add new tag to generate a new
+              entry and enter the key and value pairs.
+Choose Create trusted token issuer.
+After you finish creating the trusted token issuer, contact the application
+              administrator to let them know the name of the trusted token issuer, so that they can
+              confirm that the trusted token issuer is visible in the applicable console. 
+Make sure the application administrator selects this trusted token issuer in the
+              applicable console to enable user access to the application from applications that are
+              configured for trusted identity propagation.
+To ensure that the bootstrap application and identity bearer
+          users can properly work with each other, make sure to create two IAM
+            roles. One IAM role is required for the bootstrap application and
+          the other IAM role must be used for the identity bearer, or end users who are accessing
+          the web application that requests access through S3 Access Grants. The bootstrap
+          application receives the token issued by the identity provider and invokes the
+            CreateTokenWithIAM API, exchanging this token with the one
+          issued by the Identity Center.
+Create an IAM role, such as bootstrap-role, with permissions such as
+          the following. The following example IAM policy gives permissions to the
+            bootstrap-role to perform the token exchange:
+Then, create a second IAM role (such as identity-bearer-role), which
+          the identity broker uses to generate the IAM credentials. The IAM credentials returned
+          from the identity broker to the web application are used by the Storage Browser for S3 component
+          to allow access to S3 data:
+This IAM role (identity-bearer-role) must use a trust policy with the
+          following statement:
+Before you begin, make sure that youâve created the required IAM roles from the
+            previous step. Youâll need to specify one of these IAM roles in this step.
+To create and configure a customer managed application in AWS IAM Identity Center,
+          perform the following steps:
+Open the IAM Identity
+                Center console.
+Choose Applications.
+Choose the Customer managed tab.
+Choose Add application.
+On the Select application type page, under Setup
+                preference, choose I have an application I want to set
+                up.
+Under Application type, choose OAuth
+              2.0.
+Choose Next. The Specify application
+              page is displayed.
+Under the Application name and descriptionsection, enter a
+                Display name for the application, such as
+                storage-browser-oauth.
+Enter a Description. The application description appears in
+              the IAM Identity Center console and API requests, but not in the AWS access
+              portal.
+Under User and group assignment method, choose Do
+                not require assignments. This option allows all authorized IAM Identity
+              Center users and groups access to this application.
+Under AWS access portal, enter an application URL where
+              users can access the application.
+(Optional) If you want to add a resource tag, enter the key and value pair. To add
+              multiple resource tags, choose Add new tag to generate a new
+              entry and enter the key and value pairs.
+Choose Next. The Specify authentication
+                page displays.
+Under Authentication with trusted token issuer, use the
+              checkbox to select the trusted token issuer that you previously created.
+Under Configure selected trusted token issuers, enter the
+                aud claim. The aud claim identifies the audience of
+              the JSON Web Token (JWT), and it is the name by which the trusted token issuer
+              identifies this application.
+You might need to contact the administrator of the external IdP to obtain this
+                information.
+Choose Next. The Specify authentication
+                credentials page displays.
+Under Configuration method, choose Enter one or
+                more IAM roles.
+Under Enter IAM roles, add the IAM role or Amazon Resource Name
+              (ARN) for the identity bearer token. You must enter the IAM role that you created from
+              the previous step for the identity broker application (for example,
+                bootstrap-role).
+Choose Next.
+On the Review and configure page, review the details of your
+              application configuration. If you need to modify any of the settings, choose
+                Edit for the section that you want to edit and make your
+              changes to.
+Choose Submit. The details page of the application that you
+              just added is displayed.
+After youâve set up your applications, your users can access your applications from
+          within their AWS access portal based on the permission sets that youâve created and the user
+            access that youâve assigned.
+After you set up your customer managed application, you must specify S3 Access Grants for
+          identity propagation. S3 Access Grants vends credentials for users to access Amazon S3 data. When you sign in to your customer
+          managed application, S3 Access Grants will pass your user identity to the trusted application.
+
+Prerequisite: Make sure that youâve set up S3 Access Grants (such
+          as creating an S3 Access Grants
+            instance and registering a
+            location) before following these steps. For more information, see Getting started with S3 Access Grants.
+To add S3 Access Grants for identity propagation to your customer managed application, perform
+          the following steps:
+Open the IAM Identity
+                Center console.
+Choose Applications.
+Choose the Customer managed tab.
+In the Customer managed applications list, select the OAuth
+              2.0 application for which you want to initiate access requests. This is the
+              application that your users will sign in to.
+On the Details page, under Trusted applications for
+                identity propagation, choose Specify trusted
+                applications.
+Under Setup type, select Individual applications and specify access, and then
+              choose Next.
+On the Select service page, choose
+                S3 Access Grants. S3 Access Grants has applications that you can use to define your
+              own web application for trusted identity propagation.
+Choose Next. You'll select your applications in the next
+              step.
+On the Select applications page, choose Individual
+                applications, select the checkbox for each application that can receive
+              requests for access, and then choose Next.
+On the Configure access page, under Configuration
+                method, choose either of the following: 
+Select access per application â Select
+                  this option to configure different access levels for each application. Choose the
+                  application for which you want to configure the access level, and then choose
+                    Edit access. In Level of access to
+                    apply, change the access levels as needed, and then choose
+                    Save changes.
+Apply same level of access to all
+                      applications â Select this option if you don't
+                  need to configure access levels on a per-application basis.
+Choose Next.
+On the Review configuration page, review the choices that you
+              made. 
+Youâll want to make sure the s3:access_grants:read_write permission
+                is granted for your users. This permission allows your users to retrieve credentials
+                to access Amazon S3. Make sure to use either the IAM policy you created previously, or
+                S3 Access Grants, to limit access to write operations.
+To make changes, choose Edit for the configuration section
+              that you want to make changes to. Then, make the required changes and choose
+                Save changes.
+Choose Trust applications to add the trusted application for
+              identity propagation.
+In this step, you use IAM Identity Center to provision your users. You can use SCIM
+          for automated or manual
+            provisioning of users and groups. SCIM keeps your IAM Identity Center
+          identities in sync with identities from your identity provider (IdP). This includes any
+          provisioning, updates, and deprovisioning of users between your IdP and IAM Identity
+          Center.
+This step is required because when S3 Access Grants is used with IAM Identity Center, local
+            IAM Identity Center users arenât used. Instead, users must be synchronized from the
+            identity provider with IAM Identity Center.
+To synchronize users from your identity provider with IAM Identity Center, perform
+          the following steps:
+Enable automatic
+                provisioning.
+Generate an access token.
+For examples of how to set up the identity provider with IAM Identity Center for
+          your specific use case, see 
+          IAM
+            Identity Center Identity source tutorials.
+After youâve set up your IAM Identity Center instance and created grants in S3 Access Grants,
+          open your React application. In the React application, use
+            createManagedAuthAdapter to set up the authorization rules. You must
+          provide a credentials provider to return the credentials you acquired from IAM Identity
+          Center. You can then call createStorageBrowser to initialize the
+          Storage Browser for S3 component:
+
+Then, create a mechanism to exchange the JSON web tokens (JWTs) from your web
+          application with the IAM credentials from IAM Identity Center. For more information
+          about how to exchange the JWT, see the following resources:
+How to develop a user-facing data application with IAM Identity Center and
+                S3 Access Grants post in AWS Storage Blog
+Scaling data access with S3 Access Grants post in AWS Storage
+              Blog
+S3 Access Grants workshop on AWS workshop studio
+S3 Access Grants workshop on GitHub
+Then, set up an API endpoint to handle requests for fetching credentials. To validate
+          the JSON web token (JWT) exchange, perform the following steps:
+Retrieve the JSON web token from the authorization header for incoming
+              requests.
+Validate the token using the public keys from the specified JSON web key set
+              (JWKS) URL.
+Verify the token's expiration, issuer, subject, and audience claims.
+To exchange the identity providerâs JSON web token with AWS IAM credentials,
+          perform the following steps: 
+Make sure to avoid logging any sensitive information. We recommend that you use
+            error handling controls for missing authorization, expired tokens, and other exceptions.
+            For more information, see the Implementing AWS Lambda error handling patterns  post in AWS Compute
+                Blog.
+Verify that the required Permission and
+                Scope parameters are provided in the request.
+Use the CreateTokenWithIAM API to exchange the JSON web token for an IAM Identity
+              Center token.
+After the IdP JSON web token is used, it canât be used again. A new token must
+                be used to exchange with IAM Identity Center.
+Use the AssumeRole API operation
+              to assume a transient role using the IAM Identity Center token. Make sure to use the
+              identity bearer role, also known as the role that carries the identity context (for
+              example, identity-bearer-role) to request the
+              credentials.
+Return the IAM credentials to the web application.
+Make sure that youâve set up a proper logging mechanism. Responses are returned
+                in a standardized JSON format with an appropriate HTTP status code.
+ Javascript is disabled or is unavailable in your browser.
+To use the Amazon Web Services Documentation, Javascript must be enabled. Please refer to your browser's Help pages for instructions.
+Thanks for letting us know we're doing a good job!
+If you've got a moment, please tell us what we did right so we can do more of it.
+
+Thanks for letting us know this page needs work. We're sorry we let you down.
+If you've got a moment, please tell us how we can make the documentation better.
+

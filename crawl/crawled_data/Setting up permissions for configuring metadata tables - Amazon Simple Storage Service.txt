@@ -1,0 +1,45 @@
+Title: Setting up permissions for configuring metadata tables - Amazon Simple Storage Service
+
+The S3 Metadata feature is in preview release for Amazon S3 and is subject to change.
+To create a metadata table configuration, you must have the necessary AWS Identity and Access Management (IAM)
+      permissions to both create and manage your metadata table configuration and to create and
+      manage your metadata table and the table bucket where your metadata table is stored. 
+To create and manage your metadata table configuration, you must have these permissions: 
+s3:CreateBucketMetadataTableConfiguration â This permission allows
+          you to create a metadata table configuration for your general purpose bucket.
+s3:GetBucketMetadataTableConfiguration â This permission allows
+          you to retrieve information about your metadata table configuration.
+s3:DeleteBucketMetadataTableConfiguration â This permission allows
+          you to delete your metadata table configuration.
+To create and work with tables and table buckets, you must have certain
+        s3tables permissions. At a minimum, to create a metadata table configuration,
+      you must have the following s3tables permissions: 
+s3tables:CreateNamespace â This permission allows you to create a
+          namespace in a table bucket. Metadata tables use the default aws_s3_metadata
+          namespace.
+s3tables:GetTable â This permission allows you to retrieve
+          information about your metadata table.
+s3tables:CreateTable â This permission allows you to create your
+          metadata table.
+s3tables:PutTablePolicy â This permission allows you to add or
+          update your metadata table policy.
+For detailed information about all table and table bucket permissions, see Access
+        management for S3 Tables.
+If you also want to integrate your table bucket with AWS analytics services so that you 
+        can query your metadata table, you need additional permissions. For more information, see 
+        
+          Integrating Amazon S3 Tables with AWS analytics services.
+To create and work with metadata tables and table buckets, you can use the following
+      example policy. In this policy, the general purpose bucket that you're applying the metadata
+      table configuration to is referred to as amzn-s3-demo-source-bucket. The table
+      bucket where you're storing your metadata table is referred to as
+        amzn-s3-demo-bucket. To use this policy, replace these bucket names and the
+          user input placeholders with your own information: 
+ Javascript is disabled or is unavailable in your browser.
+To use the Amazon Web Services Documentation, Javascript must be enabled. Please refer to your browser's Help pages for instructions.
+Thanks for letting us know we're doing a good job!
+If you've got a moment, please tell us what we did right so we can do more of it.
+
+Thanks for letting us know this page needs work. We're sorry we let you down.
+If you've got a moment, please tell us how we can make the documentation better.
+

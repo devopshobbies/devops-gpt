@@ -18,21 +18,6 @@ services:
     networks:
       - app_network
 
-  web:
-    build:
-      context: ./admin-panel
-      dockerfile: Dockerfile
-      args:
-        VITE_API_CLIENT_BASE_URL: "http://localhost:8080/api/"
-    image: web_gpt
-    container_name: web_gpt
-    ports:
-      - "80:4173"
-    depends_on:
-      - app
-    networks:
-      - app_network
-
 
 networks:
   app_network:

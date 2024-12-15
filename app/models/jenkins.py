@@ -5,7 +5,7 @@ from pydantic import BaseModel, validator, ValidationError
     
 class JenkinsInstallation(BaseModel):
 
-    os: str = 'Ubuntu'
+    os: str | None = 'Ubuntu'
     
     environment:str = 'Linux'
     

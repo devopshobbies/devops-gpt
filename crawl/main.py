@@ -4,55 +4,7 @@ import os
 
 # List of URLs to crawl
 urls = [
-    "https://www.browserstack.com/guide/devops-challenges-and-its-solutions",
-
-    "https://sematext.com/blog/devops-challenges/",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingBucket.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/common-bucket-patterns.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/mountpoint-installation.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/mountpoint-usage.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-storagebrowser.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/installing-storagebrowser.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/setup-storagebrowser.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3config-storagebrowser.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/troubleshooting-storagebrowser.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-restrictions.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-schema.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-permissions.html",
-    
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-optimizing-query-performance.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-example-queries.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-join-custom-metadata.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/HLuploadDirDotNet.html",
-
-    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/track-mpu.html"
+   
 ]
 
 # Directory to save the files

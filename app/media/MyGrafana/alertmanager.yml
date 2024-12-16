@@ -1,0 +1,16 @@
+apiVersion: 1
+datasources:
+- name: string
+  uid: string
+  type: alertmanager
+  url: string
+  access: proxy
+  orgId: 1
+  jsonData:
+    implementation: cortex
+    handleGrafanaManagedAlerts: true
+  editable: true
+  basicAuth: true
+  basicAuthUser: string
+  secureJsonData:
+    basicAuthPassword: string

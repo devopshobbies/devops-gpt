@@ -7,3 +7,4 @@ from .compose_models import *
 from .docker_installation_models import *
 from .jenkins import *
 from .gitlab_models import *
+from .alert_managers_models import *

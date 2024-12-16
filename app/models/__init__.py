@@ -7,4 +7,6 @@ from .compose_models import *
 from .docker_installation_models import *
 from .jenkins import *
 from .gitlab_models import *
-from .alert_managers_models import *
+from app.models.grafana.alert_managers_models import *
+from app.models.grafana.elastcsearch_models import *
+from app.models.grafana.loki_models import *

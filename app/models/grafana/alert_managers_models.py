@@ -7,10 +7,10 @@ class BasicAuth(BaseModel):
     
         
 class AlertManagerInput(BaseModel):
-    name:str
-    url:str
-    uid:str
-    implementation:str
+    name:str =  "Alertmanager"
+    url:str = "http://localhost:9093"
+    uid:str = "alertmanager"
+    implementation:str 
     
     handleGrafanaManagedAlerts:bool = True
     editable: bool = True

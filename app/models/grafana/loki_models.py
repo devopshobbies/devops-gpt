@@ -6,9 +6,9 @@ class BasicAuth(BaseModel):
     basicAuthPassword:str
        
 class LokiInput(BaseModel):
-    name:str
-    uid:str ="loki"
-    url:str
+    name:str = "Loki"
+    uid:str = "loki"
+    url:str = "http://localhost:3100"
     editable: bool = True
     timeout:int = 60
     maxLines:int = 1000

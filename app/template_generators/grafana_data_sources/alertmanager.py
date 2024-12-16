@@ -7,10 +7,10 @@ def alert_manager_template(input):
             "apiVersion": 1,
             "datasources": [
                 {
-                "name": "Alertmanager",
-                "uid": "alertmanager",
+                "name": input.name,
+                "uid": input.uid,
                 "type": "alertmanager",
-                "url": "http://localhost:9093",
+                "url": input.url,
                 "access": "proxy",
                 "orgId": 1,
                 "jsonData": {
@@ -34,10 +34,10 @@ def alert_manager_template(input):
             "apiVersion": 1,
             "datasources": [
                 {
-                "name": "Alertmanager",
-                "uid": "alertmanager",
+                "name": input.name,
+                "uid": input.uid,
                 "type": "alertmanager",
-                "url": "http://localhost:9093",
+                "url": input.url,
                 "access": "proxy",
                 "orgId": 1,
                 "jsonData": {

@@ -7,7 +7,11 @@ class BasicAuth(BaseModel):
     
         
 class AlertManagerInput(BaseModel):
+    name:str
+    url:str
+    uid:str
     implementation:str
+    
     handleGrafanaManagedAlerts:bool = True
     editable: bool = True
     basic_auth:Optional[BasicAuth]

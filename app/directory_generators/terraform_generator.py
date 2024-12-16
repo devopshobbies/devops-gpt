@@ -1,196 +1,210 @@
 import os
 project_name = "app/media/MyTerraform"
 modules_dir = os.path.join(project_name, "modules")
-docker_dir = os.path.join(modules_dir, "docker")
+argocd_dir = os.path.join(modules_dir, "argocd")
 
 # Create project directories
-os.makedirs(docker_dir, exist_ok=True)
+os.makedirs(argocd_dir, exist_ok=True)
 
 # Create main.tf
 with open(os.path.join(project_name, "main.tf"), "w") as main_file:
-    main_file.write('''provider "docker" {
-  host = "unix:///var/run/docker.sock"
+    main_file.write('''
+provider "argocd" {
+  server_addr = var.argocd_instance_info["server_addr"]
+  username    = var.argocd_instance_info["username"]
+  password    = var.argocd_instance_info["password"]
+  insecure    = var.argocd_instance_info["insecure"]
 }
 
-module "docker" {
-  source = "./modules/docker"
-
-  create_image       = var.create_image
-  image_name         = var.image_name
-  image_force_remove  = var.image_force_remove
-  image_build        = var.image_build
-
-  create_container    = var.create_container
-  container_image     = var.container_image
-  container_name      = var.container_name
-  container_hostname  = var.container_hostname
-  container_restart    = var.container_restart
+module "argocd" {
+  source = "./modules/argocd"
+  
+  repository_create        = var.repository_create
+  argocd_repository_info   = var.argocd_repository_info
+  application_create       = var.application_create
+  argocd_application       = var.argocd_application
+  argocd_sync_options      = var.argocd_sync_options
 }
 ''')
 
 # Create variables.tf
-with open(os.path.join(project_name, "variables.tf"), "w") as variables_file:
-    variables_file.write('''variable "create_image" {
-  type = bool
-}
-
-variable "image_name" {
-  type = string
-}
-
-variable "image_force_remove" {
-  type = bool
-}
-
-variable "image_build" {
+with open(os.path.join(project_name, "variables.tf"), "w") as vars_file:
+    vars_file.write('''
+variable "argocd_instance_info" {
   type = object({
-    context = string
-    tag = list(string)
+    server_addr = string
+    username    = string
+    password    = string
+    insecure    = bool
   })
 }
 
-variable "create_container" {
+variable "repository_create" {
   type = bool
 }
 
-variable "container_image" {
-  type = string
+variable "argocd_repository_info" {
+  type = map(string)
 }
 
-variable "container_name" {
-  type = string
+variable "application_create" {
+  type = bool
 }
 
-variable "container_hostname" {
-  type = string
+variable "argocd_application" {
+  type = map(string)
 }
 
-variable "container_restart" {
-  type = string
+variable "argocd_sync_options" {
+  type = list(string)
 }
 ''')
 
 # Create terraform.tfvars
 with open(os.path.join(project_name, "terraform.tfvars"), "w") as tfvars_file:
-    tfvars_file.write('''create_image = true
-image_name = "my-image"
-image_force_remove = true
-image_build = {
-  context = "./"
-  tag    = ["my-image:latest"]
+    tfvars_file.write('''
+argocd_instance_info = {
+  server_addr = "ARGOCD_DOMAIN"
+  username    = "admin"
+  password    = "ARGOCD_ADMIN_PASS"
+  insecure    = true
 }
 
-create_container = false
-container_image = "my-image"
-container_name = "my-container"
-container_hostname = "my-host"
-container_restart = "always"
+repository_create = true
+argocd_repository_info = {
+  repo     = "https://YOUR_REPO.git"
+  username = "USERNAME"
+  password = "CHANGE_ME_WITH_TOKEN"
+}
+
+application_create = true
+argocd_application = {
+  name                   = "APPLICATION_NAME"
+  destination_server     = "https://kubernetes.default.svc"
+  destination_namespace  = "DESTINATION_NAMESPACE"
+  source_repo_url       = "https://YOUR_REPO.git"
+  source_path           = "SOURCE_PATH"
+  source_target_revision = "SOURCE_TARGET_REVISION"
+}
+
+argocd_sync_options = ["CreateNamespace=true", "ApplyOutOfSyncOnly=true", "FailOnSharedResource=true"]
 ''')
 
 # Create versions.tf
-with open(os.path.join(project_name, "versions.tf"), "w") as versions_file:
-    versions_file.write('''terraform {
+with open(os.path.join(project_name, "versions.tf"), "w") as version_file:
+    version_file.write('''
+terraform {
   required_version = ">= 1.0"
 
   required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = ">= 2.8.0"
+    argocd = {
+      source  = "oboukili/argocd"
+      version = ">= 6.0.2"
     }
   }
 }
 ''')
 
 # Create module main.tf
-with open(os.path.join(docker_dir, "main.tf"), "w") as module_main_file:
-    module_main_file.write('''resource "docker_image" "image" {
-  count        = var.create_image ? 1 : 0
-  name         = var.image_name
-  force_remove = var.image_force_remove
-
-  build {
-    context = var.image_build.context
-    tag    = var.image_build.tag
-  }
+with open(os.path.join(argocd_dir, "main.tf"), "w") as module_main_file:
+    module_main_file.write('''
+resource "argocd_repository" "repository" {
+  count     = var.repository_create ? 1 : 0
+  repo      = var.argocd_repository_info["repo"]
+  username  = var.argocd_repository_info["username"]
+  password  = var.argocd_repository_info["password"]
 }
 
-resource "docker_container" "container" {
-  count     = var.create_container ? 1 : 0
-  image     = var.container_image
-  name      = var.container_name
-  hostname  = var.container_hostname
-  restart   = var.container_restart
+resource "argocd_application" "application" {
+  count     = var.application_create ? 1 : 0
+  depends_on = [argocd_repository.repository]
+
+  metadata {
+    name      = var.argocd_application["name"]
+    namespace = "argocd"
+    labels = {
+      using_sync_policy_options = "true"
+    }
+  }
+
+  spec {
+    destination {
+      server    = var.argocd_application["destination_server"]
+      namespace = var.argocd_application["destination_namespace"]
+    }
+    source {
+      repo_url        = var.argocd_application["source_repo_url"]
+      path            = var.argocd_application["source_path"]
+      target_revision = var.argocd_application["source_target_revision"]
+    }
+    sync_policy {
+      automated {
+        prune     = true
+        self_heal = true
+      }
+      sync_options = var.argocd_sync_options
+    }
+  }
 }
 ''')
 
 # Create module variables.tf
-with open(os.path.join(docker_dir, "variables.tf"), "w") as module_variables_file:
-    module_variables_file.write('''variable "create_image" {
+with open(os.path.join(argocd_dir, "variables.tf"), "w") as module_vars_file:
+    module_vars_file.write('''
+variable "repository_create" {
   type = bool
 }
 
-variable "image_name" {
-  type = string
+variable "argocd_repository_info" {
+  type = map(string)
 }
 
-variable "image_force_remove" {
+variable "application_create" {
   type = bool
 }
 
-variable "image_build" {
-  type = object({
-    context = string
-    tag = list(string)
-  })
+variable "argocd_application" {
+  type = map(string)
 }
 
-variable "create_container" {
-  type = bool
-}
-
-variable "container_image" {
-  type = string
-}
-
-variable "container_name" {
-  type = string
-}
-
-variable "container_hostname" {
-  type = string
-}
-
-variable "container_restart" {
-  type = string
+variable "argocd_sync_options" {
+  type = list(string)
 }
 ''')
 
 # Create module terraform.tfvars
-with open(os.path.join(docker_dir, "terraform.tfvars"), "w") as module_tfvars_file:
-    module_tfvars_file.write('''create_image = true
-image_name = "my-image"
-image_force_remove = true
-image_build = {
-  context = "./"
-  tag    = ["my-image:latest"]
+with open(os.path.join(argocd_dir, "terraform.tfvars"), "w") as module_tfvars_file:
+    module_tfvars_file.write('''
+repository_create = true
+argocd_repository_info = {
+  repo     = "https://YOUR_REPO.git"
+  username = "USERNAME"
+  password = "CHANGE_ME_WITH_TOKEN"
 }
 
-create_container = false
-container_image = "my-image"
-container_name = "my-container"
-container_hostname = "my-host"
-container_restart = "always"
+application_create = true
+argocd_application = {
+  name                   = "APPLICATION_NAME"
+  destination_server     = "https://kubernetes.default.svc"
+  destination_namespace  = "DESTINATION_NAMESPACE"
+  source_repo_url       = "https://YOUR_REPO.git"
+  source_path           = "SOURCE_PATH"
+  source_target_revision = "SOURCE_TARGET_REVISION"
+}
+
+argocd_sync_options = ["CreateNamespace=true", "ApplyOutOfSyncOnly=true", "FailOnSharedResource=true"]
 ''')
 
 # Create module versions.tf
-with open(os.path.join(docker_dir, "versions.tf"), "w") as module_versions_file:
-    module_versions_file.write('''terraform {
+with open(os.path.join(argocd_dir, "versions.tf"), "w") as module_version_file:
+    module_version_file.write('''
+terraform {
   required_version = ">= 1.0"
 
   required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = ">= 2.8.0"
+    argocd = {
+      source  = "oboukili/argocd"
+      version = ">= 6.0.2"
     }
   }
 }

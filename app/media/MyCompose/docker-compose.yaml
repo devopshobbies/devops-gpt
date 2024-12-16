@@ -1,31 +1,15 @@
-# sudo mkdir -p /srv/gitlab
-# export GITLAB_HOME=/srv/gitlab
-
-version: '3.6'
+version: '3.8'
 services:
-  gitlab:
-    image: gitlab/gitlab-ee:<version>-ee.0
-    container_name: gitlab
-    restart: always
-    hostname: 'gitlab.example.com'
-    environment:
-      GITLAB_OMNIBUS_CONFIG: |
-        # Add any other gitlab.rb configuration here, each on its own line
-        external_url 'https://gitlab.example.com'
-        
-        # you can also use custom HTTP and SSH port. if you you want to do that, follow the below syntax
-        
-        # external_url 'http://gitlab.example.com:8929'
-        # gitlab_rails['gitlab_shell_ssh_port'] = 2424
-        
+  jenkins:
+    image: jenkins/jenkins:lts
+    privileged: true
+    user: root
     ports:
-    # - '8929:8929' # Custom HTTP Port
-    # - '2424:22'  # Custom SSH Port
-      - '80:80'
-      - '443:443'
-      - '22:22'
+      - 8080:8080
+      - 50000:50000
+    container_name: jenkins
     volumes:
-      - '$GITLAB_HOME/config:/etc/gitlab'
-      - '$GITLAB_HOME/logs:/var/log/gitlab'
-      - '$GITLAB_HOME/data:/var/opt/gitlab'
-    shm_size: '256m'
+      - /home/${myname}/jenkins_compose/jenkins_configuration:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      
+# Replace "/home/${myname}/jenkins_compose/jenkins_configuration" with the path you want to use to store your jenkins data

@@ -1,11 +1,24 @@
-import requests
-from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 import os
+import time
 
-# List of URLs to crawl
+# Set up headless mode if you don't want to see the browser
+chrome_options = Options()
+# Uncomment the following line to run Chrome in headless mode
+#chrome_options.add_argument("--headless")
+
+# Provide the path to your ChromeDriver
+service = Service('/usr/bin/google-chrome')  # Update this path
+
+# Create a new instance of the Chrome driver
+driver = webdriver.Chrome(service=service, options=chrome_options)
+
+# # List of URLs to crawl
 urls = [
-    "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html",
-    "https://docs.aws.amazon.com/ec2/latest/instancetypes/instance-types.html#current-gen-instances"
+    "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs"
 ]
 
 # Directory to save the files
@@ -14,30 +27,32 @@ os.makedirs(save_dir, exist_ok=True)
 
 def fetch_and_save(url):
     try:
-        response = requests.get(url)
-        response.raise_for_status()  # Check if the request was successful
+        driver.get(url)
+        
+        # Optionally wait for some time for JavaScript to render (you might need to adjust this)
+        time.sleep(5)
 
-        # Parse the HTML content
-        soup = BeautifulSoup(response.text, 'html.parser')
-
-        # For demonstration, we are fetching the page title and all paragraphs
-        title = soup.title.string if soup.title else "no_title"
-        paragraphs = soup.find_all('p')
+        # Fetch the title and all paragraphs
+        title = driver.title
+        paragraphs = driver.find_elements(By.TAG_NAME, 'p')
 
         # Prepare the file name
         file_name = os.path.join(save_dir, f"{title}.txt")
-        
+
         # Write the content to the file
         with open(file_name, 'w', encoding='utf-8') as file:
             file.write(f"Title: {title}\n\n")
             for para in paragraphs:
-                file.write(para.get_text() + "\n")
+                file.write(para.text + "\n")
 
         print(f"Saved content from {url} to {file_name}")
 
-    except requests.RequestException as e:
+    except Exception as e:
         print(f"Failed to fetch {url}: {e}")
 
 # Fetch and save data from each URL
 for url in urls:
     fetch_and_save(url)
+
+# Close the driver
+driver.quit()

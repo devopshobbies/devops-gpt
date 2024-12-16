@@ -1,13 +1,4 @@
 
-variable "argocd_instance_info" {
-  type = object({
-    server_addr = string
-    username    = string
-    password    = string
-    insecure    = bool
-  })
-}
-
 variable "repository_create" {
   type = bool
 }

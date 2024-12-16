@@ -1,6 +1,7 @@
 import yaml
 from app.models.compose_models import DockerCompose
 import os
+
 def remove_none_values(d):
     if isinstance(d, dict):
         return {k: remove_none_values(v) for k, v in d.items() if v is not None}

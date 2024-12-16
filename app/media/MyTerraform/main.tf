@@ -1,18 +1,17 @@
-provider "docker" {
-  host = "unix:///var/run/docker.sock"
+
+provider "argocd" {
+  server_addr = var.argocd_instance_info["server_addr"]
+  username    = var.argocd_instance_info["username"]
+  password    = var.argocd_instance_info["password"]
+  insecure    = var.argocd_instance_info["insecure"]
 }
 
-module "docker" {
-  source = "./modules/docker"
-
-  create_image       = var.create_image
-  image_name         = var.image_name
-  image_force_remove  = var.image_force_remove
-  image_build        = var.image_build
-
-  create_container    = var.create_container
-  container_image     = var.container_image
-  container_name      = var.container_name
-  container_hostname  = var.container_hostname
-  container_restart    = var.container_restart
+module "argocd" {
+  source = "./modules/argocd"
+  
+  repository_create        = var.repository_create
+  argocd_repository_info   = var.argocd_repository_info
+  application_create       = var.application_create
+  argocd_application       = var.argocd_application
+  argocd_sync_options      = var.argocd_sync_options
 }

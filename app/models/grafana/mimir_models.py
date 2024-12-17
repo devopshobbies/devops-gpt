@@ -3,7 +3,9 @@ from pydantic import BaseModel, validator, ValidationError
 
 
 
-       
+class MultiTenancy(BaseModel):
+    tenant_name:str = "pods"
+    
 class MimirInput(BaseModel):
     name:str = "Mimir"
     uid:str = "mimir"
@@ -11,6 +13,6 @@ class MimirInput(BaseModel):
     editable: bool = True
     httpHeaderName1:str = "X-Scope-OrgID"
     alertmanagerUid:str = "alertmanager"
-    httpHeaderValue1:str = "pods"
+    multi_tenancy:Optional[MultiTenancy]
     
-    
+   

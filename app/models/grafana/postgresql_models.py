@@ -10,7 +10,7 @@ class PostgresInput(BaseModel):
     user:str = "grafana"
     editable: bool = True
     database:str = "grafana"
-    sslmode:str = "disable"
+    sslmode:str = "'disable'"
     password:str = "Password!"
     maxOpenConns:int = 100 
     maxIdleConns:int = 100

@@ -11,7 +11,7 @@ class TLS(BaseModel):
         
 class MysqlInput(BaseModel):
     name:str = "MySQL"
-    url:str = " localhost:3306"
+    url:str = "localhost:3306"
     user:str = "grafana"
     editable: bool = True
     database:str = "grafana"

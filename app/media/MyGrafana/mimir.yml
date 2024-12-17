@@ -9,5 +9,4 @@ datasources:
   editable: true
   version: 1
   jsonData:
-    httpHeaderName1: X-Scope-OrgID
     alertmanagerUid: alertmanager

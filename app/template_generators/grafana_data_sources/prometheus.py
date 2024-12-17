@@ -1,8 +1,13 @@
 import yaml
 import os
-from ruamel.yaml import YAML
+import ruamel.yaml
 from ruamel.yaml.scalarstring import ScalarString
 import re
+
+class SingleQuotedScalarString(ScalarString):
+    def __new__(cls, value):
+        return ScalarString.__new__(cls, value)
+    
 def pormetheus_template(input):
        
             

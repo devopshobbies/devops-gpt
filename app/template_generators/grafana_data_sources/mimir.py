@@ -16,7 +16,7 @@ def mimir_template(input):
                     "editable": input.editable,
                     "version": 1,
                     "jsonData": {
-                        "httpHeaderName1": input.httpHeaderName1,
+                        "httpHeaderName1": input.multi_tenancy.httpHeaderName1,
                         "alertmanagerUid": input.alertmanagerUid
                     },
                     "secureJsonData": {
@@ -48,7 +48,6 @@ def mimir_template(input):
                     "editable": input.editable,
                     "version": 1,
                     "jsonData": {
-                        "httpHeaderName1": input.httpHeaderName1,
                         "alertmanagerUid": input.alertmanagerUid
                     },
                    

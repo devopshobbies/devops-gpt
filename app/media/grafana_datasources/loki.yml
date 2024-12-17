@@ -1,0 +1,19 @@
+apiVersion: 1
+
+datasources:
+  - name: Loki
+    uid: loki
+    type: loki
+    orgId: 1
+    access: proxy
+    editable: [true|false]
+    url: http://localhost:3100
+    jsonData:
+      timeout: 60
+      maxLines: 1000
+
+    # optionally
+    basicAuth: true
+    basicAuthUser: my_user
+    secureJsonData:
+      basicAuthPassword: test_password

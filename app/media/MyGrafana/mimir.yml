@@ -1,0 +1,12 @@
+apiVersion: 1
+datasources:
+- name: Mimir
+  uid: mimir
+  type: prometheus
+  access: proxy
+  orgId: 1
+  url: http://mimir-nginx.mimir.svc.cluster.local/prometheus
+  editable: true
+  version: 1
+  jsonData:
+    alertmanagerUid: alertmanager

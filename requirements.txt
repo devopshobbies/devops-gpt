@@ -1,5 +1,6 @@
+ruamel.yaml<0.18.0
 fastapi[standard]>=0.113.0,<0.114.0
 pydantic>=2.7.0,<3.0.0
 openai
 pytest
-pymongo>=4.10.1
+

@@ -7,3 +7,11 @@ from .compose_models import *
 from .docker_installation_models import *
 from .jenkins import *
 from .gitlab_models import *
+from app.models.grafana.alert_managers_models import *
+from app.models.grafana.elastcsearch_models import *
+from app.models.grafana.loki_models import *
+from app.models.grafana.mimir_models import *
+from app.models.grafana.mysql_models import *
+from app.models.grafana.postgresql_models import *
+from app.models.grafana.prometheus_models import *
+from app.models.grafana.tempo_models import *

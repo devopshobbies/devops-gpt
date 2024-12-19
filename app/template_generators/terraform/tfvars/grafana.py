@@ -16,7 +16,7 @@ def grafana_tfvars(input):
         {{ template "Alert Instance Template" . }}
         {{ end }}
         EOT
-        }
+}
     
     """
     
@@ -41,7 +41,8 @@ def grafana_tfvars(input):
     
     """
     
-    policies = """{matchers = [
+    policies = """{
+matchers = [
       { label = "mylabel", match = "=", value = "myvalue" },
       { label = "alertname", match = "=", value = "CPU Usage" },
       { label = "Name", match = "=~", value = "host.*|host-b.*" }
@@ -63,7 +64,13 @@ def grafana_tfvars(input):
     
     """
     subject = "{{ template \"default.title\" .}}"
-    
+    message_template_content = """<<EOT
+{{ define "Alert Instance Template" }}
+Firing: {{ .Labels.alertname }}
+Silence: {{ .SilenceURL }}
+{{ end }}
+EOT
+    """
     if input.create_contact_point is None:
         tfvars_file = f'''
 # Grafana Connection Variables
@@ -90,13 +97,7 @@ slack_contact_point = {slack_contact_point}
 # Grafana_Message_Template Variables
 create_message_template  = {str(input.create_message_template).lower()}
 message_template_name    = "Alert Instance Template"
-message_template_content = <<EOT
-{{ define "Alert Instance Template" }}
-Firing: {{ .Labels.alertname }}
-Silence: {{ .SilenceURL }}
-{{ end }}
-EOT
-
+message_template_content = {message_template_content}
 
 # Grafana_Mute_Timing Variables
 create_mute_timing = {str(input.create_mute_timing).lower()}
@@ -145,12 +146,7 @@ slack_contact_point = {slack_contact_point}
 # Grafana_Message_Template Variables
 create_message_template  = {str(input.create_message_template).lower()}
 message_template_name    = "Alert Instance Template"
-message_template_content = <<EOT
-{{ define "Alert Instance Template" }}
-Firing: {{ .Labels.alertname }}
-Silence: {{ .SilenceURL }}
-{{ end }}
-EOT
+message_template_content = {message_template_content}
 
 
 # Grafana_Mute_Timing Variables

@@ -15,3 +15,4 @@ from app.models.grafana.mysql_models import *
 from app.models.grafana.postgresql_models import *
 from app.models.grafana.prometheus_models import *
 from app.models.grafana.tempo_models import *
+from app.models.grafana.terraform_alert import *

@@ -64,7 +64,7 @@ matchers = [
 }
     
     """
-    subject = "{{ template \"default.title\" .}}"
+    subject = "{{ template \\\"default.title\\\" .}}"
     message_template_content = """<<EOT
 {{ define "Alert Instance Template" }}
 Firing: {{ .Labels.alertname }}
@@ -81,7 +81,8 @@ grafana_connection = {grafana_connection}
 # Grafana_Contact_Point Variables
 create_contact_point = false
 contact_point_name   = "My Contact Point"
-
+use_email            = false
+use_slack            = false
 email_contact_point = {{
   addresses               = ["one@company.org", "two@company.org"]
   message                 = "{{ len .Alerts.Firing }} firing."

@@ -3,18 +3,19 @@
 grafana_connection = {
         "url"  = "http://localhost:8080",
         "auth" = ""
-    }
+}
+    
 
 
 # Grafana_Contact_Point Variables
 create_contact_point = true
 contact_point_name   = "My Contact Point"
-use_email            = true
+use_email            = false
 use_slack            = true
 email_contact_point = {
   addresses               = ["one@company.org", "two@company.org"]
   message                 = "{ len .Alerts.Firing } firing."
-  subject                 = "{{ template "default.title" .}}"
+  subject                 = "{{ template \"default.title\" .}}"
   single_email            = true
   disable_resolve_message = false
 }

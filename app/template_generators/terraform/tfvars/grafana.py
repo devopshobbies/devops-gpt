@@ -5,7 +5,8 @@ def grafana_tfvars(input):
     grafana_connection = """{
         "url"  = "http://localhost:8080",
         "auth" = ""
-    }"""
+}
+    """
     slack_contact_point = """{
         url  = "https://hooks.slack.com/<YOUR_SLACK_WEBHOOK_URL>"
         text = <<EOT

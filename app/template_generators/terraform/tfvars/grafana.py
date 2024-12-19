@@ -6,8 +6,7 @@ def grafana_tfvars(input):
         "url"  = "http://localhost:8080",
         "auth" = ""
     }"""
-    slack_contact_point = """
-            {
+    slack_contact_point = """{
         url  = "https://hooks.slack.com/<YOUR_SLACK_WEBHOOK_URL>"
         text = <<EOT
         {{ len .Alerts.Firing }} alerts are firing
@@ -21,8 +20,7 @@ def grafana_tfvars(input):
     
     """
     
-    mute_timing = """
-    {
+    mute_timing = """{
   name          = "My Mute Timing"
   start         = "04:56"
   end           = "04:57"
@@ -34,8 +32,7 @@ def grafana_tfvars(input):
 
     """
     
-    notification_policy_config = """
-        {
+    notification_policy_config = """{
   group_by        = ["..."]
   group_wait      = "45s"
   group_interval  = "6m"
@@ -44,9 +41,7 @@ def grafana_tfvars(input):
     
     """
     
-    policies = """
-        {
-    matchers = [
+    policies = """{matchers = [
       { label = "mylabel", match = "=", value = "myvalue" },
       { label = "alertname", match = "=", value = "CPU Usage" },
       { label = "Name", match = "=~", value = "host.*|host-b.*" }
@@ -64,9 +59,10 @@ def grafana_tfvars(input):
     continue      = false
     mute_timings  = ["mute_timing_2"]
     group_by      = ["group2_sub"]
-  }
+}
     
     """
+    subject = "{{ template \"default.title\" .}}"
     
     if input.create_contact_point is None:
         tfvars_file = f'''

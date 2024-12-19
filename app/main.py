@@ -7,3 +7,4 @@ from app.routes.docker import *
 from app.routes.jenkins import *
 from app.routes.gitlab import *
 from app.routes.grafana_data_sources import *
+from app.routes.grafana_terraform import *

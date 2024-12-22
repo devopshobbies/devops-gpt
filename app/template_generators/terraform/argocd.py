@@ -9,37 +9,44 @@ def IaC_template_generator_argocd(input) -> str:
       argocd_application_selfheal = 'true' if input.argocd_application.sync_policy.self_heal else 'false'
     else:
       argocd_create_application = 'false'
-      argocd_application_auto_prune = ""
-      argocd_application_selfheal = ""
+      argocd_application_auto_prune = "false"
+      argocd_application_selfheal = "false"
     
-    depends_on = 'depends_on = []'
-    if input.application_depends_repository == True:
-        depends_on = 'depends_on = [argocd_repository.repository]'
-
-    tfvars_file = """
-argocd_instance_info = {
-  server_addr = "ARGOCD_DOMAIN"
-  username    = "admin"
-  password    = "ARGOCD_ADMIN_PASS"
+   
+    argocd_instance_info = """{
+  server_addr = "http://argocd.local"
+  username    = "username"
+  password    = "password"
   insecure    = true
 }
-
-repository_create = true
-argocd_repository_info = {
-  repo     = "https://YOUR_REPO.git"
-  username = "USERNAME"
-  password = "CHANGE_ME_WITH_TOKEN"
+    """
+    argocd_repository_info = """{
+  repo     = "https://your_repo.git"
+  username = "username"
+  password = "token"
 }
-
-application_create = true
-argocd_application = {
-  name                   = "APPLICATION_NAME"
+    """
+    argocd_application = """{
+  name                   = "myapp"
   destination_server     = "https://kubernetes.default.svc"
-  destination_namespace  = "DESTINATION_NAMESPACE"
-  source_repo_url       = "https://YOUR_REPO.git"
-  source_path           = "SOURCE_PATH"
-  source_target_revision = "SOURCE_TARGET_REVISION"
+  destination_namespace  = "default"
+  source_repo_url       = "https://your_repo.git"
+  source_path           = "myapp/manifests"
+  source_target_revision = "master"
 }
+    """
+    
+    tfvars_file = f"""
+argocd_instance_info = {argocd_instance_info}
 
-argocd_sync_options = ["CreateNamespace=true", "ApplyOutOfSyncOnly=true", "FailOnSharedResource=true"]"""
+repository_create = {argocd_create_repository}
+argocd_repository_info = {argocd_repository_info}
+
+application_create = {argocd_create_application}
+argocd_application = {argocd_application}
+
+argocd_sync_options = ["CreateNamespace=true", "ApplyOutOfSyncOnly=true", "FailOnSharedResource=true"]
+
+auto_prune = {argocd_application_auto_prune}
+self_heal = {argocd_application_selfheal} """
     return tfvars_file

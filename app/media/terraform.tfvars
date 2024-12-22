@@ -28,5 +28,5 @@ argocd_application = {
 
 argocd_sync_options = ["CreateNamespace=true", "ApplyOutOfSyncOnly=true", "FailOnSharedResource=true"]
 
-auto_prune = 
-self_heal =  
+auto_prune = false
+self_heal = false 

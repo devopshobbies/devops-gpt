@@ -13,6 +13,7 @@ def zip_folder(folder_path: str, output_zip_path: str):
                 file_path = os.path.join(root, file)
                 # Add file to the zip file
                 zip_file.write(file_path, os.path.relpath(file_path, folder_path))
+                
 @app.post("/api/grafana/terraform")
 async def grafana_terraform_template_route(request:GrafanaTerraform) -> Output:
     

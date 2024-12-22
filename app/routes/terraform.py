@@ -1,5 +1,6 @@
 from app.app_instance import app
 from app.gpt_services import gpt_service
+from fastapi.responses import FileResponse
 from app.services import (
         
         edit_directory_generator,execute_pythonfile)
@@ -58,74 +59,85 @@ async def IaC_install_generation(request:IaCInstallationInput) -> Output:
 
 @app.post("/api/IaC-template/docker")
 async def IaC_template_generation_docker(request:IaCTemplateGenerationDocker) -> Output:
-        if os.environ.get("TEST"):
-            return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_docker(request)
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("terraform_generator",output)
-        execute_pythonfile("MyTerraform","terraform_generator")
-        return Output(output='output')
+        
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_docker(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
 
 @app.post("/api/IaC-template/aws/ec2")
 async def IaC_template_generation_aws_ec2(request:IaCTemplateGenerationEC2) -> Output:
-        if os.environ.get("TEST"):
-            return Output(output='output (nothing special)')
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_ec2(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
 
-        generated_prompt = IaC_template_generator_ec2(request)
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("terraform_generator",output)
-        execute_pythonfile("MyTerraform","terraform_generator")
-        return Output(output='output')
 
 @app.post("/api/IaC-template/aws/s3")
 async def IaC_template_generation_aws_s3(request:IaCTemplateGenerationS3) -> Output:
-        if os.environ.get("TEST"):
-            return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_s3(request)
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("terraform_generator",output)
-        execute_pythonfile("MyTerraform","terraform_generator")
-        return Output(output='output')
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_s3(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
 
 @app.post("/api/IaC-template/aws/iam")
 async def IaC_template_generation_aws_iam(request:IaCTemplateGenerationIAM) -> Output:
-        if os.environ.get("TEST"):
-            return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_iam(request)
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("terraform_generator",output)
-        execute_pythonfile("MyTerraform","terraform_generator")
-        return Output(output='output')
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_iam(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
 
 
 @app.post("/api/IaC-template/argocd")
 async def IaC_template_generation_argocd(request:IaCTemplateGenerationArgoCD) -> Output:
-        if os.environ.get("TEST"):
-            return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_argocd(request)
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("terraform_generator",output)
-        execute_pythonfile("MyTerraform","terraform_generator")
-        return Output(output='output')
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_argocd(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
 
 
 
 @app.post("/api/IaC-template/aws/elb")
 async def IaC_template_generation_aws_elb(request:IaCTemplateGenerationELB) -> Output:
-        if os.environ.get("TEST"):
-            return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_elb(request)
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("terraform_generator",output)
-        execute_pythonfile("MyTerraform","terraform_generator")
-        return Output(output='output')
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_elb(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
 
 @app.post("/api/IaC-template/aws/efs")
 async def IaC_template_generation_aws_efs(request:IaCTemplateGenerationEFS) -> Output:
-        if os.environ.get("TEST"):
-            return Output(output='output (nothing special)')
-        generated_prompt = IaC_template_generator_efs(request)
-        output = gpt_service(generated_prompt)
-        edit_directory_generator("terraform_generator",output)
-        execute_pythonfile("MyTerraform","terraform_generator")
-        return Output(output='output')
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_efs(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+

@@ -93,7 +93,7 @@ class ArgoApplication(BaseModel):
 class IaCTemplateGenerationArgoCD(BaseModel):
     argocd_application:ArgoApplication | None = None
     argocd_repository:bool = True
-    application_depends_repository:bool = True
+   
    
 
 class IaCTemplateGenerationELB(BaseModel):

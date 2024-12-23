@@ -1,4 +1,4 @@
-[![devopsgpt demo](devopsgpt.jpg)](https://youtu.be/b9KPfWTY24U?si=fPtLhW4D-lgXTp0S)
+[![devopsgpt demo](devopsgpt.jpg)](https://youtu.be/IPXmjUcDZJU?si=4S5U_y8Jr1u5gOrh)
 
 # DevOps-GPT
 

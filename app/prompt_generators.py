@@ -5,10 +5,7 @@ from .models import (IaCBasicInput,
 def IaC_basics_generator(input : IaCBasicInput) -> str:
 
     prompt = f"""
-                Write a robust answer about {input.service},
-                focusing on the latest update of {input.service} and based on this question:{input.input},
-                minimun length of answer is {input.min_tokens} and maximum length is {input.max_tokens}
-
+                {input.input}
             """
     return prompt
 
@@ -16,10 +13,7 @@ def IaC_basics_generator(input : IaCBasicInput) -> str:
 def IaC_bugfix_generator(input : IaCBugfixInput) -> str:
 
     prompt = f"""
-                Write a clear answer to debug {input.service}
-                focusing on the version {input.version} of {input.service} and based on this bug:{input.bug_description},
-                generate a correct code that help us to solve this bug.
-                minimum length of answer is {input.min_tokens} and maximum length is {input.max_tokens}
+                {input.bug_description}
 
             """
     return prompt

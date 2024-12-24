@@ -5,7 +5,7 @@ from .utils import BasicInput
 
 class IaCBasicInput(BasicInput):
     input:str
-    service:Optional[str] = 'terraform'
+    token:str
 
     @validator("input")
     def validate_input(cls, value):
@@ -13,17 +13,11 @@ class IaCBasicInput(BasicInput):
             raise ValueError("Input cannot be empty.")
         return value
 
-    @validator("service")
-    def validate_service(cls, value):
-        allowed_services = ['terraform']
-        if value not in allowed_services:
-            raise ValueError(f"Service must be one of {allowed_services}.")
-        return value
+    
 
 class IaCBugfixInput(BasicInput):
     bug_description:str
-    version:str = 'latest'
-    service:Optional[str] = 'terraform'
+    token:str
 
     @validator("bug_description")
     def validate_bug_description(cls, value):
@@ -31,18 +25,7 @@ class IaCBugfixInput(BasicInput):
             raise ValueError("Bug description cannot be empty.")
         return value
 
-    @validator("version")
-    def validate_version(cls, value):
-        if not value:
-            raise ValueError("Version cannot be empty.")
-        return value
-
-    @validator("service")
-    def validate_service(cls, value):
-        allowed_services = ['terraform']
-        if value not in allowed_services:
-            raise ValueError(f"Service must be one of {allowed_services}.")
-        return value
+   
 
 class IaCInstallationInput(BaseModel):
     os:str = "Ubuntu"

@@ -38,7 +38,7 @@ async def IaC_basic_generation(request:IaCBasicInput) -> Output:
         if os.environ.get("TEST"):
             return Output(output='Terraform developed by hashicorp and it is very usefull')
         generated_prompt = IaC_basics_generator(request)
-        output = gpt_service(generated_prompt)
+        output = gpt_service(generated_prompt,request.token)
         return Output(output=output)
    
 @app.post("/api/IaC-bugfix/")
@@ -46,7 +46,7 @@ async def IaC_bugfix_generation(request:IaCBugfixInput) -> Output:
         if os.environ.get("TEST"):
             return Output(output='fix this bug by adding x to the y')
         generated_prompt = IaC_bugfix_generator(request)
-        output = gpt_service(generated_prompt)
+        output = gpt_service(generated_prompt,request.token)
         return Output(output=output)
 
 

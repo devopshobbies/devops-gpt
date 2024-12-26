@@ -1,53 +1,27 @@
 [![devopsgpt demo](devopsgpt.jpg)](https://youtu.be/IPXmjUcDZJU?si=4S5U_y8Jr1u5gOrh)
 
-# DevOps-GPT
+# 🚀 DevOpsGPT: Automate Your DevOps Workflow
 
-This project helps you to balance your daily work as a DevOps engineer, from simple bug fixes to project template generation. you don't need to search on Google for some routine jobs and it helps you with a robust prompt to simplify your career.
+DevOpsGPT is a revolutionary tool designed to streamline your workflow and empower you to build systems and automate tasks with ease. 
 
-## Run DevOpsGPT
+**Tired of spending hours on repetitive DevOps tasks?**
 
-Builds and starts the Docker Compose stack:
-     
-    make
-    
-Stops and removes the Docker Compose stack:
+DevOpsGPT is here to help! Whether you're setting up infrastructure, speeding up deployments, or tackling any other DevOps challenge, our app can make your life easier and more productive.
 
-    make down
+**Here's what you can expect with DevOpsGPT:**
 
- Installs the Helm chart for the devopsgpt app on a Kubernetes cluster:
+* **Faster task completion:** Automate repetitive tasks and free up your time to focus on more strategic initiatives.
+* **Simplified workflows:** Our intuitive interface makes it easy to get started and use DevOpsGPT to its full potential.
+* **Increased efficiency:** Streamline your DevOps processes and achieve more with less effort.
 
-    make helm-install
+**Ready to experience the DevOpsGPT difference?**
 
-Uninstalls the Helm chart for the devopsgpt app:
+1. Visit our website: https://hobs.ai
+2. Sign in or create an account.
+3. Start exploring the many features of DevOpsGPT and see how it can transform your workflow.
+4. We value your feedback! Share your thoughts and suggestions with us to help us continuously improve DevOpsGPT.
 
-    make helm-uninstall
-
-You can override the release name and namespace for Helm commands by running:
-
-    make [helm-install|helm-uninstall] namespace=NAMESPACE releaseName=RELEASENAME
-
-The default namespace is `default` and the default release name is `devopsgpt`.
-
-
-
-## Running Tests
-
-To run tests, run the following command
-
-```
-cd app && pytest tests/
-```
-
-
-
-
-## Environment Variables
-
-To run this project, you will need to add the following environment variables to your .env file
-
-`KEY` (OpenAI API Key)
-
-
+**We're confident that DevOpsGPT will become an essential tool in your DevOps toolkit. Let's work together to make it even better!**
 
 
 ## API Reference

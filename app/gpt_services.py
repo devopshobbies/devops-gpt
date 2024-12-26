@@ -2,10 +2,10 @@ import os
 from openai import OpenAI
 from fastapi import HTTPException
 
-def gpt_service(prompt):
+def gpt_service(prompt,token):
 
     try:
-        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        client = OpenAI(api_key=token)
         chat_completion = client.chat.completions.create(
             messages=[
                 {

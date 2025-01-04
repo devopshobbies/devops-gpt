@@ -99,3 +99,7 @@ class IaCTemplateGenerationEFS(BaseModel):
     efs_mount_target:bool = True
     efs_backup_policy:bool = True
     
+class IaCTemplateGenerationALB(BaseModel):
+    
+    alb_resources:bool = True
+    security_group:bool = True

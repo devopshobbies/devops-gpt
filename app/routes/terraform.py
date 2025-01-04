@@ -14,7 +14,8 @@ from app.models import (IaCBasicInput,
         IaCTemplateGenerationIAM,
         IaCTemplateGenerationArgoCD,
         IaCTemplateGenerationELB,
-        IaCTemplateGenerationEFS
+        IaCTemplateGenerationEFS,
+        IaCTemplateGenerationALB
        )
 
 from fastapi import Response
@@ -30,6 +31,7 @@ from app.template_generators.terraform.aws.s3 import (IaC_template_generator_s3)
 from app.template_generators.terraform.argocd import (IaC_template_generator_argocd)
 from app.template_generators.terraform.aws.ELB import (IaC_template_generator_elb)
 from app.template_generators.terraform.aws.EFS import (IaC_template_generator_efs)
+from app.template_generators.terraform.aws.ALB import (IaC_template_generator_alb)
 from app.template_generators.terraform.Installation.main import (select_install)
 import os
 
@@ -136,6 +138,18 @@ async def IaC_template_generation_aws_efs(request:IaCTemplateGenerationEFS) -> O
         dir = 'app/media/terraform.tfvars'
         
         file_response = IaC_template_generator_efs(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/alb")
+async def IaC_template_generation_aws_alb(request:IaCTemplateGenerationALB) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_alb(request)
         with open(dir,'w')as f:
             f.write(file_response)
         

@@ -103,3 +103,11 @@ class IaCTemplateGenerationALB(BaseModel):
     
     alb_resources:bool = True
     security_group:bool = True
+
+class IaCTemplateGenerationCloudFront(BaseModel):
+    
+    distribution:bool = True
+    origin_access_identity:bool = True
+    origin_access_control:bool = False
+    monitoring_subscription:bool = False
+    vpc_origin:bool = False

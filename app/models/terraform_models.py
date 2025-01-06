@@ -111,3 +111,10 @@ class IaCTemplateGenerationCloudFront(BaseModel):
     origin_access_control:bool = False
     monitoring_subscription:bool = False
     vpc_origin:bool = False
+
+class IaCTemplateGenerationSNS(BaseModel):
+    
+    sns_topic:bool = True
+    fifo_topic:bool = False
+    topic_policy:bool = True
+    subscription:bool = True

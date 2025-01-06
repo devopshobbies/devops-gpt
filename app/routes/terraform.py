@@ -16,7 +16,8 @@ from app.models import (IaCBasicInput,
         IaCTemplateGenerationELB,
         IaCTemplateGenerationEFS,
         IaCTemplateGenerationALB,
-        IaCTemplateGenerationCloudFront
+        IaCTemplateGenerationCloudFront,
+        IaCTemplateGenerationSNS
        )
 
 from fastapi import Response
@@ -34,6 +35,7 @@ from app.template_generators.terraform.aws.ELB import (IaC_template_generator_el
 from app.template_generators.terraform.aws.EFS import (IaC_template_generator_efs)
 from app.template_generators.terraform.aws.ALB import (IaC_template_generator_alb)
 from app.template_generators.terraform.aws.CloudFront import (IaC_template_generator_cloudfront)
+from app.template_generators.terraform.aws.SNS import (IaC_template_generator_sns)
 from app.template_generators.terraform.Installation.main import (select_install)
 import os
 
@@ -164,6 +166,18 @@ async def IaC_template_generation_aws_cloudfront(request:IaCTemplateGenerationCl
         dir = 'app/media/terraform.tfvars'
         
         file_response = IaC_template_generator_cloudfront(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/sns")
+async def IaC_template_generation_aws_sns(request:IaCTemplateGenerationSNS) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_sns(request)
         with open(dir,'w')as f:
             f.write(file_response)
         

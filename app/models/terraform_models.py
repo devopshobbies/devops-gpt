@@ -118,3 +118,11 @@ class IaCTemplateGenerationSNS(BaseModel):
     fifo_topic:bool = False
     topic_policy:bool = True
     subscription:bool = True
+
+class IaCTemplateGenerationAutoScaling(BaseModel):
+    
+    autoscaling_group:bool = True
+    launch_template:bool = True
+    schedule:bool = True
+    scaling_policy:bool = True
+    iam_instance_profile:bool = True

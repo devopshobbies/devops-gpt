@@ -17,7 +17,8 @@ from app.models import (IaCBasicInput,
         IaCTemplateGenerationEFS,
         IaCTemplateGenerationALB,
         IaCTemplateGenerationCloudFront,
-        IaCTemplateGenerationSNS
+        IaCTemplateGenerationSNS,
+        IaCTemplateGenerationAutoScaling
        )
 
 from fastapi import Response
@@ -36,6 +37,7 @@ from app.template_generators.terraform.aws.EFS import (IaC_template_generator_ef
 from app.template_generators.terraform.aws.ALB import (IaC_template_generator_alb)
 from app.template_generators.terraform.aws.CloudFront import (IaC_template_generator_cloudfront)
 from app.template_generators.terraform.aws.SNS import (IaC_template_generator_sns)
+from app.template_generators.terraform.aws.AutoScaling import (IaC_template_generator_autoscaling)
 from app.template_generators.terraform.Installation.main import (select_install)
 import os
 
@@ -178,6 +180,18 @@ async def IaC_template_generation_aws_sns(request:IaCTemplateGenerationSNS) -> O
         dir = 'app/media/terraform.tfvars'
         
         file_response = IaC_template_generator_sns(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/autoscaling")
+async def IaC_template_generation_aws_autoscaling(request:IaCTemplateGenerationAutoScaling) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_autoscaling(request)
         with open(dir,'w')as f:
             f.write(file_response)
         

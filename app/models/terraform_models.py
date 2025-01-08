@@ -126,3 +126,11 @@ class IaCTemplateGenerationAutoScaling(BaseModel):
     schedule:bool = True
     scaling_policy:bool = True
     iam_instance_profile:bool = True
+
+class IaCTemplateGenerationSQS(BaseModel):
+    
+    sqs_queue:bool = True
+    queue_policy:bool = False
+    dlq:bool = False
+    dlq_redrive_allow_policy:bool = True
+    dlq_queue_policy:bool = False

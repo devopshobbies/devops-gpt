@@ -1,5 +1,4 @@
-create = true
-create_queue_policy = false
-create_dlq = false
-create_dlq_redrive_allow_policy = true
-create_dlq_queue_policy = false
+create_zone = true
+create_record = true
+create_delegation_set = false
+create_resolver_rule_association = false

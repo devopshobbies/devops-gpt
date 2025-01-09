@@ -134,3 +134,10 @@ class IaCTemplateGenerationSQS(BaseModel):
     dlq:bool = False
     dlq_redrive_allow_policy:bool = True
     dlq_queue_policy:bool = False
+
+class IaCTemplateGenerationRoute53(BaseModel):
+    
+    zone:bool = True
+    record:bool = True
+    delegation_set:bool = False
+    resolver_rule_association:bool = False

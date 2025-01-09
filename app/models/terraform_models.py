@@ -141,3 +141,8 @@ class IaCTemplateGenerationRoute53(BaseModel):
     record:bool = True
     delegation_set:bool = False
     resolver_rule_association:bool = False
+
+class IaCTemplateGenerationKeyPair(BaseModel):
+    
+    key_pair:bool = True
+    private_key:bool = False

@@ -21,7 +21,8 @@ from app.models import (IaCBasicInput,
         IaCTemplateGenerationAutoScaling,
         IaCTemplateGenerationSQS,
         IaCTemplateGenerationRoute53,
-        IaCTemplateGenerationKeyPair
+        IaCTemplateGenerationKeyPair,
+        IaCTemplateGenerationRDS
        )
 
 from fastapi import Response
@@ -44,6 +45,7 @@ from app.template_generators.terraform.aws.AutoScaling import (IaC_template_gene
 from app.template_generators.terraform.aws.SQS import (IaC_template_generator_sqs)
 from app.template_generators.terraform.aws.Route53 import (IaC_template_generator_route53)
 from app.template_generators.terraform.aws.KeyPair import (IaC_template_generator_key_pair)
+from app.template_generators.terraform.aws.RDS import (IaC_template_generator_rds)
 from app.template_generators.terraform.Installation.main import (select_install)
 import os
 
@@ -234,6 +236,18 @@ async def IaC_template_generation_aws_key_pair(request:IaCTemplateGenerationKeyP
         dir = 'app/media/terraform.tfvars'
         
         file_response = IaC_template_generator_key_pair(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/rds")
+async def IaC_template_generation_aws_rds(request:IaCTemplateGenerationRDS) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_rds(request)
         with open(dir,'w')as f:
             f.write(file_response)
         

@@ -145,3 +145,13 @@ class IaCTemplateGenerationKeyPair(BaseModel):
     
     key_pair:bool = True
     private_key:bool = False
+
+class IaCTemplateGenerationRDS(BaseModel):
+    
+    db_instance:bool = True
+    db_option_group:bool = True
+    db_parameter_group:bool = True
+    db_subnet_group:bool = True
+    monitoring_role:bool = True
+    cloudwatch_log_group:bool = True
+    master_user_password_rotation:bool = False

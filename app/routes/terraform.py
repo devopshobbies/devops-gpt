@@ -16,7 +16,13 @@ from app.models import (IaCBasicInput,
         IaCTemplateGenerationELB,
         IaCTemplateGenerationEFS,
         IaCTemplateGenerationALB,
-        IaCTemplateGenerationCloudFront
+        IaCTemplateGenerationCloudFront,
+        IaCTemplateGenerationSNS,
+        IaCTemplateGenerationAutoScaling,
+        IaCTemplateGenerationSQS,
+        IaCTemplateGenerationRoute53,
+        IaCTemplateGenerationKeyPair,
+        IaCTemplateGenerationRDS
        )
 
 from fastapi import Response
@@ -34,6 +40,12 @@ from app.template_generators.terraform.aws.ELB import (IaC_template_generator_el
 from app.template_generators.terraform.aws.EFS import (IaC_template_generator_efs)
 from app.template_generators.terraform.aws.ALB import (IaC_template_generator_alb)
 from app.template_generators.terraform.aws.CloudFront import (IaC_template_generator_cloudfront)
+from app.template_generators.terraform.aws.SNS import (IaC_template_generator_sns)
+from app.template_generators.terraform.aws.AutoScaling import (IaC_template_generator_autoscaling)
+from app.template_generators.terraform.aws.SQS import (IaC_template_generator_sqs)
+from app.template_generators.terraform.aws.Route53 import (IaC_template_generator_route53)
+from app.template_generators.terraform.aws.KeyPair import (IaC_template_generator_key_pair)
+from app.template_generators.terraform.aws.RDS import (IaC_template_generator_rds)
 from app.template_generators.terraform.Installation.main import (select_install)
 import os
 
@@ -164,6 +176,78 @@ async def IaC_template_generation_aws_cloudfront(request:IaCTemplateGenerationCl
         dir = 'app/media/terraform.tfvars'
         
         file_response = IaC_template_generator_cloudfront(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/sns")
+async def IaC_template_generation_aws_sns(request:IaCTemplateGenerationSNS) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_sns(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/autoscaling")
+async def IaC_template_generation_aws_autoscaling(request:IaCTemplateGenerationAutoScaling) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_autoscaling(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/sqs")
+async def IaC_template_generation_aws_sqs(request:IaCTemplateGenerationSQS) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_sqs(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/route53")
+async def IaC_template_generation_aws_route53(request:IaCTemplateGenerationRoute53) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_route53(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/key_pair")
+async def IaC_template_generation_aws_key_pair(request:IaCTemplateGenerationKeyPair) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_key_pair(request)
+        with open(dir,'w')as f:
+            f.write(file_response)
+        
+        return FileResponse(dir, media_type='application/zip', filename=f"terraform.tfvars")
+
+
+@app.post("/api/IaC-template/aws/rds")
+async def IaC_template_generation_aws_rds(request:IaCTemplateGenerationRDS) -> Output:
+         
+        dir = 'app/media/terraform.tfvars'
+        
+        file_response = IaC_template_generator_rds(request)
         with open(dir,'w')as f:
             f.write(file_response)
         

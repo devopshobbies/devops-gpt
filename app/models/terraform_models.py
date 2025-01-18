@@ -111,3 +111,47 @@ class IaCTemplateGenerationCloudFront(BaseModel):
     origin_access_control:bool = False
     monitoring_subscription:bool = False
     vpc_origin:bool = False
+
+class IaCTemplateGenerationSNS(BaseModel):
+    
+    sns_topic:bool = True
+    topic_policy:bool = True
+    subscription:bool = True
+
+class IaCTemplateGenerationAutoScaling(BaseModel):
+    
+    autoscaling_group:bool = True
+    launch_template:bool = True
+    schedule:bool = True
+    scaling_policy:bool = True
+    iam_instance_profile:bool = True
+
+class IaCTemplateGenerationSQS(BaseModel):
+    
+    sqs_queue:bool = True
+    queue_policy:bool = False
+    dlq:bool = False
+    dlq_redrive_allow_policy:bool = True
+    dlq_queue_policy:bool = False
+
+class IaCTemplateGenerationRoute53(BaseModel):
+    
+    zone:bool = True
+    record:bool = True
+    delegation_set:bool = False
+    resolver_rule_association:bool = False
+
+class IaCTemplateGenerationKeyPair(BaseModel):
+    
+    key_pair:bool = True
+    private_key:bool = False
+
+class IaCTemplateGenerationRDS(BaseModel):
+    
+    db_instance:bool = True
+    db_option_group:bool = True
+    db_parameter_group:bool = True
+    db_subnet_group:bool = True
+    monitoring_role:bool = True
+    cloudwatch_log_group:bool = True
+    master_user_password_rotation:bool = False

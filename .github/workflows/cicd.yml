@@ -58,31 +58,42 @@ jobs:
         tags: |
           ${{ secrets.DOCKER_USERNAME }}/devopsgpt-fastapi:${{ github.ref_name }}
 
-    - name: Deploying landing prod on the remote server
+    - name: Deploying engine on production server
       if: github.ref == 'refs/heads/master'
       uses: appleboy/ssh-action@v1.2.0
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.HOST_USERNAME }}
-        password: ${{ secrets.HOST_PASSWORD }}
+        host: ${{ secrets.HOST_PROD }}
+        username: ${{ secrets.HOST_USERNAME_PROD }}
+        password: ${{ secrets.HOST_PASSWORD_PROD }}
         port: ${{ secrets.HOST_PORT }}
         script: docker compose -f devopsgpt-fastapi/docker-compose-fastapi.yml down fastapi_prod && docker compose -f devopsgpt-fastapi/docker-compose-fastapi.yml up -d --pull always fastapi_prod
 
-    - name: Deploying landing dev on the remote server
+    - name: Deploying engine on dev server
       if: github.ref == 'refs/heads/dev'
       uses: appleboy/ssh-action@v1.2.0
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.HOST_USERNAME }}
-        password: ${{ secrets.HOST_PASSWORD }}
+        host: ${{ secrets.HOST_DEV }}
+        username: ${{ secrets.HOST_USERNAME_DEV }}
+        password: ${{ secrets.HOST_PASSWORD_DEV }}
         port: ${{ secrets.HOST_PORT }}
         script: docker compose -f devopsgpt-fastapi/docker-compose-fastapi.yml down fastapi_dev && docker compose -f devopsgpt-fastapi/docker-compose-fastapi.yml up -d --pull always fastapi_dev
 
-    - name: Removing dangle images on the remote server
+    - name: Removing dangle images on production server
+      if: github.ref == 'refs/heads/master'
       uses: appleboy/ssh-action@v1.2.0
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.HOST_USERNAME }}
-        password: ${{ secrets.HOST_PASSWORD }}
+        host: ${{ secrets.HOST_PROD }}
+        username: ${{ secrets.HOST_USERNAME_PROD }}
+        password: ${{ secrets.HOST_PASSWORD_PROD }}
+        port: ${{ secrets.HOST_PORT }}
+        script: docker image prune -f
+
+    - name: Removing dangle images on dev server
+      if: github.ref == 'refs/heads/dev'
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.HOST_DEV }}
+        username: ${{ secrets.HOST_USERNAME_DEV }}
+        password: ${{ secrets.HOST_PASSWORD_DEV }}
         port: ${{ secrets.HOST_PORT }}
         script: docker image prune -f
